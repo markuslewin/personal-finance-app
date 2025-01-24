@@ -6,15 +6,88 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+model Balance {
+    id       String @id @default(cuid())
+    current  Int
+    income   Int
+    expenses Int
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
 
-    @@index([name])
+model Transaction {
+    id     String   @id @default(cuid())
+    avatar String
+    name   String
+    date   DateTime
+    amount Int
+
+    categoryId      String
+    category        Category       @relation(fields: [categoryId], references: [id])
+    recurringBillId String?
+    recurringBill   RecurringBill? @relation(fields: [recurringBillId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model RecurringBill {
+    id     String @id @default(cuid())
+    avatar String
+    name   String
+    amount Int
+    day    Int
+
+    transaction Transaction[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Budget {
+    id      String @id @default(cuid())
+    maximum Int
+
+    categoryId String
+    category   Category @relation(fields: [categoryId], references: [id])
+    themeId    String
+    theme      Theme    @relation(fields: [themeId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Pot {
+    id     String @id @default(cuid())
+    name   String
+    target Int
+    total  Int
+
+    themeId String
+    theme   Theme  @relation(fields: [themeId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Category {
+    id   String @id @default(cuid())
+    name String
+
+    Transaction Transaction[]
+    Budget      Budget[]
+}
+
+model Theme {
+    id    String @id @default(cuid())
+    name  String
+    color String
+
+    Budget Budget[]
+    Pot    Pot[]
 }
