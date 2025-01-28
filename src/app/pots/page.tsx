@@ -1,6 +1,11 @@
+import { type Metadata } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
 import { db } from "~/server/db";
+
+export const metadata: Metadata = {
+  title: "Pots",
+};
 
 const PotsPage = async () => {
   const pots = await db.pot.findMany({

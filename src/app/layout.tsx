@@ -5,9 +5,19 @@ import { publicSans } from "~/app/_fonts";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "finance",
+  title: {
+    template: "Frontend Mentor | Personal finance app - %s",
+    default: "Frontend Mentor | Personal finance app",
+  },
   description: "A personal fincance app.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      url: "/assets/images/favicon-32x32.png",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -15,7 +25,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${publicSans.variable}`}>
-      <body className="font-public-sans bg-beige-100 text-grey-900">
+      <body className="bg-beige-100 font-public-sans text-grey-900">
         <header>
           <nav>
             <ul role="list">

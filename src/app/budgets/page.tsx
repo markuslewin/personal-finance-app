@@ -1,8 +1,13 @@
 import { getBudgetsWithTransactions } from "@prisma/client/sql";
+import { type Metadata } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
 import { now } from "~/app/_now";
 import { db } from "~/server/db";
+
+export const metadata: Metadata = {
+  title: "Budgets",
+};
 
 const BudgetsPage = async () => {
   const nowDate = new Date(now);

@@ -1,5 +1,10 @@
+import { type Metadata } from "next";
 import { now } from "~/app/_now";
 import { db } from "~/server/db";
+
+export const metadata: Metadata = {
+  title: "Transactions",
+};
 
 const TransactionsPage = async () => {
   const transactions = await db.transaction.findMany({

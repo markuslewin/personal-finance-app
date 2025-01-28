@@ -1,4 +1,9 @@
+import { type Metadata } from "next";
 import { db } from "~/server/db";
+
+export const metadata: Metadata = {
+  title: "Frontend Mentor | Personal finance app - Overview",
+};
 
 const OverviewPage = async () => {
   const [balance, pots, transactions, budgets, recurringBills] =

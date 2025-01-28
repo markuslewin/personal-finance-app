@@ -1,4 +1,9 @@
+import { type Metadata } from "next";
 import { db } from "~/server/db";
+
+export const metadata: Metadata = {
+  title: "Recurring bills",
+};
 
 const RecurringBillsPage = async () => {
   const recurringBills = await db.recurringBill.findMany({
