@@ -93,3 +93,19 @@ model Theme {
     Budget Budget[]
     Pot    Pot[]
 }
+
+model User {
+    id    String @id @default(cuid())
+    email String @unique
+    name  String
+
+    passwordId String   @unique
+    password   Password @relation(fields: [passwordId], references: [id])
+}
+
+model Password {
+    id   String @id @default(cuid())
+    hash String
+
+    user User?
+}

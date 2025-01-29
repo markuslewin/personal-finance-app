@@ -4,13 +4,14 @@ import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { cx } from "class-variance-authority";
 import { useActionState, type ComponentPropsWithoutRef } from "react";
-import { login } from "~/app/login/_action";
-import { schema } from "~/app/login/_schema";
+import { signup } from "~/app/signup/_action";
+import { schema } from "~/app/signup/_schema";
 
-type LoginFormProps = ComponentPropsWithoutRef<"form">;
+type SignupFormProps = ComponentPropsWithoutRef<"form">;
 
-const LoginForm = ({ className, ...props }: LoginFormProps) => {
-  const [lastResult, action] = useActionState(login, undefined);
+const SignupForm = ({ className, ...props }: SignupFormProps) => {
+  const [lastResult, action] = useActionState(signup, undefined);
+  console.log({ lastResult });
   const [form, fields] = useForm({
     lastResult,
     constraint: getZodConstraint(schema),
@@ -29,6 +30,14 @@ const LoginForm = ({ className, ...props }: LoginFormProps) => {
       className={cx(className, "")}
     >
       <div>
+        <label htmlFor={fields.name.id}>Name</label>
+        <input
+          {...getInputProps(fields.name, { type: "text" })}
+          key={fields.name.key}
+        />
+        <p id={fields.name.errorId}>{fields.name.errors}</p>
+      </div>
+      <div>
         <label htmlFor={fields.email.id}>Email</label>
         <input
           {...getInputProps(fields.email, { type: "email" })}
@@ -37,19 +46,21 @@ const LoginForm = ({ className, ...props }: LoginFormProps) => {
         <p id={fields.email.errorId}>{fields.email.errors}</p>
       </div>
       <div>
-        <label htmlFor={fields.password.id}>Password</label>
+        <label htmlFor={fields["create-password"].id}>Create Password</label>
         <input
-          {...getInputProps(fields.password, { type: "password" })}
-          key={fields.password.key}
+          {...getInputProps(fields["create-password"], { type: "password" })}
+          key={fields["create-password"].key}
         />
-        <p id={fields.password.errorId}>{fields.password.errors}</p>
+        <p id={fields["create-password"].errorId}>
+          {fields["create-password"].errors}
+        </p>
       </div>
       <p>
-        <button type="submit">Login</button>
+        <button type="submit">Create Account</button>
       </p>
       <p id={form.errorId}>{form.errors}</p>
     </form>
   );
 };
 
-export default LoginForm;
+export default SignupForm;

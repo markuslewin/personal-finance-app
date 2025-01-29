@@ -3,6 +3,9 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { publicSans } from "~/app/_fonts";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { db } from "~/server/db";
+import { logOut } from "~/app/_actions";
 
 export const metadata: Metadata = {
   title: {
@@ -20,9 +23,23 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const userIdCookie = cookieStore.get("userId");
+  let user;
+  if (userIdCookie) {
+    user = await db.user.findUnique({
+      select: {
+        name: true,
+      },
+      where: {
+        id: userIdCookie.value,
+      },
+    });
+  }
+
   return (
     <html lang="en" className={`${publicSans.variable}`}>
       <body className="bg-beige-100 font-public-sans text-grey-900">
@@ -44,6 +61,16 @@ export default function RootLayout({
               })}
             </ul>
           </nav>
+          {user ? (
+            <>
+              <p>Hello, {user.name}!</p>
+              <form action={logOut}>
+                <button type="submit">Log out</button>
+              </form>
+            </>
+          ) : (
+            <p>User isn&apos;t logged in</p>
+          )}
         </header>
         <main>{children}</main>
       </body>
