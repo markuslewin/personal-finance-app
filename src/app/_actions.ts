@@ -7,6 +7,5 @@ export const logOut = async () => {
   const cookieStore = await cookies();
   cookieStore.delete("userId");
 
-  // todo: Fix redirect
   redirect("/login");
 };

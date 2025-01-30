@@ -43,13 +43,12 @@ export const login = async (prevState: unknown, formData: FormData) => {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...userData } = user;
-      return userData;
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
     }),
   });
   if (submission.status !== "success") {
     // todo: Don't send password back
-    // todo: ...but do send something back...
     return submission.reply();
   }
 

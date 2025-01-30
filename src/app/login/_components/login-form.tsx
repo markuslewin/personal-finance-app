@@ -3,7 +3,11 @@
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { cx } from "class-variance-authority";
-import { useActionState, type ComponentPropsWithoutRef } from "react";
+import {
+  startTransition,
+  useActionState,
+  type ComponentPropsWithoutRef,
+} from "react";
 import { login } from "~/app/login/_action";
 import { schema } from "~/app/login/_schema";
 
@@ -19,6 +23,14 @@ const LoginForm = ({ className, ...props }: LoginFormProps) => {
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
+    // Avoid the automatic form reset of hydrated forms in React
+    onSubmit: (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      startTransition(() => {
+        action(formData);
+      });
+    },
   });
 
   return (
