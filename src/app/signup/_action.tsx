@@ -2,7 +2,7 @@
 
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
-import { schema } from "~/app/signup/_schema";
+import { type Schema, schema } from "~/app/signup/_schema";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
@@ -27,7 +27,9 @@ export const signup = async (prevState: unknown, formData: FormData) => {
     ),
   });
   if (submission.status !== "success") {
-    return submission.reply();
+    return submission.reply({
+      hideFields: ["create-password"] satisfies (keyof Schema)[],
+    });
   }
 
   const hashedPassword = await bcrypt.hash(

@@ -11,7 +11,6 @@ type SignupFormProps = ComponentPropsWithoutRef<"form">;
 
 const SignupForm = ({ className, ...props }: SignupFormProps) => {
   const [lastResult, action] = useActionState(signup, undefined);
-  console.log({ lastResult });
   const [form, fields] = useForm({
     lastResult,
     constraint: getZodConstraint(schema),

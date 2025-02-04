@@ -2,7 +2,7 @@
 
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
-import { schema } from "~/app/login/_schema";
+import { type Schema, schema } from "~/app/login/_schema";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -48,8 +48,9 @@ export const login = async (prevState: unknown, formData: FormData) => {
     }),
   });
   if (submission.status !== "success") {
-    // todo: Don't send password back
-    return submission.reply();
+    return submission.reply({
+      hideFields: ["password"] satisfies (keyof Schema)[],
+    });
   }
 
   const cookieStore = await cookies();
