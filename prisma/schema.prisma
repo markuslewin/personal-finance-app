@@ -99,13 +99,13 @@ model User {
     email String @unique
     name  String
 
-    passwordId String   @unique
-    password   Password @relation(fields: [passwordId], references: [id])
+    password Password?
 }
 
 model Password {
     id   String @id @default(cuid())
     hash String
 
-    user User?
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
