@@ -28,6 +28,7 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.1",
+    "cookie-signature": "^1.2.2",
     "next": "^15.2.0-canary.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-signature": "^1.1.2",
     "@types/eslint": "^8.56.10",
     "@types/node": "^22.10.10",
     "@types/react": "^18.3.3",

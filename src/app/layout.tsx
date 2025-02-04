@@ -3,9 +3,9 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { publicSans } from "~/app/_fonts";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { db } from "~/server/db";
 import { logOut } from "~/app/_actions";
+import { getSession } from "~/app/_auth";
 
 export const metadata: Metadata = {
   title: {
@@ -26,16 +26,15 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = await cookies();
-  const userIdCookie = cookieStore.get("userId");
+  const userId = await getSession();
   let user;
-  if (userIdCookie) {
+  if (typeof userId === "string") {
     user = await db.user.findUnique({
       select: {
         name: true,
       },
       where: {
-        id: userIdCookie.value,
+        id: userId,
       },
     });
   }

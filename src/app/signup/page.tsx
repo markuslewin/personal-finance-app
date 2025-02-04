@@ -1,19 +1,17 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getSession } from "~/app/_auth";
 import SignupForm from "~/app/signup/_components/signup-form";
 import { db } from "~/server/db";
 
 const SignupPage = async () => {
-  // todo: Abstraction
-  const cookieStore = await cookies();
-  const userIdCookie = cookieStore.get("userId");
-  if (userIdCookie) {
+  const userId = await getSession();
+  if (typeof userId === "string") {
     const user = await db.user.findUnique({
       select: {
         id: true,
       },
       where: {
-        id: userIdCookie.value,
+        id: userId,
       },
     });
     if (user) {

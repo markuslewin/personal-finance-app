@@ -1,11 +1,9 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { deleteSession } from "~/app/_auth";
 
 export const logOut = async () => {
-  const cookieStore = await cookies();
-  cookieStore.delete("userId");
-
+  await deleteSession();
   redirect("/login");
 };
