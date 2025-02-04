@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { type Schema, schema } from "~/app/signup/_schema";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
-import { cookies } from "next/headers";
+import { createSession } from "~/app/_auth";
 
 export const signup = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
@@ -52,11 +52,7 @@ export const signup = async (prevState: unknown, formData: FormData) => {
     },
   });
 
-  const cookieStore = await cookies();
-  // todo: Sign cookie
-  cookieStore.set("userId", user.id, {
-    // todo: Options
-  });
+  await createSession(user.id);
 
   redirect("/");
 };

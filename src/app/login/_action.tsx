@@ -6,7 +6,7 @@ import { type Schema, schema } from "~/app/login/_schema";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import { cookies } from "next/headers";
+import { createSession } from "~/app/_auth";
 
 export const login = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
@@ -53,8 +53,7 @@ export const login = async (prevState: unknown, formData: FormData) => {
     });
   }
 
-  const cookieStore = await cookies();
-  cookieStore.set("userId", submission.value.id);
+  await createSession(submission.value.id);
 
   redirect("/");
 };
