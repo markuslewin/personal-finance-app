@@ -25,7 +25,8 @@ export const login = async (prevState: unknown, formData: FormData) => {
           email: val.email,
         },
       });
-      if (!user) {
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+      if (!user || user.password === null) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Invalid credentials",
