@@ -22,6 +22,7 @@ const NavLink = ({ name, icon, ...props }: NavLinkProps) => {
           ? "border-green bg-beige-100 text-grey-900"
           : "hocus:text-white border-[transparent] forced-colors:border-[Canvas]",
       )}
+      aria-current={isActive ? "page" : undefined}
       {...props}
     >
       <span
