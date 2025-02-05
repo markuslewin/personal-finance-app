@@ -20,7 +20,7 @@ const NavLink = ({ name, icon, ...props }: NavLinkProps) => {
         "grid gap-50 rounded-t-lg border-b-[0.25rem] py-100 transition-[background,border-color] desktop:grid-cols-[auto_1fr] desktop:items-center desktop:gap-200 desktop:rounded-r-xl desktop:rounded-tl-none desktop:border-b-0 desktop:border-l-[0.25rem] desktop:py-200 desktop:pl-[1.75rem]",
         isActive
           ? "border-green bg-beige-100 text-grey-900"
-          : "hocus:text-white border-[transparent]",
+          : "hocus:text-white border-[transparent] forced-colors:border-[Canvas]",
       )}
       {...props}
     >
