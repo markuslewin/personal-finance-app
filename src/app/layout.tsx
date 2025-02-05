@@ -3,9 +3,17 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { publicSans } from "~/app/_fonts";
 import Link from "next/link";
-import { db } from "~/server/db";
-import { logOut } from "~/app/_actions";
-import { getSession } from "~/app/_auth";
+// import { db } from "~/server/db";
+// import { logOut } from "~/app/_actions";
+// import { getSession } from "~/app/_auth";
+import AssetLogoLarge from "~/app/_assets/logo-large.svg";
+import AssetLogoSmall from "~/app/_assets/logo-small.svg";
+import IconMinimizeMenu from "~/app/_assets/icon-minimize-menu.svg";
+import IconNavBudgets from "~/app/_assets/icon-nav-budgets.svg";
+import IconNavOverview from "~/app/_assets/icon-nav-overview.svg";
+import IconNavPots from "~/app/_assets/icon-nav-pots.svg";
+import IconNavRecurringBills from "~/app/_assets/icon-nav-recurring-bills.svg";
+import IconNavTransactions from "~/app/_assets/icon-nav-transactions.svg";
 
 export const metadata: Metadata = {
   title: {
@@ -26,52 +34,103 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const userId = await getSession();
-  let user;
-  if (typeof userId === "string") {
-    user = await db.user.findUnique({
-      select: {
-        name: true,
-      },
-      where: {
-        id: userId,
-      },
-    });
-  }
+  // const userId = await getSession();
+  // let user;
+  // if (typeof userId === "string") {
+  //   user = await db.user.findUnique({
+  //     select: {
+  //       name: true,
+  //     },
+  //     where: {
+  //       id: userId,
+  //     },
+  //   });
+  // }
 
   return (
     <html lang="en" className={`${publicSans.variable}`}>
       <body className="bg-beige-100 font-public-sans text-grey-900">
-        <header>
-          <nav>
-            <ul role="list">
-              {[
-                { name: "Overview", href: "/" },
-                { name: "Transactions", href: "/transactions" },
-                { name: "Budgets", href: "/budgets" },
-                { name: "Pots", href: "/pots" },
-                { name: "Recurring Bills", href: "/recurring-bills" },
-              ].map((link) => {
-                return (
-                  <li key={link.href}>
-                    <Link href={link.href}>{link.name}</Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-          {user ? (
+        <div className="min-h-screen desktop:grid desktop:grid-cols-[18.75rem_1fr]">
+          <header className="inset-x-0 bottom-0 fixed rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:static desktop:flex desktop:h-auto desktop:flex-col desktop:gap-300 desktop:rounded-r-2xl desktop:rounded-tl-none desktop:pb-500 desktop:text-preset-3">
+            <p className="hidden px-400 py-500 text-white desktop:block">
+              <Link href={"/"}>
+                {/* <AssetLogoSmall /> */}
+                <AssetLogoLarge />
+                <span className="sr-only">Finance</span>
+              </Link>
+            </p>
+            <nav className="desktop:px-0 desktop:pt-0 px-200 pt-100 tablet:px-500 desktop:pr-300">
+              <ul
+                className="desktop:p-0 flex justify-between desktop:flex-col desktop:justify-normal desktop:gap-50"
+                role="list"
+              >
+                {[
+                  { name: "Overview", href: "/", Icon: IconNavOverview },
+                  {
+                    name: "Transactions",
+                    href: "/transactions",
+                    Icon: IconNavTransactions,
+                  },
+                  { name: "Budgets", href: "/budgets", Icon: IconNavBudgets },
+                  { name: "Pots", href: "/pots", Icon: IconNavPots },
+                  {
+                    name: "Recurring Bills",
+                    href: "/recurring-bills",
+                    Icon: IconNavRecurringBills,
+                  },
+                ].map((link) => {
+                  return (
+                    <li
+                      className="grid basis-[6.5rem] text-center desktop:basis-auto desktop:text-start"
+                      key={link.href}
+                    >
+                      <Link
+                        className="grid gap-50 rounded-t-lg border-b-[0.25rem] border-green bg-beige-100 py-100 text-grey-900 desktop:grid-cols-[auto_1fr] desktop:items-center desktop:gap-200 desktop:rounded-r-xl desktop:rounded-tl-none desktop:border-b-0 desktop:border-l-[0.25rem] desktop:py-200 desktop:pl-[1.75rem]"
+                        href={link.href}
+                      >
+                        <span className="grid justify-center text-green">
+                          <span className="grid size-300 place-items-center">
+                            <link.Icon />
+                          </span>
+                        </span>
+                        <span className="sr-only !whitespace-nowrap tablet:not-sr-only">
+                          {link.name}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+            {/* todo: Action */}
+            <form className="mt-auto hidden desktop:grid">
+              <button
+                className="hocus:text-white grid grid-cols-[auto_1fr] items-center gap-200 py-200 pl-400 text-start transition-colors"
+                type="submit"
+              >
+                <span className="grid size-300 place-items-center">
+                  <IconMinimizeMenu />
+                </span>{" "}
+                Minimize menu
+              </button>
+            </form>
+            {/* todo: User? */}
+            {/* {user ? (
             <>
-              <p>Hello, {user.name}!</p>
-              <form action={logOut}>
+            <p>Hello, {user.name}!</p>
+            <form action={logOut}>
                 <button type="submit">Log out</button>
               </form>
-            </>
-          ) : (
-            <p>User isn&apos;t logged in</p>
-          )}
-        </header>
-        <main>{children}</main>
+              </>
+              ) : (
+                <p>User isn&apos;t logged in</p>
+                )} */}
+          </header>
+          {/* Padding creates buffer for fixed `header` */}
+          <main className="desktop:pb-0 pb-[3.25rem] tablet:pb-[4.625rem]">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

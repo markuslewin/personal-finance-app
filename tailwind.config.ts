@@ -1,9 +1,22 @@
 import { type Config } from "tailwindcss";
 import { screens } from "./src/app/_screens";
+import plugin from "tailwindcss/plugin";
 
 const rem = (px: number) => {
   return `${px / 16}rem`;
 };
+
+const hocus = plugin((p) => {
+  p.addVariant("hocus", ["&:hover", "&:focus-visible"]);
+  p.addVariant("group-hocus", [
+    ":merge(.group):hover &",
+    ":merge(.group):focus-visible &",
+  ]);
+  p.addVariant("peer-hocus", [
+    ":merge(.peer):hover ~ &",
+    ":merge(.peer):focus-visible ~ &",
+  ]);
+});
 
 export default {
   content: ["./src/**/*.tsx"],
@@ -72,6 +85,7 @@ export default {
       ],
     },
     spacing: {
+      0: "0rem",
       50: "0.25rem",
       100: "0.5rem",
       150: "0.75rem",
@@ -82,5 +96,5 @@ export default {
       500: "2.5rem",
     },
   },
-  plugins: [],
+  plugins: [hocus],
 } satisfies Config;
