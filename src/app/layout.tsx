@@ -14,6 +14,7 @@ import IconNavOverview from "~/app/_assets/icon-nav-overview.svg";
 import IconNavPots from "~/app/_assets/icon-nav-pots.svg";
 import IconNavRecurringBills from "~/app/_assets/icon-nav-recurring-bills.svg";
 import IconNavTransactions from "~/app/_assets/icon-nav-transactions.svg";
+import NavLink from "~/app/_components/nav-link";
 
 export const metadata: Metadata = {
   title: {
@@ -65,18 +66,22 @@ export default async function RootLayout({
                 role="list"
               >
                 {[
-                  { name: "Overview", href: "/", Icon: IconNavOverview },
+                  { name: "Overview", href: "/", icon: <IconNavOverview /> },
                   {
                     name: "Transactions",
                     href: "/transactions",
-                    Icon: IconNavTransactions,
+                    icon: <IconNavTransactions />,
                   },
-                  { name: "Budgets", href: "/budgets", Icon: IconNavBudgets },
-                  { name: "Pots", href: "/pots", Icon: IconNavPots },
+                  {
+                    name: "Budgets",
+                    href: "/budgets",
+                    icon: <IconNavBudgets />,
+                  },
+                  { name: "Pots", href: "/pots", icon: <IconNavPots /> },
                   {
                     name: "Recurring Bills",
                     href: "/recurring-bills",
-                    Icon: IconNavRecurringBills,
+                    icon: <IconNavRecurringBills />,
                   },
                 ].map((link) => {
                   return (
@@ -84,19 +89,7 @@ export default async function RootLayout({
                       className="grid basis-[6.5rem] text-center desktop:basis-auto desktop:text-start"
                       key={link.href}
                     >
-                      <Link
-                        className="grid gap-50 rounded-t-lg border-b-[0.25rem] border-green bg-beige-100 py-100 text-grey-900 desktop:grid-cols-[auto_1fr] desktop:items-center desktop:gap-200 desktop:rounded-r-xl desktop:rounded-tl-none desktop:border-b-0 desktop:border-l-[0.25rem] desktop:py-200 desktop:pl-[1.75rem]"
-                        href={link.href}
-                      >
-                        <span className="grid justify-center text-green">
-                          <span className="grid size-300 place-items-center">
-                            <link.Icon />
-                          </span>
-                        </span>
-                        <span className="sr-only !whitespace-nowrap tablet:not-sr-only">
-                          {link.name}
-                        </span>
-                      </Link>
+                      <NavLink {...link} />
                     </li>
                   );
                 })}
