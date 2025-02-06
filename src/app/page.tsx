@@ -146,7 +146,7 @@ const OverviewPage = async () => {
                     <Image
                       className="size-400 rounded-full object-cover tablet:size-500"
                       alt=""
-                      src={transaction.avatar.replace(/^\./, "")}
+                      src={transaction.avatar}
                       width={160}
                       height={160}
                     />

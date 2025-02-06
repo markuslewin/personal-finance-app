@@ -7,11 +7,17 @@ const categories = [
   ...new Set([...data.budgets, ...data.transactions].map((d) => d.category)),
 ];
 
+// Point transaction avatars to `/public`
+const transactions = data.transactions.map((t) => ({
+  ...t,
+  avatar: t.avatar.replace(/^\./, ""),
+}));
+
 type RecurringBillData = Omit<RecurringBill, "id" | "createdAt" | "updatedAt">;
 
 // Derives recurring bill data from the last transaction of the recipient. Should probably be its own collection
 const recurringBills = Object.values(
-  data.transactions
+  transactions
     .filter((t) => t.recurring)
     .reduce(
       (bills, transaction) => {
@@ -70,7 +76,7 @@ async function main() {
   });
 
   await db.transaction.createMany({
-    data: data.transactions.map((transaction) => {
+    data: transactions.map((transaction) => {
       const categoryId = categoryIdByName.get(transaction.category);
       if (categoryId === undefined) {
         throw new Error(
