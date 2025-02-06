@@ -102,7 +102,7 @@ const OverviewPage = async () => {
               <CardLink href={"#"}>See Details</CardLink>
             </p>
           </CardHeader>
-          <div className="mt-250 grid gap-250 tablet:grid-cols-[247fr_277fr]">
+          <CardContent className="mt-250 grid gap-250 tablet:grid-cols-[247fr_277fr]">
             <div className="grid grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900">
               <div className="grid size-500 place-items-center">
                 <IconPot />
@@ -112,29 +112,18 @@ const OverviewPage = async () => {
                 <p className="text-preset-1">{"todo"}</p>
               </div>
             </div>
-            <h3 className="sr-only">Saved by Pot</h3>
+            <h3 className="sr-only">Per Pot</h3>
             <ul className="grid grid-cols-2 gap-200 py-50" role="list">
               {pots.map((pot) => {
                 return (
-                  <li
-                    className="grid grid-cols-[auto_1fr] gap-200"
-                    key={pot.id}
-                  >
-                    <div
-                      className="rounded-full border-l-[0.25rem]"
-                      style={{ borderColor: pot.theme.color }}
-                    />
-                    <div>
-                      <h4 className="text-preset-5">{pot.name}</h4>
-                      <p className="text-preset-4-bold text-grey-900">
-                        {pot.total}
-                      </p>
-                    </div>
-                  </li>
+                  <LegendItem key={pot.id} color={pot.theme.color}>
+                    <LegendName>{pot.name}</LegendName>
+                    <LegendValue>{pot.total}</LegendValue>
+                  </LegendItem>
                 );
               })}
             </ul>
-          </div>
+          </CardContent>
         </Card>
         <Card className="desktop:col-start-1 desktop:row-span-2 desktop:row-start-2">
           <CardHeader>
@@ -143,48 +132,50 @@ const OverviewPage = async () => {
               <CardLink href={"/transactions"}>View All</CardLink>
             </p>
           </CardHeader>
-          <ul
-            className="mt-400 [&>*+*]:mt-250 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-250"
-            role="list"
-          >
-            {transactions.map((transaction) => {
-              return (
-                <li
-                  className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
-                  key={transaction.id}
-                >
-                  <Image
-                    className="size-400 rounded-full object-cover tablet:size-500"
-                    alt=""
-                    src={transaction.avatar.replace(/^\./, "")}
-                    width={160}
-                    height={160}
-                  />
-                  <h3 className="text-preset-4-bold text-grey-900">
-                    {transaction.name}
-                  </h3>
-                  <div className="text-end">
-                    <p
-                      className={cx(
-                        "text-preset-4-bold",
-                        transaction.amount > 0 ? "text-green" : "text-grey-900",
-                      )}
-                    >
-                      <span className="sr-only">Amount: </span>
-                      <strong>{transaction.amount}</strong>
-                    </p>
-                    <p className="mt-100 text-preset-5">
-                      <span className="sr-only">Date: </span>
-                      {transaction.date.toUTCString()}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <CardContent>
+            <ul
+              className="mt-400 [&>*+*]:mt-250 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-250"
+              role="list"
+            >
+              {transactions.map((transaction) => {
+                return (
+                  <li
+                    className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
+                    key={transaction.id}
+                  >
+                    <Image
+                      className="size-400 rounded-full object-cover tablet:size-500"
+                      alt=""
+                      src={transaction.avatar.replace(/^\./, "")}
+                      width={160}
+                      height={160}
+                    />
+                    <h3 className="text-preset-4-bold text-grey-900">
+                      {transaction.name}
+                    </h3>
+                    <div className="text-end">
+                      <p
+                        className={cx(
+                          "text-preset-4-bold",
+                          transaction.amount > 0
+                            ? "text-green"
+                            : "text-grey-900",
+                        )}
+                      >
+                        <span className="sr-only">Amount: </span>
+                        <strong>{transaction.amount}</strong>
+                      </p>
+                      <p className="mt-100 text-preset-5">
+                        <span className="sr-only">Date: </span>
+                        {transaction.date.toUTCString()}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </CardContent>
         </Card>
-        {/* <h2 className="text-preset-2">Budgets</h2> */}
-        {/* <pre>{JSON.stringify(budgets, undefined, "\t")}</pre> */}
         <Card className="desktop:row-span-2 desktop:row-start-1">
           <CardHeader>
             <CardHeading>Budgets</CardHeading>
@@ -192,6 +183,55 @@ const OverviewPage = async () => {
               <CardLink href={"/budgets"}>See Details</CardLink>
             </p>
           </CardHeader>
+          <CardContent className="mt-250 grid">
+            <div className="grid items-center gap-200 tablet:grid-cols-[1fr_auto]">
+              <h3 className="sr-only">Total</h3>
+              <div
+                className="mx-auto grid aspect-square w-full max-w-[15rem] place-items-center rounded-full"
+                style={{
+                  background: `conic-gradient(${
+                    [
+                      { color: "blue", percent: 0.77 },
+                      { color: "yellow", percent: 0.08 },
+                      { color: "grey", percent: 0.1 },
+                    ].reduce(
+                      (last, current) => {
+                        const end = last.end + current.percent;
+                        return {
+                          end,
+                          string: `${last.string}, ${current.color} ${last.end}turn, ${current.color} ${end}turn`,
+                        };
+                      },
+                      { end: 0.05, string: "green 0.05turn" },
+                    ).string
+                  })`,
+                }}
+              >
+                <div className="grid size-[67.5%] items-center rounded-full bg-white text-center text-preset-5 text-grey-500 shadow-[0_0_0_0.8125rem_hsl(0_0%_100%/0.25)]">
+                  <p>
+                    <strong className="block text-preset-1 text-grey-900">
+                      todo
+                    </strong>{" "}
+                    of todo
+                  </p>
+                </div>
+              </div>
+              <h3 className="sr-only">Per Budget</h3>
+              <ul
+                className="grid grid-cols-2 gap-200 tablet:grid-cols-none"
+                role="list"
+              >
+                {budgets.map((budget) => {
+                  return (
+                    <LegendItem key={budget.id} color={budget.theme.color}>
+                      <LegendName>{budget.category.name}</LegendName>
+                      <LegendValue>{"todo"}</LegendValue>
+                    </LegendItem>
+                  );
+                })}
+              </ul>
+            </div>
+          </CardContent>
         </Card>
         {/* <h2 className="text-preset-2">Recurring Bills</h2> */}
         {/* <pre>{JSON.stringify(recurringBills, undefined, "\t")}</pre> */}
@@ -202,6 +242,7 @@ const OverviewPage = async () => {
               <CardLink href={"/recurring-bills"}>See Details</CardLink>
             </p>
           </CardHeader>
+          <CardContent></CardContent>
         </Card>
       </div>
     </>
@@ -216,7 +257,7 @@ const Card = ({ className, ...props }: CardProps) => {
       {...props}
       className={cx(
         className,
-        "rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400",
+        "grid grid-rows-[auto_1fr] rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400",
       )}
     />
   );
@@ -231,6 +272,12 @@ const CardHeader = ({ className, ...props }: CardHeaderProps) => {
       className={cx(className, "flex flex-wrap items-center justify-between")}
     />
   );
+};
+
+type CardContentProps = ComponentPropsWithRef<"div">;
+
+const CardContent = ({ className, ...props }: CardContentProps) => {
+  return <div {...props} className={cx(className, "")} />;
 };
 
 type CardHeadingProps = ComponentPropsWithRef<"h2">;
@@ -257,6 +304,45 @@ const CardLink = ({ className, children, ...props }: CardLinkProps) => {
         <IconCaretRight />
       </span>
     </Link>
+  );
+};
+
+type LegendItemProps = ComponentPropsWithRef<"li"> & { color: string };
+
+const LegendItem = ({
+  className,
+  children,
+  color,
+  ...props
+}: LegendItemProps) => {
+  return (
+    <li
+      {...props}
+      className={cx(className, "grid grid-cols-[auto_1fr] gap-200")}
+    >
+      <div
+        className="rounded-full border-l-[0.25rem]"
+        style={{ borderColor: color }}
+      />
+      <div>{children}</div>
+    </li>
+  );
+};
+
+type LegendNameProps = ComponentPropsWithRef<"h4">;
+
+const LegendName = ({ className, ...props }: LegendNameProps) => {
+  return <h4 {...props} className={cx(className, "text-preset-5")} />;
+};
+
+type LegendValueProps = ComponentPropsWithRef<"p">;
+
+const LegendValue = ({ className, ...props }: LegendValueProps) => {
+  return (
+    <p
+      {...props}
+      className={cx(className, "text-preset-4-bold text-grey-900")}
+    />
   );
 };
 
