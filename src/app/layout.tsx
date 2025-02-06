@@ -50,9 +50,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${publicSans.variable}`}>
-      <body className="bg-beige-100 font-public-sans text-preset-4 text-grey-900">
-        <div className="min-h-screen desktop:grid desktop:grid-cols-[18.75rem_1fr]">
-          <header className="inset-x-0 bottom-0 fixed rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:static desktop:flex desktop:h-auto desktop:flex-col desktop:gap-300 desktop:rounded-r-2xl desktop:rounded-tl-none desktop:pb-500 desktop:text-preset-3">
+      <body className="bg-grey-900 font-public-sans text-preset-4">
+        <div className="min-h-screen bg-beige-100 text-grey-900 desktop:grid desktop:grid-cols-[18.75rem_1fr]">
+          <header className="fixed inset-x-0 bottom-0 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:static desktop:flex desktop:h-auto desktop:flex-col desktop:gap-300 desktop:rounded-r-2xl desktop:rounded-tl-none desktop:pb-500 desktop:text-preset-3">
             <p className="hidden px-400 py-500 text-white desktop:block">
               <Link href={"/"}>
                 {/* <AssetLogoSmall /> */}
@@ -60,9 +60,9 @@ export default async function RootLayout({
                 <span className="sr-only">Finance</span>
               </Link>
             </p>
-            <nav className="desktop:px-0 desktop:pt-0 px-200 pt-100 tablet:px-500 desktop:pr-300">
+            <nav className="px-200 pt-100 tablet:px-500 desktop:px-0 desktop:pr-300 desktop:pt-0">
               <ul
-                className="desktop:p-0 flex justify-between desktop:flex-col desktop:justify-normal desktop:gap-50"
+                className="flex justify-between desktop:flex-col desktop:justify-normal desktop:gap-50 desktop:p-0"
                 role="list"
               >
                 {[
@@ -98,7 +98,7 @@ export default async function RootLayout({
             {/* todo: Action */}
             <form className="mt-auto hidden desktop:grid">
               <button
-                className="hocus:text-white grid grid-cols-[auto_1fr] items-center gap-200 py-200 pl-400 text-start transition-colors"
+                className="grid grid-cols-[auto_1fr] items-center gap-200 py-200 pl-400 text-start transition-colors hocus:text-white"
                 type="submit"
               >
                 <span className="grid size-300 place-items-center">
@@ -120,7 +120,7 @@ export default async function RootLayout({
                 )} */}
           </header>
           {/* Padding creates buffer for fixed `header` */}
-          <main className="px-200 pb-[3.25rem] pt-300 tablet:px-500 tablet:pb-[4.625rem] tablet:pt-500 desktop:pb-400">
+          <main className="px-200 pb-[5.25rem] pt-300 tablet:px-500 tablet:pb-[6.625rem] tablet:pt-500 desktop:pb-400">
             <div className="mx-auto max-w-[66.25rem]">{children}</div>
           </main>
         </div>
