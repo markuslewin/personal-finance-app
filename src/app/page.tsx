@@ -5,6 +5,7 @@ import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconPot from "~/app/_assets/icon-pot.svg";
 import { type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Frontend Mentor | Personal finance app - Overview",
@@ -79,15 +80,15 @@ const OverviewPage = async () => {
       <h1 className="text-preset-1">Overview</h1>
       <h2 className="sr-only">Balance</h2>
       <div className="mt-400 flex flex-col gap-150 tablet:mt-[2.625rem] tablet:flex-row tablet:flex-wrap tablet:gap-300">
-        <div className="basis-0 grow rounded-xl bg-grey-900 p-250 text-white tablet:p-300">
+        <div className="grow basis-0 rounded-xl bg-grey-900 p-250 text-white tablet:p-300">
           <h3>Current Balance</h3>
           <p className="mt-150 text-preset-1">{balance?.current}</p>
         </div>
-        <div className="basis-0 grow rounded-xl bg-white p-250 tablet:p-300">
+        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
           <h3 className="text-grey-500">Income</h3>
           <p className="mt-150 text-preset-1">{balance?.income}</p>
         </div>
-        <div className="basis-0 grow rounded-xl bg-white p-250 tablet:p-300">
+        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
           <h3 className="text-grey-500">Expenses</h3>
           <p className="mt-150 text-preset-1">{balance?.expenses}</p>
         </div>
@@ -135,8 +136,6 @@ const OverviewPage = async () => {
             </ul>
           </div>
         </Card>
-        {/* <h2 className="text-preset-2">Transactions</h2> */}
-        {/* <pre>{JSON.stringify(transactions, undefined, "\t")}</pre> */}
         <Card className="desktop:col-start-1 desktop:row-span-2 desktop:row-start-2">
           <CardHeader>
             <CardHeading>Transactions</CardHeading>
@@ -144,6 +143,45 @@ const OverviewPage = async () => {
               <CardLink href={"/transactions"}>View All</CardLink>
             </p>
           </CardHeader>
+          <ul
+            className="mt-400 [&>*+*]:mt-250 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-250"
+            role="list"
+          >
+            {transactions.map((transaction) => {
+              return (
+                <li
+                  className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
+                  key={transaction.id}
+                >
+                  <Image
+                    className="size-400 rounded-full object-cover tablet:size-500"
+                    alt=""
+                    src={transaction.avatar.replace(/^\./, "")}
+                    width={160}
+                    height={160}
+                  />
+                  <h3 className="text-preset-4-bold text-grey-900">
+                    {transaction.name}
+                  </h3>
+                  <div className="text-end">
+                    <p
+                      className={cx(
+                        "text-preset-4-bold",
+                        transaction.amount > 0 ? "text-green" : "text-grey-900",
+                      )}
+                    >
+                      <span className="sr-only">Amount: </span>
+                      <strong>{transaction.amount}</strong>
+                    </p>
+                    <p className="mt-100 text-preset-5">
+                      <span className="sr-only">Date: </span>
+                      {transaction.date.toUTCString()}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </Card>
         {/* <h2 className="text-preset-2">Budgets</h2> */}
         {/* <pre>{JSON.stringify(budgets, undefined, "\t")}</pre> */}
@@ -211,7 +249,7 @@ const CardLink = ({ className, children, ...props }: CardLinkProps) => {
       {...props}
       className={cx(
         className,
-        "hocus:text-grey-900 inline-grid grid-cols-[1fr_auto] items-center gap-150 transition-colors",
+        "inline-grid grid-cols-[1fr_auto] items-center gap-150 transition-colors hocus:text-grey-900",
       )}
     >
       {children}
