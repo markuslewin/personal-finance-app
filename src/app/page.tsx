@@ -6,6 +6,7 @@ import IconPot from "~/app/_assets/icon-pot.svg";
 import { type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
 import Image from "next/image";
+import * as Donut from "~/app/_components/donut";
 
 export const metadata: Metadata = {
   title: "Frontend Mentor | Personal finance app - Overview",
@@ -186,36 +187,23 @@ const OverviewPage = async () => {
           <CardContent className="mt-250 grid">
             <div className="grid items-center gap-200 tablet:grid-cols-[1fr_auto]">
               <h3 className="sr-only">Total</h3>
-              <div
-                className="mx-auto grid aspect-square w-full max-w-[15rem] place-items-center rounded-full"
-                style={{
-                  background: `conic-gradient(${
-                    [
-                      { color: "blue", percent: 0.77 },
-                      { color: "yellow", percent: 0.08 },
-                      { color: "grey", percent: 0.1 },
-                    ].reduce(
-                      (last, current) => {
-                        const end = last.end + current.percent;
-                        return {
-                          end,
-                          string: `${last.string}, ${current.color} ${last.end}turn, ${current.color} ${end}turn`,
-                        };
-                      },
-                      { end: 0.05, string: "green 0.05turn" },
-                    ).string
-                  })`,
-                }}
+              <Donut.Root
+                data={[
+                  { color: "green", percent: 0.05 },
+                  { color: "blue", percent: 0.77 },
+                  { color: "yellow", percent: 0.08 },
+                  { color: "grey", percent: 0.1 },
+                ]}
               >
-                <div className="grid size-[67.5%] items-center rounded-full bg-white text-center text-preset-5 text-grey-500 shadow-[0_0_0_0.8125rem_hsl(0_0%_100%/0.25)]">
+                <Donut.Hole>
                   <p>
                     <strong className="block text-preset-1 text-grey-900">
                       todo
                     </strong>{" "}
-                    of todo
+                    of todo limit
                   </p>
-                </div>
-              </div>
+                </Donut.Hole>
+              </Donut.Root>
               <h3 className="sr-only">Per Budget</h3>
               <ul
                 className="grid grid-cols-2 gap-200 tablet:grid-cols-none"
