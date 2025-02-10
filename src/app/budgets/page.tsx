@@ -6,9 +6,10 @@ import { db } from "~/server/db";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import Image from "next/image";
-import { type ComponentPropsWithRef, useId } from "react";
+import { type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
 import * as Donut from "~/app/_components/donut";
+import * as Meter from "~/app/_components/meter";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -134,20 +135,29 @@ const BudgetsPage = async () => {
                     className="transition-colors hocus:text-grey-900"
                     href={`/budgets/${budget.id}/edit`}
                   >
-                    <span className="sr-only">Edit budget</span>
+                    <span className="sr-only">
+                      {`Edit budget "${budget.category.name}"`}
+                    </span>
                     <span className="grid size-200 place-items-center">
                       <IconEllipsis />
                     </span>
                   </Link>
                 </header>
                 <p className="mt-250">Maximum of {budget.maximum}</p>
-                <MeterSection
-                  className="mt-200"
-                  color={budget.theme.color}
-                  max={budget.maximum}
-                  // todo
-                  value={50}
-                />
+                <p className="mt-200">
+                  <Meter.Root
+                    className="grid h-400 rounded bg-beige-100 p-50"
+                    name="Amount spent"
+                    min={0}
+                    max={budget.maximum}
+                    value={50}
+                  >
+                    <Meter.Indicator
+                      className="w-1/2 rounded"
+                      style={{ background: budget.theme.color }}
+                    />
+                  </Meter.Root>
+                </p>
                 <div className="mt-200 grid grid-cols-2 gap-200 text-preset-5">
                   <div className="grid grid-cols-[auto_1fr] gap-200">
                     <div
@@ -227,39 +237,6 @@ const BudgetsPage = async () => {
         </div>
       </div>
     </article>
-  );
-};
-
-interface MeterSectionProps extends ComponentPropsWithRef<"p"> {
-  max: number;
-  value: number;
-  color: string;
-}
-
-const MeterSection = ({
-  className,
-  color,
-  max,
-  value,
-  ...props
-}: MeterSectionProps) => {
-  const labelId = useId();
-  return (
-    <p {...props} className={cx(className, "")}>
-      <span className="sr-only" id={labelId}>
-        Amount spent
-      </span>
-      <span
-        className="grid h-400 rounded bg-beige-100 p-50"
-        role="meter"
-        aria-valuemin={0}
-        aria-valuemax={max}
-        aria-valuenow={value}
-        aria-labelledby={labelId}
-      >
-        <span className="w-1/2 rounded" style={{ background: color }} />
-      </span>
-    </p>
   );
 };
 
