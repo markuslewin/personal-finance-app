@@ -12,6 +12,7 @@ import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { z } from "zod";
 import { type ComponentPropsWithRef, useId } from "react";
+import { currency } from "~/app/_format";
 
 const PAGE_SIZE = 10;
 
@@ -151,7 +152,9 @@ const TransactionsPage = async ({
                       )}
                     >
                       <span className="sr-only">Amount: </span>
-                      {transaction.amount}
+                      {currency(transaction.amount, {
+                        signDisplay: "always",
+                      })}
                     </p>
                     <p className="text-preset-5">
                       <span className="sr-only">Date: </span>
@@ -209,7 +212,9 @@ const TransactionsPage = async ({
                         transaction.amount > 0 ? "text-green" : "text-grey-900",
                       )}
                     >
-                      {transaction.amount}
+                      {currency(transaction.amount, {
+                        signDisplay: "always",
+                      })}
                     </td>
                   </tr>
                 );

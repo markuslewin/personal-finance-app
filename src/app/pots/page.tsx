@@ -3,6 +3,7 @@ import Link from "next/link";
 import { db } from "~/server/db";
 import * as Meter from "~/app/_components/meter";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
+import { currency } from "~/app/_format";
 
 export const metadata: Metadata = {
   title: "Pots",
@@ -65,7 +66,7 @@ const PotsPage = async () => {
               <div className="mt-500 flex flex-wrap items-center justify-between">
                 <h3>Total Saved</h3>
                 <p className="text-preset-1 text-grey-900">
-                  <strong>{pot.total}</strong>
+                  <strong>{currency(pot.total)}</strong>
                 </p>
               </div>
               <div className="mt-200 text-preset-5">
@@ -85,7 +86,12 @@ const PotsPage = async () => {
                 </p>
                 <div className="mt-150 flex items-center justify-between">
                   <p className="text-preset-5-bold">TODO</p>
-                  <p className="text-end">Target of {pot.target}</p>
+                  <p className="text-end">
+                    Target of{" "}
+                    {currency(pot.target, {
+                      trailingZeroDisplay: "stripIfInteger",
+                    })}
+                  </p>
                 </div>
               </div>
               <h3 className="sr-only">Actions</h3>

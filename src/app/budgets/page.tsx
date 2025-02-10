@@ -6,10 +6,9 @@ import { db } from "~/server/db";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import Image from "next/image";
-import { type ComponentPropsWithRef } from "react";
-import { cx } from "class-variance-authority";
 import * as Donut from "~/app/_components/donut";
 import * as Meter from "~/app/_components/meter";
+import { currency } from "~/app/_format";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -106,7 +105,7 @@ const BudgetsPage = async () => {
                         <strong className="text-preset-3 text-grey-900">
                           {"todo"}
                         </strong>{" "}
-                        of {budget.maximum}
+                        of {currency(budget.maximum)}
                       </p>
                     </div>
                   </li>
@@ -143,7 +142,7 @@ const BudgetsPage = async () => {
                     </span>
                   </Link>
                 </header>
-                <p className="mt-250">Maximum of {budget.maximum}</p>
+                <p className="mt-250">Maximum of {currency(budget.maximum)}</p>
                 <p className="mt-200">
                   <Meter.Root
                     className="grid h-400 rounded bg-beige-100 p-50"
@@ -219,7 +218,7 @@ const BudgetsPage = async () => {
                           <div className="grid gap-50 text-end">
                             <p className="text-preset-5-bold text-grey-900">
                               <span className="sr-only">Amount: </span>
-                              {transaction.amount}
+                              {currency(transaction.amount)}
                             </p>
                             <p>
                               <span className="sr-only">Date: </span>

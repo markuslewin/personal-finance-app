@@ -24,7 +24,7 @@ const recurringBills = Object.values(
         return {
           ...bills,
           [transaction.name]: {
-            amount: transaction.amount,
+            amount: Math.abs(transaction.amount),
             avatar: transaction.avatar,
             name: transaction.name,
             day: new Date(transaction.date).getDate(),

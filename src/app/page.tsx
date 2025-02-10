@@ -7,6 +7,7 @@ import { type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
 import Image from "next/image";
 import * as Donut from "~/app/_components/donut";
+import { currency } from "~/app/_format";
 
 export const metadata: Metadata = {
   title: "Frontend Mentor | Personal finance app - Overview",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 const OverviewPage = async () => {
   const [balance, pots, transactions, budgets, recurringBills] =
     await Promise.all([
-      db.balance.findFirst({
+      db.balance.findFirstOrThrow({
         select: {
           current: true,
           expenses: true,
@@ -83,15 +84,15 @@ const OverviewPage = async () => {
       <div className="mt-400 flex flex-col gap-150 tablet:mt-[2.625rem] tablet:flex-row tablet:flex-wrap tablet:gap-300">
         <div className="grow basis-0 rounded-xl bg-grey-900 p-250 text-white tablet:p-300">
           <h3>Current Balance</h3>
-          <p className="mt-150 text-preset-1">{balance?.current}</p>
+          <p className="mt-150 text-preset-1">{currency(balance.current)}</p>
         </div>
         <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
           <h3 className="text-grey-500">Income</h3>
-          <p className="mt-150 text-preset-1">{balance?.income}</p>
+          <p className="mt-150 text-preset-1">{currency(balance.income)}</p>
         </div>
         <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
           <h3 className="text-grey-500">Expenses</h3>
-          <p className="mt-150 text-preset-1">{balance?.expenses}</p>
+          <p className="mt-150 text-preset-1">{currency(balance.expenses)}</p>
         </div>
       </div>
       <div className="mt-400 grid gap-200 tablet:gap-300 desktop:grid-cols-[608fr_428fr] desktop:grid-rows-[auto_1fr_auto]">
@@ -119,7 +120,11 @@ const OverviewPage = async () => {
                 return (
                   <LegendItem key={pot.id} color={pot.theme.color}>
                     <LegendName>{pot.name}</LegendName>
-                    <LegendValue>{pot.total}</LegendValue>
+                    <LegendValue>
+                      {currency(pot.total, {
+                        trailingZeroDisplay: "stripIfInteger",
+                      })}
+                    </LegendValue>
                   </LegendItem>
                 );
               })}
@@ -164,7 +169,11 @@ const OverviewPage = async () => {
                         )}
                       >
                         <span className="sr-only">Amount: </span>
-                        <strong>{transaction.amount}</strong>
+                        <strong>
+                          {currency(transaction.amount, {
+                            signDisplay: "always",
+                          })}
+                        </strong>
                       </p>
                       <p className="mt-100 text-preset-5">
                         <span className="sr-only">Date: </span>
@@ -229,17 +238,24 @@ const OverviewPage = async () => {
             </p>
           </CardHeader>
           <CardContent className="mt-400 grid gap-150">
+            {/* todo: Calculate */}
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
               <h3>Paid Bills</h3>
-              <p className="text-preset-4-bold text-grey-900">190</p>
+              <p className="text-preset-4-bold text-grey-900">
+                {currency(190)}
+              </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
               <h3>Total Upcoming</h3>
-              <p className="text-preset-4-bold text-grey-900">194.98</p>
+              <p className="text-preset-4-bold text-grey-900">
+                {currency(194.98)}
+              </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
               <h3>Due Soon</h3>
-              <p className="text-preset-4-bold text-grey-900">59.98</p>
+              <p className="text-preset-4-bold text-grey-900">
+                {currency(59.98)}
+              </p>
             </div>
           </CardContent>
         </Card>

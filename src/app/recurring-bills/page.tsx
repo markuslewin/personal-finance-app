@@ -6,6 +6,7 @@ import { cx } from "class-variance-authority";
 import Image from "next/image";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
+import { currency } from "~/app/_format";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
@@ -129,7 +130,7 @@ const RecurringBillsPage = async () => {
                       </p>
                       <p className="text-end text-preset-4-bold text-grey-900">
                         <span className="sr-only">Amount: </span>
-                        {bill.amount}
+                        {currency(bill.amount)}
                       </p>
                     </div>
                   </li>
@@ -172,7 +173,7 @@ const RecurringBillsPage = async () => {
                         Monthly-{bill.day}
                       </td>
                       <td className="py-200 text-end text-preset-4-bold text-grey-900 desktop:px-200">
-                        {bill.amount}
+                        {currency(bill.amount)}
                       </td>
                     </tr>
                   );
