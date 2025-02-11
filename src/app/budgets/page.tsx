@@ -9,6 +9,7 @@ import Image from "next/image";
 import * as Donut from "~/app/_components/donut";
 import * as Meter from "~/app/_components/meter";
 import { currency, date } from "~/app/_format";
+import Button from "~/app/_components/button";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -55,12 +56,11 @@ const BudgetsPage = async () => {
     <article>
       <header className="flex flex-wrap items-center justify-between">
         <h1 className="text-preset-1">Budgets</h1>
-        <Link
-          className="rounded-lg bg-grey-900 p-200 text-preset-4-bold text-white transition-colors hocus:bg-grey-500"
-          href={"/budgets/add"}
-        >
-          <span aria-hidden="true">+ </span>Add New Budget
-        </Link>
+        <Button asChild>
+          <Link href={"/budgets/add"}>
+            <span aria-hidden="true">+ </span>Add New Budget
+          </Link>
+        </Button>
       </header>
       <div className="mt-400 grid items-start gap-300 desktop:grid-cols-[428fr_608fr]">
         <div className="grid items-center gap-400 rounded-xl bg-white px-250 pb-200 pt-300 text-grey-500 tablet:grid-cols-2 tablet:p-400 desktop:grid-cols-none">

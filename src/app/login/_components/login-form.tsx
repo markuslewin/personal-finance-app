@@ -23,7 +23,7 @@ const LoginForm = ({ className, ...props }: LoginFormProps) => {
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    // Avoid the automatic form reset of hydrated forms in React
+    // Avoid the automatic form reset of hydrated forms in React after server-side validation fails
     onSubmit: (e) => {
       e.preventDefault();
       const formData = new FormData(e.currentTarget);

@@ -13,6 +13,7 @@ import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { z } from "zod";
 import { type ComponentPropsWithRef, useId } from "react";
 import { currency, date } from "~/app/_format";
+import Textbox from "~/app/_components/textbox";
 
 const PAGE_SIZE = 10;
 
@@ -64,9 +65,8 @@ const TransactionsPage = async ({
             <label className="grow">
               <span className="sr-only">Search: </span>
               <span className="relative text-grey-900">
-                <input
-                  className="h-[2.8125rem] w-full max-w-[20rem] rounded-xl border-[0.0625rem] border-beige-500 pl-[1.1875rem] pr-[3.25rem] placeholder:text-beige-500"
-                  type="text"
+                <Textbox
+                  className="w-full max-w-[20rem]"
                   name="q"
                   placeholder="Search transaction"
                 />

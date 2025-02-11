@@ -37,6 +37,7 @@ export const signup = async (prevState: unknown, formData: FormData) => {
     10,
   );
   // todo: Seed tables of mutable data with `user.id`
+  // todo: Move into `parseWithZod`
   const user = await db.user.create({
     data: {
       email: submission.value.email,

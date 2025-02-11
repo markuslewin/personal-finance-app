@@ -25,6 +25,7 @@
     "@conform-to/react": "^1.2.2",
     "@conform-to/zod": "^1.2.2",
     "@prisma/client": "^6.3.1",
+    "@radix-ui/react-slot": "^1.1.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.1",

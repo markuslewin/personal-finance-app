@@ -55,7 +55,7 @@ model Budget {
     id      String @id @default(cuid())
     maximum Int
 
-    categoryId String
+    categoryId String   @unique
     category   Category @relation(fields: [categoryId], references: [id])
     themeId    String
     theme      Theme    @relation(fields: [themeId], references: [id])
