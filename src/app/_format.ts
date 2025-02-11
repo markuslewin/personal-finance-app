@@ -15,3 +15,9 @@ export const currency = (value: number, options?: CurrencyOptions) => {
     ...options,
   }).format(value);
 };
+
+export const date = (value: Date) => {
+  return new Intl.DateTimeFormat(locales, {
+    dateStyle: "medium",
+  }).format(value);
+};

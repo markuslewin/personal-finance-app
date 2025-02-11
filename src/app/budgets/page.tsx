@@ -8,7 +8,7 @@ import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import Image from "next/image";
 import * as Donut from "~/app/_components/donut";
 import * as Meter from "~/app/_components/meter";
-import { currency } from "~/app/_format";
+import { currency, date } from "~/app/_format";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -222,7 +222,7 @@ const BudgetsPage = async () => {
                             </p>
                             <p>
                               <span className="sr-only">Date: </span>
-                              {transaction.date.toUTCString()}
+                              {date(transaction.date)}
                             </p>
                           </div>
                         </li>

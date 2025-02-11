@@ -12,7 +12,7 @@ import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { z } from "zod";
 import { type ComponentPropsWithRef, useId } from "react";
-import { currency } from "~/app/_format";
+import { currency, date } from "~/app/_format";
 
 const PAGE_SIZE = 10;
 
@@ -158,7 +158,7 @@ const TransactionsPage = async ({
                     </p>
                     <p className="text-preset-5">
                       <span className="sr-only">Date: </span>
-                      {transaction.date.toUTCString()}
+                      {date(transaction.date)}
                     </p>
                   </div>
                 </li>
@@ -204,7 +204,7 @@ const TransactionsPage = async ({
                       {transaction.category.name}
                     </td>
                     <td className="py-200 text-preset-5 desktop:px-200">
-                      {transaction.date.toUTCString()}
+                      {date(transaction.date)}
                     </td>
                     <td
                       className={cx(

@@ -7,7 +7,7 @@ import { type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
 import Image from "next/image";
 import * as Donut from "~/app/_components/donut";
-import { currency } from "~/app/_format";
+import { currency, date } from "~/app/_format";
 
 export const metadata: Metadata = {
   title: "Frontend Mentor | Personal finance app - Overview",
@@ -177,7 +177,7 @@ const OverviewPage = async () => {
                       </p>
                       <p className="mt-100 text-preset-5">
                         <span className="sr-only">Date: </span>
-                        {transaction.date.toUTCString()}
+                        {date(transaction.date)}
                       </p>
                     </div>
                   </li>
