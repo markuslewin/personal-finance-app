@@ -6,13 +6,14 @@ import { usePathname } from "next/navigation";
 import { type ReactNode, type ComponentPropsWithRef } from "react";
 
 interface NavLinkProps extends ComponentPropsWithRef<typeof Link> {
+  href: string;
   name: string;
   icon: ReactNode;
 }
 
 const NavLink = ({ name, icon, ...props }: NavLinkProps) => {
   const pathname = usePathname();
-  const isActive = pathname === props.href;
+  const isActive = `/${pathname.split("/")[1] ?? ""}` === props.href;
 
   return (
     <Link
@@ -20,7 +21,7 @@ const NavLink = ({ name, icon, ...props }: NavLinkProps) => {
         "grid gap-50 rounded-t-lg border-b-[0.25rem] py-100 transition-[background,border-color] desktop:grid-cols-[auto_1fr] desktop:items-center desktop:gap-200 desktop:rounded-r-xl desktop:rounded-tl-none desktop:border-b-0 desktop:border-l-[0.25rem] desktop:py-200 desktop:pl-[1.75rem]",
         isActive
           ? "border-green bg-beige-100 text-grey-900"
-          : "hocus:text-white border-[transparent] forced-colors:border-[Canvas]",
+          : "border-[transparent] hocus:text-white forced-colors:border-[Canvas]",
       )}
       aria-current={isActive ? "page" : undefined}
       {...props}
