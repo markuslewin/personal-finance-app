@@ -10,7 +10,7 @@ const Combobox = ({ className, ...props }: ComboboxProps) => {
       {...props}
       className={cx(
         className,
-        "h-[2.8125rem] rounded-lg border-[0.0625rem] border-beige-500 px-250 text-grey-900",
+        "h-[2.8125rem] rounded-lg border-[0.0625rem] border-beige-500 bg-white px-250 text-grey-900",
       )}
     />
   );
