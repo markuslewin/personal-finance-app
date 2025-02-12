@@ -56,6 +56,7 @@ const BudgetsPage = async () => {
     <article>
       <header className="flex flex-wrap items-center justify-between">
         <h1 className="text-preset-1">Budgets</h1>
+        {/* todo: Focus when navigating from dialog */}
         <Button asChild>
           <Link href={"/budgets/add"}>
             <span aria-hidden="true">+ </span>Add New Budget

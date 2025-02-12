@@ -15,6 +15,7 @@ import IconNavPots from "~/app/_assets/icon-nav-pots.svg";
 import IconNavRecurringBills from "~/app/_assets/icon-nav-recurring-bills.svg";
 import IconNavTransactions from "~/app/_assets/icon-nav-transactions.svg";
 import NavLink from "~/app/_components/nav-link";
+import { type ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  dialog,
+}: Readonly<{ children: ReactNode; dialog: ReactNode }>) {
   // const userId = await getSession();
   // let user;
   // if (typeof userId === "string") {
@@ -124,6 +126,7 @@ export default async function RootLayout({
             <div className="mx-auto max-w-[66.25rem]">{children}</div>
           </main>
         </div>
+        {dialog}
       </body>
     </html>
   );
