@@ -5,42 +5,42 @@ import {
   getFormProps,
   getInputProps,
   getSelectProps,
+  type SubmissionResult,
   useField,
 } from "@conform-to/react";
-import { cx } from "class-variance-authority";
 import { useActionState, type ComponentPropsWithRef } from "react";
 import { useAppForm } from "~/app/_form";
-import { add } from "~/app/budgets/_actions";
-import { budgetSchema, type BudgetSchema } from "~/app/budgets/_schemas";
 import * as Card from "~/app/budgets/_components/card";
-import Textbox from "~/app/_components/textbox";
-import Combobox from "~/app/_components/combobox";
+import TextboxUI from "~/app/_components/textbox";
+import ComboboxUI from "~/app/_components/combobox";
+import { type ZodTypeAny } from "zod";
 
-type RootProps = ComponentPropsWithRef<"form">;
+type RootProps = Omit<ComponentPropsWithRef<"form">, "action"> & {
+  schema: ZodTypeAny;
+  action: (
+    prevState: unknown,
+    formData: FormData,
+  ) => Promise<SubmissionResult<string[]> | undefined>;
+};
 
-export const Root = ({ className, ...props }: RootProps) => {
+export const Root = ({ schema, action: _action, ...props }: RootProps) => {
   // todo: Move into `useAppForm`
-  const [lastResult, action] = useActionState(add, undefined);
+  const [lastResult, action] = useActionState(_action, undefined);
   const [form] = useAppForm({
     lastResult,
-    schema: budgetSchema,
+    schema,
     action,
   });
 
   return (
     <FormProvider context={form.context}>
-      <Card.Form
-        {...getFormProps(form)}
-        action={action}
-        {...props}
-        className={cx(className, "")}
-      />
+      <Card.Form {...getFormProps(form)} action={action} {...props} />
     </FormProvider>
   );
 };
 
 type LabelProps = ComponentPropsWithRef<typeof Card.Label> & {
-  name: keyof BudgetSchema;
+  name: string;
 };
 
 export const Label = ({ name, ...props }: LabelProps) => {
@@ -50,7 +50,7 @@ export const Label = ({ name, ...props }: LabelProps) => {
 };
 
 type MessageProps = ComponentPropsWithRef<typeof Card.Message> & {
-  name: keyof BudgetSchema;
+  name: string;
 };
 
 export const Message = ({ name, ...props }: MessageProps) => {
@@ -63,15 +63,15 @@ export const Message = ({ name, ...props }: MessageProps) => {
   );
 };
 
-type TestTextboxProps = ComponentPropsWithRef<typeof Textbox> & {
-  name: keyof BudgetSchema;
+type TextboxProps = ComponentPropsWithRef<typeof TextboxUI> & {
+  name: string;
 };
 
-export const TestTextbox = ({ name, ...props }: TestTextboxProps) => {
+export const Textbox = ({ name, ...props }: TextboxProps) => {
   const [meta] = useField(name);
 
   return (
-    <Textbox
+    <TextboxUI
       {...getInputProps(meta, { type: "text" })}
       key={meta.key}
       {...props}
@@ -79,12 +79,12 @@ export const TestTextbox = ({ name, ...props }: TestTextboxProps) => {
   );
 };
 
-type TestComboboxProps = ComponentPropsWithRef<typeof Combobox> & {
-  name: keyof BudgetSchema;
+type ComboboxProps = ComponentPropsWithRef<typeof ComboboxUI> & {
+  name: string;
 };
 
-export const TestCombobox = ({ name, ...props }: TestComboboxProps) => {
+export const Combobox = ({ name, ...props }: ComboboxProps) => {
   const [meta] = useField(name);
 
-  return <Combobox {...getSelectProps(meta)} {...props} />;
+  return <ComboboxUI {...getSelectProps(meta)} {...props} />;
 };

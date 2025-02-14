@@ -1,11 +1,13 @@
-import { cx } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
-import Combobox from "~/app/_components/combobox";
+import type Combobox from "~/app/_components/combobox";
+import * as Form from "~/app/_components/form";
 import { db } from "~/server/db";
 
-type ThemesComboboxProps = ComponentPropsWithRef<typeof Combobox>;
+type ThemesComboboxProps = ComponentPropsWithRef<typeof Combobox> & {
+  name: string;
+};
 
-const ThemesCombobox = async ({ className, ...props }: ThemesComboboxProps) => {
+const ThemesCombobox = async (props: ThemesComboboxProps) => {
   const themes = await db.theme.findMany({
     select: {
       id: true,
@@ -14,7 +16,7 @@ const ThemesCombobox = async ({ className, ...props }: ThemesComboboxProps) => {
   });
 
   return (
-    <Combobox {...props} className={cx(className, "")}>
+    <Form.Combobox {...props}>
       {themes.map((theme) => {
         return (
           <option key={theme.id} value={theme.id}>
@@ -22,7 +24,7 @@ const ThemesCombobox = async ({ className, ...props }: ThemesComboboxProps) => {
           </option>
         );
       })}
-    </Combobox>
+    </Form.Combobox>
   );
 };
 

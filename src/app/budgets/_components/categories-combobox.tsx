@@ -1,17 +1,13 @@
 import { type ComponentPropsWithRef } from "react";
 import type Combobox from "~/app/_components/combobox";
 import * as Form from "~/app/_components/form";
-import { type BudgetSchema } from "~/app/budgets/_schemas";
 import { db } from "~/server/db";
 
 type CategoriesComboboxProps = ComponentPropsWithRef<typeof Combobox> & {
-  name: keyof BudgetSchema;
+  name: string;
 };
 
-const CategoriesCombobox = async ({
-  name,
-  ...props
-}: CategoriesComboboxProps) => {
+const CategoriesCombobox = async (props: CategoriesComboboxProps) => {
   const categories = await db.category.findMany({
     select: {
       id: true,
@@ -20,7 +16,7 @@ const CategoriesCombobox = async ({
   });
 
   return (
-    <Form.TestCombobox name={name} {...props}>
+    <Form.Combobox {...props}>
       {categories.map((category) => {
         return (
           <option key={category.id} value={category.id}>
@@ -28,7 +24,7 @@ const CategoriesCombobox = async ({
           </option>
         );
       })}
-    </Form.TestCombobox>
+    </Form.Combobox>
   );
 };
 

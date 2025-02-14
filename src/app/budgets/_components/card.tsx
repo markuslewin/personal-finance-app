@@ -1,11 +1,16 @@
+import { Slot } from "@radix-ui/react-slot";
 import { cx } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
 
-interface RootProps extends ComponentPropsWithRef<"div"> {}
+type RootProps = ComponentPropsWithRef<"div"> & {
+  asChild?: boolean;
+};
 
-export const Root = ({ className, ...props }: RootProps) => {
+export const Root = ({ className, asChild = false, ...props }: RootProps) => {
+  const Comp = asChild ? Slot : "div";
+
   return (
-    <div
+    <Comp
       {...props}
       className={cx(
         className,
@@ -15,45 +20,64 @@ export const Root = ({ className, ...props }: RootProps) => {
   );
 };
 
-interface HeadingProps extends ComponentPropsWithRef<"h1"> {}
+type HeaderProps = ComponentPropsWithRef<"header">;
 
-export const Heading = ({ className, ...props }: HeadingProps) => {
+export const Header = ({ className, ...props }: HeaderProps) => {
   return (
-    <h1 {...props} className={cx(className, "text-preset-1 text-grey-900")} />
+    <header
+      {...props}
+      className={cx(className, "flex flex-wrap items-center justify-between")}
+    />
   );
 };
 
-interface DescriptionProps extends ComponentPropsWithRef<"p"> {}
+type HeadingProps = ComponentPropsWithRef<"h1"> & {
+  asChild?: boolean;
+};
+
+export const Heading = ({
+  className,
+  asChild = false,
+  ...props
+}: HeadingProps) => {
+  const Comp = asChild ? Slot : "h1";
+
+  return (
+    <Comp {...props} className={cx(className, "text-preset-1 text-grey-900")} />
+  );
+};
+
+type DescriptionProps = ComponentPropsWithRef<"p">;
 
 export const Description = ({ className, ...props }: DescriptionProps) => {
   return <p {...props} className={cx(className, "")} />;
 };
 
-interface FormProps extends ComponentPropsWithRef<"form"> {}
+type FormProps = ComponentPropsWithRef<"form">;
 
 export const Form = ({ className, ...props }: FormProps) => {
   return <form {...props} className={cx(className, "grid gap-250")} />;
 };
 
-interface GroupsProps extends ComponentPropsWithRef<"div"> {}
+type GroupsProps = ComponentPropsWithRef<"div">;
 
 export const Groups = ({ className, ...props }: GroupsProps) => {
   return <div {...props} className={cx(className, "grid gap-250")} />;
 };
 
-interface GroupProps extends ComponentPropsWithRef<"div"> {}
+type GroupProps = ComponentPropsWithRef<"div">;
 
 export const Group = ({ className, ...props }: GroupProps) => {
   return <div {...props} className={cx(className, "grid gap-50")} />;
 };
 
-interface LabelProps extends ComponentPropsWithRef<"label"> {}
+type LabelProps = ComponentPropsWithRef<"label">;
 
 export const Label = ({ className, ...props }: LabelProps) => {
   return <label {...props} className={cx(className, "text-preset-5-bold")} />;
 };
 
-interface MessageProps extends ComponentPropsWithRef<"p"> {}
+type MessageProps = ComponentPropsWithRef<"p">;
 
 export const Message = ({ className, ...props }: MessageProps) => {
   return <p {...props} className={cx(className, "text-end text-preset-5")} />;

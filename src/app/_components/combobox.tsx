@@ -1,8 +1,7 @@
 import { cx } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface ComboboxProps extends ComponentPropsWithRef<"select"> {}
+type ComboboxProps = ComponentPropsWithRef<"select">;
 
 const Combobox = ({ className, ...props }: ComboboxProps) => {
   return (
