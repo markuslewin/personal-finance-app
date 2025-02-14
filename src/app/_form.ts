@@ -8,9 +8,9 @@ import { startTransition } from "react";
 import { type z, type ZodTypeAny } from "zod";
 
 interface AppFormOptions<Schema extends ZodTypeAny, FormError = string[]> {
-  lastResult?: SubmissionResult<FormError>;
   schema: Schema;
   defaultValue?: DefaultValue<z.input<Schema>>;
+  lastResult?: SubmissionResult<FormError>;
   action: (formData: FormData) => void;
 }
 
@@ -21,11 +21,11 @@ export const useAppForm = <Schema extends ZodTypeAny>({
   action,
 }: AppFormOptions<Schema>) => {
   return useForm({
-    lastResult,
     constraint: getZodConstraint(schema),
     defaultValue,
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
+    lastResult,
     onValidate: ({ formData }) => {
       return parseWithZod(formData, { schema });
     },

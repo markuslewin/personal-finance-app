@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type DefaultValue,
   FormProvider,
   getFormProps,
   getInputProps,
@@ -13,22 +14,34 @@ import { useAppForm } from "~/app/_form";
 import * as Card from "~/app/budgets/_components/card";
 import TextboxUI from "~/app/_components/textbox";
 import ComboboxUI from "~/app/_components/combobox";
+import type z from "zod";
 import { type ZodTypeAny } from "zod";
 
-type RootProps = Omit<ComponentPropsWithRef<"form">, "action"> & {
-  schema: ZodTypeAny;
+type RootProps<Schema extends ZodTypeAny> = Omit<
+  ComponentPropsWithRef<"form">,
+  "action" | "defaultValue"
+> & {
+  schema: Schema;
+  defaultValue?: DefaultValue<z.input<Schema>>;
   action: (
     prevState: unknown,
     formData: FormData,
   ) => Promise<SubmissionResult<string[]> | undefined>;
 };
 
-export const Root = ({ schema, action: _action, ...props }: RootProps) => {
+export const Root = <Schema extends ZodTypeAny>({
+  schema,
+  defaultValue,
+  action: _action,
+  ...props
+}: RootProps<Schema>) => {
   // todo: Move into `useAppForm`
   const [lastResult, action] = useActionState(_action, undefined);
+  console.log({ lastResult });
   const [form] = useAppForm({
-    lastResult,
     schema,
+    defaultValue,
+    lastResult,
     action,
   });
 
@@ -61,6 +74,16 @@ export const Message = ({ name, ...props }: MessageProps) => {
       {meta.errors}
     </Card.Message>
   );
+};
+
+type HiddenFieldProps = ComponentPropsWithRef<"input"> & {
+  name: string;
+};
+
+export const HiddenField = ({ name, ...props }: HiddenFieldProps) => {
+  const [meta] = useField(name);
+
+  return <input {...getInputProps(meta, { type: "hidden" })} {...props} />;
 };
 
 type TextboxProps = ComponentPropsWithRef<typeof TextboxUI> & {
