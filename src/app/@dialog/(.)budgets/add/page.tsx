@@ -1,7 +1,11 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import RoutedDialog from "~/app/_components/routed-dialog";
 import IconCloseModal from "~/app/_assets/icon-close-modal.svg";
-import ServerForm from "~/app/budgets/add/_components/server-form";
+import * as Form from "~/app/_components/form";
+import * as Card from "~/app/budgets/_components/card";
+import Button from "~/app/_components/button";
+import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
+import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
 
 const BudgetsAddPage = () => {
   return (
@@ -26,7 +30,26 @@ const BudgetsAddPage = () => {
                 Choose a category to set a spending budget. These categories can
                 help you monitor spending.
               </Dialog.Description>
-              <ServerForm />
+              <Form.Root>
+                <Card.Groups>
+                  <Card.Group>
+                    <Form.Label name="category">Budget Category</Form.Label>
+                    <CategoriesCombobox name="category" />
+                    <Form.Message name="category" />
+                  </Card.Group>
+                  <Card.Group>
+                    <Form.Label name="maximum">Maximum Spend</Form.Label>
+                    <Form.TestTextbox name="maximum" placeholder="e.g. 2000" />
+                    <Form.Message name="maximum" />
+                  </Card.Group>
+                  <Card.Group>
+                    <Form.Label name="theme">Theme</Form.Label>
+                    <ThemesCombobox />
+                    <Form.Message name="theme" />
+                  </Card.Group>
+                </Card.Groups>
+                <Button type="submit">Add Budget</Button>
+              </Form.Root>
             </article>
           </Dialog.Content>
         </Dialog.Overlay>
