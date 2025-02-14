@@ -37,7 +37,6 @@ export const Root = <Schema extends ZodTypeAny>({
 }: RootProps<Schema>) => {
   // todo: Move into `useAppForm`
   const [lastResult, action] = useActionState(_action, undefined);
-  console.log({ lastResult });
   const [form] = useAppForm({
     schema,
     defaultValue,

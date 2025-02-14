@@ -2,6 +2,7 @@
 
 import { parseWithZod } from "@conform-to/zod";
 import { Prisma } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
@@ -52,7 +53,7 @@ export const add = async (prevState: unknown, formData: FormData) => {
     return submission.reply();
   }
 
-  // todo: `revalidatePath`?
+  revalidatePath("/budgets");
   redirect("/budgets");
 };
 
@@ -83,6 +84,6 @@ export const edit = async (prevState: unknown, formData: FormData) => {
     },
   });
 
-  // todo: `revalidatePath`?
+  revalidatePath("/budgets");
   redirect("/budgets");
 };
