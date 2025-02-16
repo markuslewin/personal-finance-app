@@ -1,22 +1,36 @@
 import * as Slot from "@radix-ui/react-slot";
-import { cx } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
 
-interface ButtonProps extends ComponentPropsWithRef<"button"> {
-  asChild?: boolean;
-}
+const buttonVariants = cva("transition-colors", {
+  variants: {
+    intent: {
+      primary:
+        "bg-grey-900 text-white hocus:bg-grey-500 p-200 text-preset-4-bold rounded-lg",
+      tertiary: "text-grey-500 hocus:text-grey-900 text-preset-4",
+      destroy:
+        "bg-red text-white hocus:bg-[hsl(7_58%_60%)] p-200 text-preset-4-bold rounded-lg",
+    },
+  },
+  defaultVariants: {
+    intent: "primary",
+  },
+});
 
-const Button = ({ className, asChild = false, ...props }: ButtonProps) => {
+type ButtonProps = ComponentPropsWithRef<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  };
+
+const Button = ({
+  className,
+  intent,
+  asChild = false,
+  ...props
+}: ButtonProps) => {
   const Comp = asChild ? Slot.Root : "button";
-  return (
-    <Comp
-      {...props}
-      className={cx(
-        className,
-        "rounded-lg bg-grey-900 p-200 text-preset-4-bold text-white transition-colors hocus:bg-grey-500",
-      )}
-    />
-  );
+
+  return <Comp {...props} className={buttonVariants({ className, intent })} />;
 };
 
 export default Button;

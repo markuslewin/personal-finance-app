@@ -1,6 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import RoutedDialog from "~/app/_components/routed-dialog";
-import IconCloseModal from "~/app/_assets/icon-close-modal.svg";
 import * as Form from "~/app/_components/form";
 import * as Card from "~/app/budgets/_components/card";
 import Button from "~/app/_components/button";
@@ -22,9 +21,8 @@ const AddBudgetPage = () => {
                       <h2>Add New Budget</h2>
                     </Card.Heading>
                   </Dialog.Title>
-                  <Dialog.Close className="rounded-full transition-colors hocus:text-grey-900">
-                    <IconCloseModal />
-                    <span className="sr-only">Close</span>
+                  <Dialog.Close asChild>
+                    <Card.Close />
                   </Dialog.Close>
                 </Card.Header>
                 <Dialog.Description asChild>

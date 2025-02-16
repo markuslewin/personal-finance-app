@@ -16,6 +16,7 @@ import TextboxUI from "~/app/_components/textbox";
 import ComboboxUI from "~/app/_components/combobox";
 import type z from "zod";
 import { type ZodTypeAny } from "zod";
+import { cx } from "class-variance-authority";
 
 type RootProps<Schema extends ZodTypeAny> = Omit<
   ComponentPropsWithRef<"form">,
@@ -69,7 +70,11 @@ export const Message = ({ name, ...props }: MessageProps) => {
   const [meta] = useField(name);
 
   return (
-    <Card.Message id={meta.errorId} {...props}>
+    <Card.Message
+      id={meta.errorId}
+      {...props}
+      className={cx(!meta.errors ? "hidden" : "")}
+    >
       {meta.errors}
     </Card.Message>
   );

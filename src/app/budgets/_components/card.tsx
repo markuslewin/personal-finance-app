@@ -1,6 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cx } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
+import IconCloseModal from "~/app/_assets/icon-close-modal.svg";
 
 type RootProps = ComponentPropsWithRef<"div"> & {
   asChild?: boolean;
@@ -47,6 +48,23 @@ export const Heading = ({
   );
 };
 
+type CloseProps = ComponentPropsWithRef<"button">;
+
+export const Close = ({ className, ...props }: CloseProps) => {
+  return (
+    <button
+      {...props}
+      className={cx(
+        className,
+        "rounded-full transition-colors hocus:text-grey-900",
+      )}
+    >
+      <IconCloseModal />
+      <span className="sr-only">Close</span>
+    </button>
+  );
+};
+
 type DescriptionProps = ComponentPropsWithRef<"p">;
 
 export const Description = ({ className, ...props }: DescriptionProps) => {
@@ -62,7 +80,7 @@ export const Form = ({ className, ...props }: FormProps) => {
 type GroupsProps = ComponentPropsWithRef<"div">;
 
 export const Groups = ({ className, ...props }: GroupsProps) => {
-  return <div {...props} className={cx(className, "grid gap-250")} />;
+  return <div {...props} className={cx(className, "grid gap-200")} />;
 };
 
 type GroupProps = ComponentPropsWithRef<"div">;

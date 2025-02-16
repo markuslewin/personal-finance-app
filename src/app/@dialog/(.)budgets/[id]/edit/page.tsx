@@ -52,9 +52,8 @@ const EditBudgetPage = async ({
                       <h2>Edit Budget</h2>
                     </Card.Heading>
                   </Dialog.Title>
-                  <Dialog.Close className="rounded-full transition-colors hocus:text-grey-900">
-                    <IconCloseModal />
-                    <span className="sr-only">Close</span>
+                  <Dialog.Close asChild>
+                    <Card.Close />
                   </Dialog.Close>
                 </Card.Header>
                 <Dialog.Description asChild>

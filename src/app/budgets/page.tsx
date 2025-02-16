@@ -10,8 +10,7 @@ import * as Donut from "~/app/_components/donut";
 import * as Meter from "~/app/_components/meter";
 import { currency, date } from "~/app/_format";
 import Button from "~/app/_components/button";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import ActionsMenuContent from "~/app/budgets/_components/actions-menu-content";
+import ActionsMenu from "~/app/budgets/_components/actions-menu";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 
 export const metadata: Metadata = {
@@ -135,17 +134,7 @@ const BudgetsPage = async () => {
                     {budget.category.name}
                   </h3>
                   <Hydrated>
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger className="transition-colors hocus:text-grey-900">
-                        <span className="sr-only">Actions</span>
-                        <span className="grid size-200 place-items-center">
-                          <IconEllipsis />
-                        </span>
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Portal>
-                        <ActionsMenuContent id={budget.id} />
-                      </DropdownMenu.Portal>
-                    </DropdownMenu.Root>
+                    <ActionsMenu budget={budget} />
                   </Hydrated>
                   <Dehydrated>
                     <Link

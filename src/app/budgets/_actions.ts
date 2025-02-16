@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
+  budgetIdSchema,
   type BudgetSchema,
   budgetSchema,
   budgetSchemaWithId,
@@ -79,6 +80,24 @@ export const edit = async (prevState: unknown, formData: FormData) => {
         },
       },
     },
+    where: {
+      id: submission.value.id,
+    },
+  });
+
+  revalidatePath("/budgets");
+  redirect("/budgets");
+};
+
+export const remove = async (prevState: unknown, formData: FormData) => {
+  const submission = parseWithZod(formData, {
+    schema: budgetIdSchema,
+  });
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  await db.budget.delete({
     where: {
       id: submission.value.id,
     },

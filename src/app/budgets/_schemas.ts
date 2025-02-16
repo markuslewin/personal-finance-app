@@ -8,8 +8,12 @@ export const budgetSchema = z.object({
 
 export type BudgetSchema = z.infer<typeof budgetSchema>;
 
-export const budgetSchemaWithId = budgetSchema.extend({
+export const budgetIdSchema = z.object({
   id: z.string(),
 });
+
+export type BudgetIdSchema = z.infer<typeof budgetIdSchema>;
+
+export const budgetSchemaWithId = budgetSchema.merge(budgetIdSchema);
 
 export type BudgetSchemaWithId = z.infer<typeof budgetSchemaWithId>;
