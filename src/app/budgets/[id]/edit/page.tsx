@@ -1,19 +1,56 @@
 import * as Card from "~/app/budgets/_components/card";
 import * as Form from "~/app/_components/form";
-import AddBudgetForm from "~/app/budgets/add/_components/add-budget-form";
+import { notFound } from "next/navigation";
+import { db } from "~/server/db";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";
 import Button from "~/app/_components/button";
 
-const AddBudgetPage = () => {
+const EditBudgetPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const id = (await params).id;
+  const budget = await db.budget.findUnique({
+    select: {
+      id: true,
+      maximum: true,
+      category: {
+        select: {
+          id: true,
+        },
+      },
+      theme: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    where: {
+      id,
+    },
+  });
+  if (!budget) {
+    notFound();
+  }
+
   return (
     <Card.Root>
-      <Card.Heading>Add New Budget</Card.Heading>
+      <Card.Heading>Edit Budget</Card.Heading>
       <Card.Description>
-        Choose a category to set a spending budget. These categories can help
-        you monitor spending.
+        As your budgets change, feel free to update your spending limits.
       </Card.Description>
-      <AddBudgetForm>
+      <EditBudgetForm
+        budget={{
+          id: budget.id,
+          maximum: budget.maximum,
+          category: budget.category.id,
+          theme: budget.theme.id,
+        }}
+      >
+        <Form.HiddenField name="id" />
         <Card.Groups>
           <Card.Group>
             <Form.Label name="category">Budget Category</Form.Label>
@@ -31,10 +68,10 @@ const AddBudgetPage = () => {
             <Form.Message name="theme" />
           </Card.Group>
         </Card.Groups>
-        <Button type="submit">Add Budget</Button>
-      </AddBudgetForm>
+        <Button type="submit">Save Changes</Button>
+      </EditBudgetForm>
     </Card.Root>
   );
 };
 
-export default AddBudgetPage;
+export default EditBudgetPage;

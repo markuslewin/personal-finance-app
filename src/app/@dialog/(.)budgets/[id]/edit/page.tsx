@@ -6,9 +6,39 @@ import * as Card from "~/app/budgets/_components/card";
 import Button from "~/app/_components/button";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
-import AddBudgetForm from "~/app/budgets/add/_components/add-budget-form";
+import { db } from "~/server/db";
+import { notFound } from "next/navigation";
+import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";
 
-const AddBudgetPage = () => {
+const EditBudgetPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const id = (await params).id;
+  const budget = await db.budget.findUnique({
+    select: {
+      id: true,
+      maximum: true,
+      category: {
+        select: {
+          id: true,
+        },
+      },
+      theme: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    where: {
+      id,
+    },
+  });
+  if (!budget) {
+    notFound();
+  }
+
   return (
     <RoutedDialog>
       <Dialog.Portal>
@@ -19,7 +49,7 @@ const AddBudgetPage = () => {
                 <Card.Header>
                   <Dialog.Title asChild>
                     <Card.Heading asChild>
-                      <h2>Add New Budget</h2>
+                      <h2>Edit Budget</h2>
                     </Card.Heading>
                   </Dialog.Title>
                   <Dialog.Close className="rounded-full transition-colors hocus:text-grey-900">
@@ -29,11 +59,19 @@ const AddBudgetPage = () => {
                 </Card.Header>
                 <Dialog.Description asChild>
                   <Card.Description>
-                    Choose a category to set a spending budget. These categories
-                    can help you monitor spending.
+                    As your budgets change, feel free to update your spending
+                    limits.
                   </Card.Description>
                 </Dialog.Description>
-                <AddBudgetForm>
+                <EditBudgetForm
+                  budget={{
+                    id: budget.id,
+                    maximum: budget.maximum,
+                    category: budget.category.id,
+                    theme: budget.theme.id,
+                  }}
+                >
+                  <Form.HiddenField name="id" />
                   <Card.Groups>
                     <Card.Group>
                       <Form.Label name="category">Budget Category</Form.Label>
@@ -51,8 +89,8 @@ const AddBudgetPage = () => {
                       <Form.Message name="theme" />
                     </Card.Group>
                   </Card.Groups>
-                  <Button type="submit">Add Budget</Button>
-                </AddBudgetForm>
+                  <Button type="submit">Save Changes</Button>
+                </EditBudgetForm>
               </article>
             </Card.Root>
           </Dialog.Content>
@@ -62,4 +100,4 @@ const AddBudgetPage = () => {
   );
 };
 
-export default AddBudgetPage;
+export default EditBudgetPage;

@@ -10,6 +10,9 @@ import * as Donut from "~/app/_components/donut";
 import * as Meter from "~/app/_components/meter";
 import { currency, date } from "~/app/_format";
 import Button from "~/app/_components/button";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import ActionsMenuContent from "~/app/budgets/_components/actions-menu-content";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -131,17 +134,32 @@ const BudgetsPage = async () => {
                   <h3 className="text-preset-2 text-grey-900">
                     {budget.category.name}
                   </h3>
-                  <Link
-                    className="transition-colors hocus:text-grey-900"
-                    href={`/budgets/${budget.id}/edit`}
-                  >
-                    <span className="sr-only">
-                      {`Edit budget "${budget.category.name}"`}
-                    </span>
-                    <span className="grid size-200 place-items-center">
-                      <IconEllipsis />
-                    </span>
-                  </Link>
+                  <Hydrated>
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger className="transition-colors hocus:text-grey-900">
+                        <span className="sr-only">Actions</span>
+                        <span className="grid size-200 place-items-center">
+                          <IconEllipsis />
+                        </span>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Portal>
+                        <ActionsMenuContent id={budget.id} />
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                  </Hydrated>
+                  <Dehydrated>
+                    <Link
+                      className="transition-colors hocus:text-grey-900"
+                      href={`/budgets/${budget.id}/edit`}
+                    >
+                      <span className="sr-only">
+                        {`Edit budget "${budget.category.name}"`}
+                      </span>
+                      <span className="grid size-200 place-items-center">
+                        <IconEllipsis />
+                      </span>
+                    </Link>
+                  </Dehydrated>
                 </header>
                 <p className="mt-250">Maximum of {currency(budget.maximum)}</p>
                 <p className="mt-200">
