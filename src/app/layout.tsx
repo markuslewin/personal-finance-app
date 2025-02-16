@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "Frontend Mentor | Personal finance app - %s",
     default: "Frontend Mentor | Personal finance app",
   },
-  description: "A personal fincance app.",
+  description: "A personal finance app.",
   icons: [
     {
       rel: "icon",

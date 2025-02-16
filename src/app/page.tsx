@@ -10,7 +10,7 @@ import * as Donut from "~/app/_components/donut";
 import { currency, date } from "~/app/_format";
 
 export const metadata: Metadata = {
-  title: "Frontend Mentor | Personal finance app - Overview",
+  title: "Overview",
 };
 
 const OverviewPage = async () => {
