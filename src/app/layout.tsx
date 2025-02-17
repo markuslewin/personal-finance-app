@@ -14,7 +14,7 @@ import IconNavOverview from "~/app/_assets/icon-nav-overview.svg";
 import IconNavPots from "~/app/_assets/icon-nav-pots.svg";
 import IconNavRecurringBills from "~/app/_assets/icon-nav-recurring-bills.svg";
 import IconNavTransactions from "~/app/_assets/icon-nav-transactions.svg";
-import NavLink from "~/app/_components/nav-link";
+import NavLink from "~/app/_components/ui/nav-link";
 import { type ReactNode } from "react";
 
 export const metadata: Metadata = {

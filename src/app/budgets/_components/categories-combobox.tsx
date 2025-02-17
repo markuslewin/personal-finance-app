@@ -1,5 +1,5 @@
 import { type ComponentPropsWithRef } from "react";
-import type Combobox from "~/app/_components/combobox";
+import type Combobox from "~/app/_components/ui/combobox";
 import * as Form from "~/app/_components/form";
 import { db } from "~/server/db";
 

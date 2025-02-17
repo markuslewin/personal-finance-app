@@ -1,11 +1,11 @@
-import * as Card from "~/app/budgets/_components/card";
+import * as Dialog from "~/app/_components/ui/dialog";
 import * as Form from "~/app/_components/form";
 import * as DeleteDialog from "~/app/budgets/_components/delete-dialog";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
-import Button from "~/app/_components/button";
+import Button from "~/app/_components/ui/button";
 import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";
 import DeleteBudgetForm from "~/app/budgets/[id]/edit/_components/delete-budget-form";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
@@ -41,11 +41,11 @@ const EditBudgetPage = async ({
   }
 
   return (
-    <Card.Root>
-      <Card.Heading>Edit Budget</Card.Heading>
-      <Card.Description>
+    <Dialog.Content>
+      <Dialog.Heading>Edit Budget</Dialog.Heading>
+      <Dialog.Description>
         As your budgets change, feel free to update your spending limits.
-      </Card.Description>
+      </Dialog.Description>
       <EditBudgetForm
         budget={{
           id: budget.id,
@@ -55,23 +55,23 @@ const EditBudgetPage = async ({
         }}
       >
         <Form.HiddenField name="id" />
-        <Card.Groups>
-          <Card.Group>
+        <Dialog.Groups>
+          <Dialog.Group>
             <Form.Label name="category">Budget Category</Form.Label>
             <CategoriesCombobox name="category" />
             <Form.Message name="category" />
-          </Card.Group>
-          <Card.Group>
+          </Dialog.Group>
+          <Dialog.Group>
             <Form.Label name="maximum">Maximum Spend</Form.Label>
             <Form.Textbox name="maximum" placeholder="e.g. 2000" />
             <Form.Message name="maximum" />
-          </Card.Group>
-          <Card.Group>
+          </Dialog.Group>
+          <Dialog.Group>
             <Form.Label name="theme">Theme</Form.Label>
             <ThemesCombobox name="theme" />
             <Form.Message name="theme" />
-          </Card.Group>
-        </Card.Groups>
+          </Dialog.Group>
+        </Dialog.Groups>
         <Button type="submit">Save Changes</Button>
       </EditBudgetForm>
       <Hydrated>
@@ -92,7 +92,7 @@ const EditBudgetPage = async ({
           </Button>
         </DeleteBudgetForm>
       </Dehydrated>
-    </Card.Root>
+    </Dialog.Content>
   );
 };
 

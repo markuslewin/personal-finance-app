@@ -6,10 +6,10 @@ import { db } from "~/server/db";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import Image from "next/image";
-import * as Donut from "~/app/_components/donut";
+import * as Donut from "~/app/_components/ui/donut";
 import * as Meter from "~/app/_components/meter";
 import { currency, date } from "~/app/_format";
-import Button from "~/app/_components/button";
+import Button from "~/app/_components/ui/button";
 import ActionsMenu from "~/app/budgets/_components/actions-menu";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 

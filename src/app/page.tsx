@@ -6,7 +6,7 @@ import IconPot from "~/app/_assets/icon-pot.svg";
 import { type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
 import Image from "next/image";
-import * as Donut from "~/app/_components/donut";
+import * as Donut from "~/app/_components/ui/donut";
 import { currency, date } from "~/app/_format";
 
 export const metadata: Metadata = {

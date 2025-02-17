@@ -11,9 +11,9 @@ import {
 } from "@conform-to/react";
 import { useActionState, type ComponentPropsWithRef } from "react";
 import { useAppForm } from "~/app/_form";
-import * as Card from "~/app/budgets/_components/card";
-import TextboxUI from "~/app/_components/textbox";
-import ComboboxUI from "~/app/_components/combobox";
+import * as Dialog from "~/app/_components/ui/dialog";
+import TextboxUI from "~/app/_components/ui/textbox";
+import ComboboxUI from "~/app/_components/ui/combobox";
 import type z from "zod";
 import { type ZodTypeAny } from "zod";
 import { cx } from "class-variance-authority";
@@ -47,22 +47,22 @@ export const Root = <Schema extends ZodTypeAny>({
 
   return (
     <FormProvider context={form.context}>
-      <Card.Form {...getFormProps(form)} action={action} {...props} />
+      <Dialog.Form {...getFormProps(form)} action={action} {...props} />
     </FormProvider>
   );
 };
 
-type LabelProps = ComponentPropsWithRef<typeof Card.Label> & {
+type LabelProps = ComponentPropsWithRef<typeof Dialog.Label> & {
   name: string;
 };
 
 export const Label = ({ name, ...props }: LabelProps) => {
   const [meta] = useField(name);
 
-  return <Card.Label htmlFor={meta.id} {...props} />;
+  return <Dialog.Label htmlFor={meta.id} {...props} />;
 };
 
-type MessageProps = ComponentPropsWithRef<typeof Card.Message> & {
+type MessageProps = ComponentPropsWithRef<typeof Dialog.Message> & {
   name: string;
 };
 
@@ -70,13 +70,13 @@ export const Message = ({ name, ...props }: MessageProps) => {
   const [meta] = useField(name);
 
   return (
-    <Card.Message
+    <Dialog.Message
       id={meta.errorId}
       {...props}
       className={cx(!meta.errors ? "hidden" : "")}
     >
       {meta.errors}
-    </Card.Message>
+    </Dialog.Message>
   );
 };
 

@@ -13,7 +13,7 @@ import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { z } from "zod";
 import { type ComponentPropsWithRef, useId } from "react";
 import { currency, date } from "~/app/_format";
-import Textbox from "~/app/_components/textbox";
+import Textbox from "~/app/_components/ui/textbox";
 
 const PAGE_SIZE = 10;
 

@@ -3,11 +3,29 @@ import { cx } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
 import IconCloseModal from "~/app/_assets/icon-close-modal.svg";
 
-type RootProps = ComponentPropsWithRef<"div"> & {
+type OverlayProps = ComponentPropsWithRef<"div">;
+
+export const Overlay = ({ className, ...props }: OverlayProps) => {
+  return (
+    <div
+      {...props}
+      className={cx(
+        className,
+        "fixed inset-0 grid grid-cols-[minmax(auto,35rem)] items-center justify-center overflow-y-auto bg-[hsl(0_0%_0%/0.5)] p-250",
+      )}
+    />
+  );
+};
+
+type ContentProps = ComponentPropsWithRef<"div"> & {
   asChild?: boolean;
 };
 
-export const Root = ({ className, asChild = false, ...props }: RootProps) => {
+export const Content = ({
+  className,
+  asChild = false,
+  ...props
+}: ContentProps) => {
   const Comp = asChild ? Slot : "div";
 
   return (
