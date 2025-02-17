@@ -1,0 +1,21 @@
+import { z } from "zod";
+
+export const NAME_MAX_LENGTH = 30;
+
+export const potSchema = z.object({
+  name: z.string().max(NAME_MAX_LENGTH),
+  target: z.number().positive().int(),
+  theme: z.string(),
+});
+
+export type PotSchema = z.infer<typeof potSchema>;
+
+export const potIdSchema = z.object({
+  id: z.string(),
+});
+
+export type PotIdSchema = z.infer<typeof potIdSchema>;
+
+export const potSchemaWithId = potSchema.merge(potIdSchema);
+
+export type PotSchemaWithId = z.infer<typeof potSchemaWithId>;
