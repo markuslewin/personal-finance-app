@@ -18,15 +18,13 @@ export const Trigger = (props: TriggerProps) => {
 };
 
 type PortalProps = ComponentPropsWithRef<typeof AlertDialog.Portal> & {
-  budget: {
+  pot: {
     id: string;
-    category: {
-      name: string;
-    };
+    name: string;
   };
 };
 
-export const Portal = ({ budget, ...props }: PortalProps) => {
+export const Portal = ({ pot, ...props }: PortalProps) => {
   return (
     <AlertDialog.Portal {...props}>
       <AlertDialog.Overlay asChild>
@@ -38,7 +36,7 @@ export const Portal = ({ budget, ...props }: PortalProps) => {
                 <Dialog.Header>
                   <AlertDialog.Title asChild>
                     <Dialog.Heading asChild>
-                      <h2>Delete ‘{budget.category.name}’?</h2>
+                      <h2>Delete ‘{pot.name}’?</h2>
                     </Dialog.Heading>
                   </AlertDialog.Title>
                   <AlertDialog.Cancel asChild>
@@ -47,21 +45,23 @@ export const Portal = ({ budget, ...props }: PortalProps) => {
                 </Dialog.Header>
                 <AlertDialog.Description asChild>
                   <Dialog.Description>
-                    Are you sure you want to delete this budget? This action
-                    cannot be reversed, and all the data inside it will be
-                    removed forever.
+                    Are you sure you want to delete this pot? This action cannot
+                    be reversed, and all the data inside it will be removed
+                    forever.
                   </Dialog.Description>
                 </AlertDialog.Description>
-                <DeleteBudgetForm id={budget.id}>
+                {/* todo: DeletePotForm */}
+                {/* <DeleteBudgetForm id={budget.id}>
                   <Form.HiddenField name="id" />
                   <Button type="submit" intent="destroy">
                     Yes, Confirm Deletion
                   </Button>
-                </DeleteBudgetForm>
+                </DeleteBudgetForm> */}
                 <AlertDialog.Cancel asChild>
                   <Button intent="tertiary">No, Go Back</Button>
                 </AlertDialog.Cancel>
               </article>
+              <p>blabla</p>
             </Dialog.Content>
           </AlertDialog.Content>
         </Dialog.Overlay>

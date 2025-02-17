@@ -1,0 +1,76 @@
+"use client";
+
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { cva, cx, type VariantProps } from "class-variance-authority";
+import { type ComponentPropsWithRef } from "react";
+import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
+
+type RootProps = ComponentPropsWithRef<typeof DropdownMenu.Root>;
+
+export const Root = (props: RootProps) => {
+  return <DropdownMenu.Root {...props} />;
+};
+
+type TriggerProps = ComponentPropsWithRef<typeof DropdownMenu.Trigger>;
+
+export const Trigger = (props: TriggerProps) => {
+  return (
+    <DropdownMenu.Trigger {...props}>
+      <span className="grid size-200 place-items-center">
+        <IconEllipsis />
+      </span>
+      <span className="sr-only">Actions</span>
+    </DropdownMenu.Trigger>
+  );
+};
+
+type PortalProps = ComponentPropsWithRef<typeof DropdownMenu.Portal>;
+
+export const Portal = (props: PortalProps) => {
+  return <DropdownMenu.Portal {...props} />;
+};
+
+type ContentProps = ComponentPropsWithRef<typeof DropdownMenu.Content>;
+
+export const Content = ({ className, ...props }: ContentProps) => {
+  return (
+    <DropdownMenu.Content
+      sideOffset={12}
+      align="end"
+      {...props}
+      className={cx(
+        className,
+        "rounded-lg bg-white text-grey-900 shadow-[0_0.25rem_1.5rem_hsl(0_0%_0%/0.25)]",
+      )}
+    />
+  );
+};
+
+const itemVariants = cva("px-250 py-150", {
+  variants: {
+    intent: { destroy: "text-red" },
+  },
+});
+
+type ItemProps = ComponentPropsWithRef<typeof DropdownMenu.Item> &
+  VariantProps<typeof itemVariants>;
+
+export const Item = ({ className, intent, ...props }: ItemProps) => {
+  return (
+    <DropdownMenu.Item
+      {...props}
+      className={itemVariants({ intent, className })}
+    />
+  );
+};
+
+type ItemSeparatorProps = ComponentPropsWithRef<"div">;
+
+export const ItemSeparator = ({ className, ...props }: ItemSeparatorProps) => {
+  return (
+    <div
+      {...props}
+      className={cx(className, "mx-250 border-t-[0.0625rem] border-grey-100")}
+    />
+  );
+};

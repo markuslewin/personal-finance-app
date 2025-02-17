@@ -4,6 +4,8 @@ import { db } from "~/server/db";
 import * as Meter from "~/app/_components/meter";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import { currency } from "~/app/_format";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import PotActions from "~/app/pots/_components/pot-actions-menu";
 
 export const metadata: Metadata = {
   title: "Pots",
@@ -53,15 +55,20 @@ const PotsPage = async () => {
                   />
                   <h2 className="text-preset-2 text-grey-900">{pot.name}</h2>
                 </div>
-                <div className="grid size-200 place-items-center">
+                <Hydrated>
+                  <PotActions pot={pot} />
+                </Hydrated>
+                <Dehydrated>
                   <Link
                     className="transition-colors hocus:text-grey-900"
                     href={`/pots/${pot.id}/edit`}
                   >
-                    <IconEllipsis />
+                    <span className="grid size-200 place-items-center">
+                      <IconEllipsis />
+                    </span>
                     <span className="sr-only">{`Edit pot "${pot.name}"`}</span>
                   </Link>
-                </div>
+                </Dehydrated>
               </header>
               <div className="mt-500 flex flex-wrap items-center justify-between">
                 <h3>Total Saved</h3>
