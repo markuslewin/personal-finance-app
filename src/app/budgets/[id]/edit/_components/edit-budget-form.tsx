@@ -8,12 +8,12 @@ import {
   budgetSchemaWithId,
 } from "~/app/budgets/_schemas";
 
-type EditBudgetForm = {
+type EditBudgetFormProps = {
   children: ReactNode;
   budget: BudgetSchemaWithId;
 };
 
-const EditBudgetForm = ({ budget, ...props }: EditBudgetForm) => {
+const EditBudgetForm = ({ budget, ...props }: EditBudgetFormProps) => {
   return (
     <Form.Root
       schema={budgetSchemaWithId}

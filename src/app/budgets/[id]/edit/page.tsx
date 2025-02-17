@@ -1,11 +1,14 @@
 import * as Card from "~/app/budgets/_components/card";
 import * as Form from "~/app/_components/form";
+import * as DeleteDialog from "~/app/budgets/_components/delete-dialog";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
-import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";
 import Button from "~/app/_components/button";
+import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";
+import DeleteBudgetForm from "~/app/budgets/[id]/edit/_components/delete-budget-form";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 
 const EditBudgetPage = async ({
   params,
@@ -20,6 +23,7 @@ const EditBudgetPage = async ({
       category: {
         select: {
           id: true,
+          name: true,
         },
       },
       theme: {
@@ -70,6 +74,24 @@ const EditBudgetPage = async ({
         </Card.Groups>
         <Button type="submit">Save Changes</Button>
       </EditBudgetForm>
+      <Hydrated>
+        <DeleteDialog.Root>
+          <DeleteDialog.Trigger asChild>
+            <Button type="submit" intent="destroy">
+              Delete Budget
+            </Button>
+          </DeleteDialog.Trigger>
+          <DeleteDialog.Portal budget={budget} />
+        </DeleteDialog.Root>
+      </Hydrated>
+      <Dehydrated>
+        <DeleteBudgetForm id={budget.id}>
+          <Form.HiddenField name="id" />
+          <Button type="submit" intent="destroy">
+            Delete Budget
+          </Button>
+        </DeleteBudgetForm>
+      </Dehydrated>
     </Card.Root>
   );
 };

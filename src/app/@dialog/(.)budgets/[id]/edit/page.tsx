@@ -1,6 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import RoutedDialog from "~/app/_components/routed-dialog";
-import IconCloseModal from "~/app/_assets/icon-close-modal.svg";
 import * as Form from "~/app/_components/form";
 import * as Card from "~/app/budgets/_components/card";
 import Button from "~/app/_components/button";
