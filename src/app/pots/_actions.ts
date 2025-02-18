@@ -3,7 +3,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { removePotSchema, potSchema } from "~/app/pots/_schemas";
+import { removePotSchema, potSchema, editPotSchema } from "~/app/pots/_schemas";
 import { db } from "~/server/db";
 
 export const add = async (prevState: unknown, formData: FormData) => {
@@ -35,36 +35,32 @@ export const add = async (prevState: unknown, formData: FormData) => {
   redirect("/pots");
 };
 
-// export const edit = async (prevState: unknown, formData: FormData) => {
-//   const submission = parseWithZod(formData, {
-//     schema: budgetSchemaWithId,
-//   });
-//   if (submission.status !== "success") {
-//     return submission.reply();
-//   }
+export const edit = async (prevState: unknown, formData: FormData) => {
+  const submission = parseWithZod(formData, {
+    schema: editPotSchema,
+  });
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
 
-//   await db.budget.update({
-//     data: {
-//       maximum: submission.value.maximum,
-//       category: {
-//         connect: {
-//           id: submission.value.category,
-//         },
-//       },
-//       theme: {
-//         connect: {
-//           id: submission.value.theme,
-//         },
-//       },
-//     },
-//     where: {
-//       id: submission.value.id,
-//     },
-//   });
+  await db.pot.update({
+    data: {
+      name: submission.value.name,
+      target: submission.value.target,
+      theme: {
+        connect: {
+          id: submission.value.theme,
+        },
+      },
+    },
+    where: {
+      id: submission.value.id,
+    },
+  });
 
-//   revalidatePath("/budgets");
-//   redirect("/budgets");
-// };
+  revalidatePath("/pots");
+  redirect("/pots");
+};
 
 export const remove = async (prevState: unknown, formData: FormData) => {
   const submission = parseWithZod(formData, {

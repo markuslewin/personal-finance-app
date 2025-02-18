@@ -3,11 +3,13 @@ import * as Form from "~/app/_components/form";
 import * as DeleteDialog from "~/app/pots/_components/delete-dialog";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
-// import ThemesCombobox from "~/app/pots/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
-// import EditBudgetForm from "~/app/pots/[id]/edit/_components/edit-budget-form";
+import EditPotForm from "~/app/pots/_components/edit-pot-form";
 import DeletePotForm from "~/app/pots/_components/delete-pot-form";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import CharactersLeft from "~/app/pots/_components/characters-left";
+import { nbsp } from "~/app/_unicode";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -15,6 +17,12 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     select: {
       id: true,
       name: true,
+      target: true,
+      theme: {
+        select: {
+          id: true,
+        },
+      },
     },
     where: {
       id,
@@ -30,25 +38,32 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       <Dialog.Description>
         If your saving targets change, feel free to update your pots.
       </Dialog.Description>
-      {/* <EditBudgetForm
-        budget={{
+      <EditPotForm
+        defaultValue={{
           id: pot.id,
-          maximum: pot.maximum,
-          category: pot.category.id,
+          name: pot.name,
+          target: pot.target,
           theme: pot.theme.id,
         }}
       >
         <Form.HiddenField name="id" />
         <Dialog.Groups>
           <Dialog.Group>
-            <Form.Label name="category">Budget Category</Form.Label>
-            <CategoriesCombobox name="category" />
-            <Form.Message name="category" />
+            <Form.Label name="name">Pot Name</Form.Label>
+            <Form.Textbox name="name" placeholder="e.g. Rainy Days" />
+            <Form.Message name="name" />
+            {/* todo: ARIA description */}
+            <Dialog.Message>
+              <Hydrated>
+                <CharactersLeft name="name" /> characters left
+              </Hydrated>
+              <Dehydrated>{nbsp}</Dehydrated>
+            </Dialog.Message>
           </Dialog.Group>
           <Dialog.Group>
-            <Form.Label name="maximum">Maximum Spend</Form.Label>
-            <Form.Textbox name="maximum" placeholder="e.g. 2000" />
-            <Form.Message name="maximum" />
+            <Form.Label name="target">Target</Form.Label>
+            <Form.Textbox name="target" placeholder="e.g. 2000" />
+            <Form.Message name="target" />
           </Dialog.Group>
           <Dialog.Group>
             <Form.Label name="theme">Theme</Form.Label>
@@ -57,7 +72,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           </Dialog.Group>
         </Dialog.Groups>
         <Button type="submit">Save Changes</Button>
-      </EditBudgetForm> */}
+      </EditPotForm>
       <Hydrated>
         <DeleteDialog.Root>
           <DeleteDialog.Trigger asChild>

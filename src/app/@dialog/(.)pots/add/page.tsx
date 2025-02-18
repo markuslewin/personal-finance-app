@@ -3,9 +3,8 @@ import RoutedDialog from "~/app/_components/routed-dialog";
 import * as Form from "~/app/_components/form";
 import * as DialogUI from "~/app/_components/ui/dialog";
 import Button from "~/app/_components/ui/button";
-import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddPotForm from "~/app/pots/_components/add-pot-form";
-import { Hydrated } from "~/app/_components/hydration";
 import CharactersLeft from "~/app/pots/_components/characters-left";
 
 const AddBudgetPage = () => {

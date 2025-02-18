@@ -2,7 +2,7 @@ import * as Dialog from "~/app/_components/ui/dialog";
 import * as Form from "~/app/_components/form";
 import AddBudgetForm from "~/app/budgets/add/_components/add-budget-form";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
-import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
 
 const AddBudgetPage = () => {

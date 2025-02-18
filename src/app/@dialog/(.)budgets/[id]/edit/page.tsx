@@ -4,7 +4,7 @@ import * as Form from "~/app/_components/form";
 import * as DialogUI from "~/app/_components/ui/dialog";
 import Button from "~/app/_components/ui/button";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
-import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import { db } from "~/server/db";
 import { notFound } from "next/navigation";
 import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";

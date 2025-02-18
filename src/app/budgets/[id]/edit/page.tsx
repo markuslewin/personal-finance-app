@@ -4,7 +4,7 @@ import * as DeleteDialog from "~/app/budgets/_components/delete-dialog";
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
-import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
 import EditBudgetForm from "~/app/budgets/[id]/edit/_components/edit-budget-form";
 import DeleteBudgetForm from "~/app/budgets/[id]/edit/_components/delete-budget-form";

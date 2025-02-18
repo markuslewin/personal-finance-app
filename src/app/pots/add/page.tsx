@@ -1,6 +1,6 @@
 import * as Dialog from "~/app/_components/ui/dialog";
 import * as Form from "~/app/_components/form";
-import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import AddPotForm from "~/app/pots/_components/add-pot-form";

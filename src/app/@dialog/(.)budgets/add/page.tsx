@@ -4,7 +4,7 @@ import * as Form from "~/app/_components/form";
 import * as DialogUI from "~/app/_components/ui/dialog";
 import Button from "~/app/_components/ui/button";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
-import ThemesCombobox from "~/app/budgets/_components/themes-combobox";
+import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddBudgetForm from "~/app/budgets/add/_components/add-budget-form";
 
 const AddBudgetPage = () => {
