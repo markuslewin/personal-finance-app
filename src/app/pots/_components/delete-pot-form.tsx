@@ -1,3 +1,5 @@
+"use client";
+
 import { type ReactNode } from "react";
 import * as Form from "~/app/_components/form";
 import { remove } from "~/app/pots/_actions";
