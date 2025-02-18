@@ -10,8 +10,8 @@ import * as Donut from "~/app/_components/ui/donut";
 import * as Meter from "~/app/_components/meter";
 import { currency, date } from "~/app/_format";
 import Button from "~/app/_components/ui/button";
-import ActionsMenu from "~/app/budgets/_components/actions-menu";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import BudgetActions from "~/app/budgets/_components/budget-actions-menu";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -134,18 +134,18 @@ const BudgetsPage = async () => {
                     {budget.category.name}
                   </h3>
                   <Hydrated>
-                    <ActionsMenu budget={budget} />
+                    <BudgetActions budget={budget} />
                   </Hydrated>
                   <Dehydrated>
                     <Link
                       className="transition-colors hocus:text-grey-900"
                       href={`/budgets/${budget.id}/edit`}
                     >
-                      <span className="sr-only">
-                        {`Edit budget "${budget.category.name}"`}
-                      </span>
                       <span className="grid size-200 place-items-center">
                         <IconEllipsis />
+                      </span>
+                      <span className="sr-only">
+                        {`Edit budget "${budget.category.name}"`}
                       </span>
                     </Link>
                   </Dehydrated>

@@ -10,12 +10,12 @@ export const potSchema = z.object({
 
 export type PotSchema = z.infer<typeof potSchema>;
 
-export const potIdSchema = z.object({
+export const removePotSchema = z.object({
   id: z.string(),
 });
 
-export type PotIdSchema = z.infer<typeof potIdSchema>;
+export type RemovePotSchema = z.infer<typeof removePotSchema>;
 
-export const potSchemaWithId = potSchema.merge(potIdSchema);
+export const potSchemaWithId = potSchema.merge(removePotSchema);
 
 export type PotSchemaWithId = z.infer<typeof potSchemaWithId>;

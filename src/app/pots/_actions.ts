@@ -3,7 +3,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { potSchema } from "~/app/pots/_schemas";
+import { removePotSchema, potSchema } from "~/app/pots/_schemas";
 import { db } from "~/server/db";
 
 export const add = async (prevState: unknown, formData: FormData) => {
@@ -66,20 +66,20 @@ export const add = async (prevState: unknown, formData: FormData) => {
 //   redirect("/budgets");
 // };
 
-// export const remove = async (prevState: unknown, formData: FormData) => {
-//   const submission = parseWithZod(formData, {
-//     schema: budgetIdSchema,
-//   });
-//   if (submission.status !== "success") {
-//     return submission.reply();
-//   }
+export const remove = async (prevState: unknown, formData: FormData) => {
+  const submission = parseWithZod(formData, {
+    schema: removePotSchema,
+  });
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
 
-//   await db.budget.delete({
-//     where: {
-//       id: submission.value.id,
-//     },
-//   });
+  await db.pot.delete({
+    where: {
+      id: submission.value.id,
+    },
+  });
 
-//   revalidatePath("/budgets");
-//   redirect("/budgets");
-// };
+  revalidatePath("/pots");
+  redirect("/pots");
+};
