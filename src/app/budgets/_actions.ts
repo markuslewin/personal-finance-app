@@ -47,6 +47,7 @@ export const add = async (prevState: unknown, formData: FormData) => {
             return z.NEVER;
           }
         }
+        throw error;
       }
     }),
   });
