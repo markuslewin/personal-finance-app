@@ -3,11 +3,13 @@
 import { parseWithZod } from "@conform-to/zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import {
   removePotSchema,
   potSchema,
   editPotSchema,
   addMoneySchema,
+  type AddMoneySchema,
 } from "~/app/pots/_schemas";
 import { db } from "~/server/db";
 
@@ -90,43 +92,48 @@ export const addMoney = async (prevState: unknown, formData: FormData) => {
     async: true,
     schema: addMoneySchema.transform(async (val, ctx) => {
       // todo: Transaction
-      try {
-        const balance = await db.balance.findFirstOrThrow({
-          select: {
-            id: true,
-            current: true,
-          },
+      // todo: Lock
+      const balance = await db.balance.findFirstOrThrow({
+        select: {
+          id: true,
+          current: true,
+        },
+      });
+      if (balance.current < val.amount) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["amount"] satisfies [keyof AddMoneySchema],
+          message: "Insufficient funds",
         });
-        await db.balance.update({
-          data: {
-            current: balance.current - val.amount,
-          },
-          where: {
-            id: balance.id,
-          },
-        });
-
-        const pot = await db.pot.findUniqueOrThrow({
-          select: {
-            id: true,
-            total: true,
-          },
-          where: { id: val.id },
-        });
-        await db.pot.update({
-          data: {
-            total: pot.total + val.amount,
-          },
-          where: {
-            id: pot.id,
-          },
-        });
-
-        return true;
-      } catch (error) {
-        // todo: ctx.addIssue "Insufficient funds"
-        throw error;
+        return z.NEVER;
       }
+
+      await db.balance.update({
+        data: {
+          current: balance.current - val.amount,
+        },
+        where: {
+          id: balance.id,
+        },
+      });
+
+      const pot = await db.pot.findUniqueOrThrow({
+        select: {
+          id: true,
+          total: true,
+        },
+        where: { id: val.id },
+      });
+      await db.pot.update({
+        data: {
+          total: pot.total + val.amount,
+        },
+        where: {
+          id: pot.id,
+        },
+      });
+
+      return true;
     }),
   });
   if (submission.status !== "success") {
