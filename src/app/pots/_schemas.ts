@@ -7,6 +7,8 @@ const name = z.string().max(NAME_MAX_LENGTH);
 const target = z.number().positive().int();
 const theme = z.string();
 
+export const amount = z.number().positive().int();
+
 export const potSchema = z.object({
   name,
   target,
@@ -29,3 +31,17 @@ export const editPotSchema = z.object({
 });
 
 export type EditPotSchema = z.infer<typeof editPotSchema>;
+
+export const addMoneySchema = z.object({
+  id,
+  amount,
+});
+
+export type AddMoneySchema = z.infer<typeof addMoneySchema>;
+
+export const withdrawSchema = z.object({
+  id,
+  amount,
+});
+
+export type WithdrawSchema = z.infer<typeof withdrawSchema>;

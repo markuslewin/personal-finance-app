@@ -1,37 +1,25 @@
-import { cx } from "class-variance-authority";
-import { useId, type ComponentPropsWithRef } from "react";
+"use client";
 
-interface RootProps extends ComponentPropsWithRef<"span"> {
-  name: string;
+import { cx } from "class-variance-authority";
+import { type ComponentPropsWithRef } from "react";
+
+type RootProps = ComponentPropsWithRef<"span"> & {
   min: number;
   max: number;
   value: number;
-}
+};
 
-export const Root = ({
-  className,
-  name,
-  max,
-  min,
-  value,
-  ...props
-}: RootProps) => {
-  const labelId = useId();
+// Name with `aria-label`, `aria-labelledby`
+export const Root = ({ className, max, min, value, ...props }: RootProps) => {
   return (
-    <>
-      <span className="sr-only" id={labelId}>
-        {name}
-      </span>
-      <span
-        role="meter"
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={value}
-        aria-labelledby={labelId}
-        {...props}
-        className={cx(className, "")}
-      />
-    </>
+    <span
+      role="meter"
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={Math.min(max, Math.max(min, value))}
+      {...props}
+      className={cx(className, "")}
+    />
   );
 };
 

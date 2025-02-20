@@ -16,6 +16,13 @@ export const currency = (value: number, options?: CurrencyOptions) => {
   }).format(value);
 };
 
+export const percent = (value: number) => {
+  return new Intl.NumberFormat(locales, {
+    style: "percent",
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
 export const date = (value: Date) => {
   return new Intl.DateTimeFormat(locales, {
     dateStyle: "medium",

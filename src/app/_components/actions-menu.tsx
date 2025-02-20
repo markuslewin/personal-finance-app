@@ -13,9 +13,12 @@ export const Root = (props: RootProps) => {
 
 type TriggerProps = ComponentPropsWithRef<typeof DropdownMenu.Trigger>;
 
-export const Trigger = (props: TriggerProps) => {
+export const Trigger = ({ className, ...props }: TriggerProps) => {
   return (
-    <DropdownMenu.Trigger {...props}>
+    <DropdownMenu.Trigger
+      {...props}
+      className={cx(className, "transition-colors hocus:text-grey-900")}
+    >
       <span className="grid size-200 place-items-center">
         <IconEllipsis />
       </span>

@@ -45,7 +45,10 @@ export const Header = ({ className, ...props }: HeaderProps) => {
   return (
     <header
       {...props}
-      className={cx(className, "flex flex-wrap items-center justify-between")}
+      className={cx(
+        className,
+        "grid grid-cols-[1fr_auto] items-center gap-200",
+      )}
     />
   );
 };
