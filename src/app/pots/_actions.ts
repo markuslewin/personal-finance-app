@@ -71,18 +71,35 @@ export const edit = async (prevState: unknown, formData: FormData) => {
 };
 
 export const remove = async (prevState: unknown, formData: FormData) => {
-  const submission = parseWithZod(formData, {
-    schema: removePotSchema,
+  const submission = await parseWithZod(formData, {
+    async: true,
+    schema: removePotSchema.transform(async (val) => {
+      // todo: Transaction
+      const pot = await db.pot.delete({
+        select: {
+          total: true,
+        },
+        where: {
+          id: val.id,
+        },
+      });
+
+      const balance = await db.balance.findFirstOrThrow();
+      await db.balance.update({
+        data: {
+          current: balance.current + pot.total,
+        },
+        where: {
+          id: balance.id,
+        },
+      });
+
+      return true;
+    }),
   });
   if (submission.status !== "success") {
     return submission.reply();
   }
-
-  await db.pot.delete({
-    where: {
-      id: submission.value.id,
-    },
-  });
 
   revalidatePath("/pots");
   redirect("/pots");
