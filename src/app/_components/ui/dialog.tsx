@@ -65,7 +65,13 @@ export const Heading = ({
   const Comp = asChild ? Slot : "h1";
 
   return (
-    <Comp {...props} className={cx(className, "text-preset-1 text-grey-900")} />
+    <Comp
+      {...props}
+      className={cx(
+        className,
+        "text-preset-2 text-grey-900 tablet:text-preset-1",
+      )}
+    />
   );
 };
 
