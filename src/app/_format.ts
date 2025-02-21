@@ -2,6 +2,7 @@ const locales: Intl.LocalesArgument = "en-US";
 const defaultOptions: Intl.NumberFormatOptions = {
   style: "currency",
   currency: "USD",
+  signDisplay: "negative",
 };
 
 type CurrencyOptions = {

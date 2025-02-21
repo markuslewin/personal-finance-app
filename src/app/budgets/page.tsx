@@ -1,4 +1,3 @@
-import { getBudgetsWithTransactions } from "@prisma/client/sql";
 import { type Metadata } from "next";
 import Link from "next/link";
 import { nowDate } from "~/app/_now";
@@ -19,40 +18,78 @@ export const metadata: Metadata = {
 };
 
 const BudgetsPage = async () => {
-  const budgetsResult = await db.$queryRawTyped(
-    getBudgetsWithTransactions(nowDate.getFullYear(), nowDate.getMonth() + 1),
-  );
-
-  const budgets = Object.values(
-    budgetsResult.reduce(
-      (acc, cur) => {
-        return {
-          ...acc,
-          [cur.id]: {
-            id: cur.id,
-            maximum: cur.maximum,
-            category: {
-              name: cur.categoryName,
-              Transaction: [
-                ...(acc[cur.id]?.category.Transaction ?? []),
-                {
-                  id: cur.transactionId,
-                  amount: cur.transactionAmount,
-                  avatar: cur.transactionAvatar,
-                  date: cur.transactionDate,
-                  name: cur.transactionName,
-                },
-              ],
+  const budgets = await db.budget.findMany({
+    select: {
+      id: true,
+      maximum: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+          Transaction: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+              amount: true,
+              date: true,
             },
-            theme: {
-              color: cur.themeColor,
+            orderBy: {
+              date: "desc",
             },
-          } satisfies BudgetModel,
-        };
+            take: 3,
+          },
+        },
       },
-      {} as Record<string, BudgetModel>,
-    ),
+      theme: {
+        select: {
+          color: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+  const categorySums = await db.transaction.groupBy({
+    by: "categoryId",
+    _sum: {
+      amount: true,
+    },
+    where: {
+      AND: [
+        {
+          categoryId: {
+            in: budgets.map((b) => b.category.id),
+          },
+        },
+        {
+          date: {
+            gte: new Date(Date.UTC(nowDate.getFullYear(), nowDate.getMonth())),
+          },
+        },
+        {
+          date: {
+            lt: new Date(
+              Date.UTC(nowDate.getFullYear(), nowDate.getMonth() + 1),
+            ),
+          },
+        },
+      ],
+    },
+  });
+
+  const getSum = (categoryId: string) => {
+    return (
+      categorySums.find((t) => t.categoryId === categoryId)?._sum.amount ?? 0
+    );
+  };
+
+  const total = categorySums.reduce(
+    (acc, category) => acc + (category._sum.amount ?? 0),
+    0,
   );
+  const limit = budgets.reduce((acc, budget) => acc + budget.maximum, 0);
 
   return (
     <article>
@@ -80,9 +117,13 @@ const BudgetsPage = async () => {
               <Donut.Hole>
                 <p>
                   <strong className="block text-preset-1 text-grey-900">
-                    todo
+                    {currency(-1 * total, {
+                      trailingZeroDisplay: "stripIfInteger",
+                    })}
                   </strong>{" "}
-                  of todo limit
+                  of{" "}
+                  {currency(limit, { trailingZeroDisplay: "stripIfInteger" })}{" "}
+                  limit
                 </p>
               </Donut.Hole>
             </Donut.Root>
@@ -94,6 +135,8 @@ const BudgetsPage = async () => {
               role="list"
             >
               {budgets.map((budget) => {
+                const sum = getSum(budget.category.id);
+
                 return (
                   <li className="flex gap-200" key={budget.id}>
                     <div
@@ -104,9 +147,9 @@ const BudgetsPage = async () => {
                     />
                     <div className="flex grow flex-wrap items-center justify-between gap-100">
                       <h4>{budget.category.name}</h4>
-                      <p>
+                      <p className="flex items-center gap-100">
                         <strong className="text-preset-3 text-grey-900">
-                          {"todo"}
+                          {currency(-1 * sum)}
                         </strong>{" "}
                         of {currency(budget.maximum)}
                       </p>
@@ -120,7 +163,9 @@ const BudgetsPage = async () => {
         <div className="grid gap-300">
           <h2 className="sr-only">Categories</h2>
           {budgets.map((budget) => {
-            return <Budget key={budget.id} budget={budget} />;
+            const sum = getSum(budget.category.id);
+
+            return <Budget key={budget.id} budget={budget} spent={-1 * sum} />;
           })}
         </div>
       </div>
@@ -129,11 +174,30 @@ const BudgetsPage = async () => {
 };
 
 type BudgetProps = {
-  budget: BudgetModel;
+  budget: {
+    id: string;
+    maximum: number;
+    category: {
+      name: string;
+      Transaction: {
+        id: string;
+        name: string;
+        avatar: string;
+        amount: number;
+        date: Date;
+      }[];
+    };
+    theme: {
+      color: string;
+    };
+  };
+  spent: number;
 };
 
-const Budget = ({ budget }: BudgetProps) => {
+const Budget = ({ budget, spent }: BudgetProps) => {
   const meterLabelId = useId();
+
+  const free = Math.max(0, budget.maximum - spent);
 
   return (
     <article className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400">
@@ -186,14 +250,16 @@ const Budget = ({ budget }: BudgetProps) => {
           />
           <div className="grid gap-50">
             <h4>Spent</h4>
-            <p className="text-preset-4-bold text-grey-900">{"TODO"}</p>
+            <p className="text-preset-4-bold text-grey-900">
+              {currency(spent)}
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-[auto_1fr] gap-200">
           <div className="w-50 rounded-full bg-beige-100" />
           <div className="grid gap-50">
             <h4>Free</h4>
-            <p className="text-preset-4-bold text-grey-900">{"TODO"}</p>
+            <p className="text-preset-4-bold text-grey-900">{currency(free)}</p>
           </div>
         </div>
       </div>
@@ -250,19 +316,3 @@ const Budget = ({ budget }: BudgetProps) => {
 };
 
 export default BudgetsPage;
-
-interface BudgetModel {
-  id: string;
-  maximum: number;
-  category: {
-    name: string;
-    Transaction: {
-      id: string;
-      amount: number;
-      avatar: string;
-      date: Date;
-      name: string;
-    }[];
-  };
-  theme: { color: string };
-}

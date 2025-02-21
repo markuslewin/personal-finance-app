@@ -289,12 +289,8 @@ const OverviewPage = async () => {
                 role="list"
               >
                 {budgets.map((budget) => {
-                  const total = totalByBudgetId[budget.id];
-                  if (total === undefined) {
-                    throw new Error(
-                      `Could not find total for budget "${budget.id}"`,
-                    );
-                  }
+                  const total = totalByBudgetId[budget.id] ?? 0;
+
                   return (
                     <LegendItem key={budget.id} color={budget.theme.color}>
                       <LegendName>{budget.category.name}</LegendName>
