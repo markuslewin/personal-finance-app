@@ -100,8 +100,7 @@ const OverviewPage = async () => {
           <CardHeader>
             <CardHeading>Pots</CardHeading>
             <p>
-              {/* todo: Details of `pot` */}
-              <CardLink href={"#"}>See Details</CardLink>
+              <CardLink href={"/pots"}>See Details</CardLink>
             </p>
           </CardHeader>
           <CardContent className="mt-250 grid gap-250 tablet:grid-cols-[247fr_277fr]">

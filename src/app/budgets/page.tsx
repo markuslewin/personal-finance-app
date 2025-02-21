@@ -203,7 +203,7 @@ const Budget = ({ budget }: BudgetProps) => {
           <h4 className="text-preset-3 text-grey-900">Latest Spending</h4>
           <Link
             className="grid grid-cols-[1fr_auto] items-center gap-150 transition-colors hocus:text-grey-900"
-            href={"/transactions"}
+            href={`/transactions?category=${encodeURIComponent(budget.category.name)}`}
           >
             See All
             <span className="grid size-150 place-items-center">

@@ -2,33 +2,45 @@ import { cx } from "class-variance-authority";
 import { type Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { now } from "~/app/_now";
 import { db } from "~/server/db";
 // import IconCaretDown from "~/app/_assets/icon-caret-down.svg";
 import IconCaretLeft from "~/app/_assets/icon-caret-left.svg";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
-import IconFilterMobile from "~/app/_assets/icon-filter-mobile.svg";
-import IconSearch from "~/app/_assets/icon-search.svg";
-import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
-import { z } from "zod";
 import { type ComponentPropsWithRef, useId } from "react";
 import { currency, date } from "~/app/_format";
-import Textbox from "~/app/_components/ui/textbox";
-
-const PAGE_SIZE = 10;
+import TransactionsSearchForm from "~/app/transactions/_components/transactions-search-form";
+import { getOrderBy, searchSchema } from "~/app/transactions/_search";
+import { z } from "zod";
 
 export const metadata: Metadata = {
   title: "Transactions",
 };
 
+const PAGE_SIZE = 10;
+
 const TransactionsPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ page: string | string[] | undefined }>;
+  searchParams: Promise<unknown>;
 }) => {
-  const page = pageSchema.parse((await searchParams).page);
+  const { name, sort, category, page } = searchSchema
+    .extend({
+      page: z
+        .preprocess(
+          (val) => (Array.isArray(val) ? val[0] : val),
+          z.coerce.number().int().positive(),
+        )
+        .catch(1),
+    })
+    .parse(await searchParams);
+
   const [categories, transactions] = await Promise.all([
-    db.category.findMany(),
+    db.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    }),
     db.transaction.findMany({
       select: {
         id: true,
@@ -43,13 +55,15 @@ const TransactionsPage = async ({
         },
       },
       where: {
-        date: {
-          lte: new Date(now),
+        name: {
+          contains: name,
+          mode: "insensitive",
+        },
+        category: {
+          name: category,
         },
       },
-      orderBy: {
-        date: "desc",
-      },
+      orderBy: getOrderBy(sort),
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
@@ -61,59 +75,14 @@ const TransactionsPage = async ({
       <article className="mt-[2.5625rem] rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400">
         <header>
           <h2 className="sr-only">Search</h2>
-          <form className="flex flex-wrap items-center gap-300">
-            <label className="grow">
-              <span className="sr-only">Search: </span>
-              <span className="relative text-grey-900">
-                <Textbox
-                  className="w-full max-w-[20rem]"
-                  name="q"
-                  placeholder="Search transaction"
-                />
-                <span className="absolute inset-y-0 right-250 grid size-200 place-items-center">
-                  <IconSearch />
-                </span>
-              </span>
-            </label>
-            <label className="inline-flex items-center gap-100">
-              <span className="sr-only tablet:not-sr-only">Sort by </span>
-              <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-                <IconSortMobile />
-              </span>
-              <select
-                className="hidden tablet:block"
-                name="sort"
-                defaultValue={"latest"}
-              >
-                <option value={"latest"}>Latest</option>
-                <option value={"oldest"}>Oldest</option>
-                <option value={"a-to-z"}>A to Z</option>
-                <option value={"z-to-a"}>Z to A</option>
-                <option value={"highest"}>Highest</option>
-                <option value={"lowest"}>Lowest</option>
-              </select>
-            </label>
-            <label className="inline-flex items-center gap-100">
-              <span className="sr-only tablet:not-sr-only">Category </span>
-              <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-                <IconFilterMobile />
-              </span>
-              <select
-                className="hidden tablet:block"
-                name="category"
-                defaultValue={"all-transactions"}
-              >
-                <option value={"all-transactions"}>All Transactions</option>
-                {categories.map((category) => {
-                  return (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </label>
-          </form>
+          <TransactionsSearchForm
+            categories={categories}
+            defaultValues={{
+              name,
+              sort,
+              category,
+            }}
+          />
         </header>
         <SearchResultsSection className="mt-300">
           {/* Duplicate HTML to match the design */}
@@ -282,13 +251,6 @@ const TransactionsPage = async ({
     </>
   );
 };
-
-const pageSchema = z
-  .preprocess(
-    (val) => (Array.isArray(val) ? val[0] : val),
-    z.coerce.number().int().positive(),
-  )
-  .catch(1);
 
 type SearchResultsSectionProps = ComponentPropsWithRef<"section">;
 
