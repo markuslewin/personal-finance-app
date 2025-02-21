@@ -1,7 +1,7 @@
 import { getBudgetsWithTransactions } from "@prisma/client/sql";
 import { type Metadata } from "next";
 import Link from "next/link";
-import { now } from "~/app/_now";
+import { nowDate } from "~/app/_now";
 import { db } from "~/server/db";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 };
 
 const BudgetsPage = async () => {
-  const nowDate = new Date(now);
   const budgetsResult = await db.$queryRawTyped(
     getBudgetsWithTransactions(nowDate.getFullYear(), nowDate.getMonth() + 1),
   );

@@ -8,6 +8,7 @@ import { cx } from "class-variance-authority";
 import Image from "next/image";
 import * as Donut from "~/app/_components/ui/donut";
 import { currency, date } from "~/app/_format";
+import { nowDate } from "~/app/_now";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -19,8 +20,6 @@ const OverviewPage = async () => {
       db.balance.findFirstOrThrow({
         select: {
           current: true,
-          expenses: true,
-          income: true,
         },
       }),
       db.pot.findMany({
@@ -38,14 +37,23 @@ const OverviewPage = async () => {
           createdAt: "asc",
         },
       }),
+      // todo: Only need transactions of current month. Fill to 5.
       db.transaction.findMany({
-        take: 5,
         select: {
           id: true,
           amount: true,
           avatar: true,
           date: true,
           name: true,
+          category: {
+            select: {
+              Budget: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           date: "desc",
@@ -54,6 +62,7 @@ const OverviewPage = async () => {
       db.budget.findMany({
         select: {
           id: true,
+          maximum: true,
           theme: {
             select: {
               color: true,
@@ -77,6 +86,58 @@ const OverviewPage = async () => {
       }),
     ]);
 
+  const transactionsThisMonth = transactions.filter(
+    (t) => t.date.getUTCMonth() === nowDate.getUTCMonth(),
+  );
+
+  // Intro
+  const income = transactionsThisMonth
+    .filter((t) => t.amount > 0)
+    .reduce((total, transaction) => total + transaction.amount, 0);
+  const expenses = transactionsThisMonth
+    .filter((t) => t.amount < 0)
+    .reduce((total, transaction) => total + transaction.amount, 0);
+
+  // Pots
+  const totalSaved = pots.reduce((total, pot) => total + pot.total, 0);
+
+  // Budgets
+  const totalByBudgetId = transactionsThisMonth.reduce(
+    (acc, transaction) => {
+      if (transaction.category.Budget === null) {
+        return acc;
+      }
+
+      const budgetId = transaction.category.Budget.id;
+      const budgetTotal = acc[budgetId] ?? 0;
+
+      return { ...acc, [budgetId]: budgetTotal + transaction.amount };
+    },
+    {} as Record<string, number>,
+  );
+  const budgetsTotal = Object.values(totalByBudgetId).reduce(
+    (total, amount) => total + amount,
+    0,
+  );
+  const budgetsLimit = budgets.reduce(
+    (limit, budget) => limit + budget.maximum,
+    0,
+  );
+
+  // Recurring bills
+  const totalPaid = recurringBills
+    .filter((bill) => bill.day < nowDate.getUTCDate())
+    .reduce((total, bill) => total + bill.amount, 0);
+  const totalUpcoming = recurringBills
+    .filter((bill) => bill.day >= nowDate.getUTCDate())
+    .reduce((total, bill) => total + bill.amount, 0);
+  const totalDueSoon = recurringBills
+    .filter(
+      (bill) =>
+        bill.day >= nowDate.getUTCDate() && bill.day < nowDate.getUTCDate() + 5,
+    )
+    .reduce((total, bill) => total + bill.amount, 0);
+
   return (
     <>
       <h1 className="text-preset-1">Overview</h1>
@@ -88,11 +149,11 @@ const OverviewPage = async () => {
         </div>
         <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
           <h3 className="text-grey-500">Income</h3>
-          <p className="mt-150 text-preset-1">{currency(balance.income)}</p>
+          <p className="mt-150 text-preset-1">{currency(income)}</p>
         </div>
         <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
           <h3 className="text-grey-500">Expenses</h3>
-          <p className="mt-150 text-preset-1">{currency(balance.expenses)}</p>
+          <p className="mt-150 text-preset-1">{currency(Math.abs(expenses))}</p>
         </div>
       </div>
       <div className="mt-400 grid gap-200 tablet:gap-300 desktop:grid-cols-[608fr_428fr] desktop:grid-rows-[auto_1fr_auto]">
@@ -110,12 +171,16 @@ const OverviewPage = async () => {
               </div>
               <div>
                 <h3 className="text-grey-500">Total Saved</h3>
-                <p className="text-preset-1">{"todo"}</p>
+                <p className="text-preset-1">
+                  {currency(totalSaved, {
+                    trailingZeroDisplay: "stripIfInteger",
+                  })}
+                </p>
               </div>
             </div>
             <h3 className="sr-only">Per Pot</h3>
             <ul className="grid grid-cols-2 gap-200 py-50" role="list">
-              {pots.map((pot) => {
+              {pots.slice(0, 4).map((pot) => {
                 return (
                   <LegendItem key={pot.id} color={pot.theme.color}>
                     <LegendName>{pot.name}</LegendName>
@@ -142,7 +207,7 @@ const OverviewPage = async () => {
               className="mt-400 [&>*+*]:mt-250 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-250"
               role="list"
             >
-              {transactions.map((transaction) => {
+              {transactions.slice(0, 5).map((transaction) => {
                 return (
                   <li
                     className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
@@ -206,9 +271,15 @@ const OverviewPage = async () => {
                 <Donut.Hole>
                   <p>
                     <strong className="block text-preset-1 text-grey-900">
-                      todo
+                      {currency(-1 * budgetsTotal, {
+                        trailingZeroDisplay: "stripIfInteger",
+                      })}
                     </strong>{" "}
-                    of todo limit
+                    of{" "}
+                    {currency(budgetsLimit, {
+                      trailingZeroDisplay: "stripIfInteger",
+                    })}{" "}
+                    limit
                   </p>
                 </Donut.Hole>
               </Donut.Root>
@@ -218,10 +289,16 @@ const OverviewPage = async () => {
                 role="list"
               >
                 {budgets.map((budget) => {
+                  const total = totalByBudgetId[budget.id];
+                  if (total === undefined) {
+                    throw new Error(
+                      `Could not find total for budget "${budget.id}"`,
+                    );
+                  }
                   return (
                     <LegendItem key={budget.id} color={budget.theme.color}>
                       <LegendName>{budget.category.name}</LegendName>
-                      <LegendValue>{"todo"}</LegendValue>
+                      <LegendValue>{currency(-1 * total)}</LegendValue>
                     </LegendItem>
                   );
                 })}
@@ -237,23 +314,22 @@ const OverviewPage = async () => {
             </p>
           </CardHeader>
           <CardContent className="mt-400 grid gap-150">
-            {/* todo: Calculate */}
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
               <h3>Paid Bills</h3>
               <p className="text-preset-4-bold text-grey-900">
-                {currency(190)}
+                {currency(totalPaid)}
               </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
               <h3>Total Upcoming</h3>
               <p className="text-preset-4-bold text-grey-900">
-                {currency(194.98)}
+                {currency(totalUpcoming)}
               </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
               <h3>Due Soon</h3>
               <p className="text-preset-4-bold text-grey-900">
-                {currency(59.98)}
+                {currency(totalDueSoon)}
               </p>
             </div>
           </CardContent>

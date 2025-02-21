@@ -18,7 +18,7 @@ export const Root = ({ className, data, ...props }: DonutProps) => {
       {...props}
       className={cx(
         className,
-        "mx-auto grid aspect-square w-full max-w-[15rem] place-items-center rounded-full",
+        "mx-auto grid size-[15rem] place-items-center rounded-full",
       )}
       style={{
         background: `conic-gradient(${
