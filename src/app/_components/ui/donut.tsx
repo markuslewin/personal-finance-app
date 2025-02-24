@@ -7,7 +7,7 @@ interface DataItem {
 }
 
 interface DonutProps extends ComponentPropsWithRef<"div"> {
-  data: [DataItem, ...DataItem[]];
+  data: DataItem[];
 }
 
 export const Root = ({ className, data, ...props }: DonutProps) => {
@@ -18,24 +18,27 @@ export const Root = ({ className, data, ...props }: DonutProps) => {
       {...props}
       className={cx(
         className,
-        "mx-auto grid size-[15rem] place-items-center rounded-full",
+        "mx-auto grid size-[15rem] place-items-center rounded-full bg-grey-500",
       )}
       style={{
-        background: `conic-gradient(${
-          rest.reduce(
-            (last, current) => {
-              const end = last.end + current.percent;
-              return {
-                end,
-                string: `${last.string}, ${current.color} ${last.end}turn, ${current.color} ${end}turn`,
-              };
-            },
-            {
-              end: first.percent,
-              string: `${first.color} ${first.percent}turn`,
-            },
-          ).string
-        })`,
+        background:
+          first !== undefined
+            ? `conic-gradient(${
+                rest.reduce(
+                  (last, current) => {
+                    const end = last.end + current.percent;
+                    return {
+                      end,
+                      string: `${last.string}, ${current.color} ${last.end}turn, ${current.color} ${end}turn`,
+                    };
+                  },
+                  {
+                    end: first.percent,
+                    string: `${first.color} ${first.percent}turn`,
+                  },
+                ).string
+              })`
+            : undefined,
       }}
     />
   );

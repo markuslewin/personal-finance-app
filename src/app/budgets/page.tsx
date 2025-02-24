@@ -105,12 +105,12 @@ const BudgetsPage = async () => {
           <h2 className="sr-only">Spending</h2>
           <div className="py-250">
             <Donut.Root
-              data={[
-                { color: "green", percent: 0.05 },
-                { color: "blue", percent: 0.77 },
-                { color: "yellow", percent: 0.08 },
-                { color: "grey", percent: 0.1 },
-              ]}
+              data={budgets.map((budget) => {
+                return {
+                  color: budget.theme.color,
+                  percent: clamp(0, 1, getSum(budget.category.id) / total),
+                };
+              })}
             >
               <Donut.Hole>
                 <p>

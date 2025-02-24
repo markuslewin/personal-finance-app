@@ -9,7 +9,7 @@ import Image from "next/image";
 import * as Donut from "~/app/_components/ui/donut";
 import { currency, date } from "~/app/_format";
 import { nowDate } from "~/app/_now";
-import { sum } from "~/app/_math";
+import { clamp, sum } from "~/app/_math";
 import { getIsDueSoon, getIsPaid } from "~/app/recurring-bills/_utils/bills";
 
 export const metadata: Metadata = {
@@ -260,12 +260,16 @@ const OverviewPage = async () => {
             <div className="grid items-center gap-200 tablet:grid-cols-[1fr_auto]">
               <h3 className="sr-only">Total</h3>
               <Donut.Root
-                data={[
-                  { color: "green", percent: 0.05 },
-                  { color: "blue", percent: 0.77 },
-                  { color: "yellow", percent: 0.08 },
-                  { color: "grey", percent: 0.1 },
-                ]}
+                data={budgets.map((budget) => {
+                  return {
+                    color: budget.theme.color,
+                    percent: clamp(
+                      0,
+                      1,
+                      (totalByBudgetId[budget.id] ?? 0) / budgetsTotal,
+                    ),
+                  };
+                })}
               >
                 <Donut.Hole>
                   <p>

@@ -122,7 +122,7 @@ export default async function RootLayout({
                 )} */}
           </header>
           {/* Padding creates buffer for fixed `header` */}
-          <main className="px-200 pb-[5.25rem] pt-300 tablet:px-500 tablet:pb-[6.625rem] tablet:pt-500 desktop:pb-400">
+          <main className="isolate px-200 pb-[5.25rem] pt-300 tablet:px-500 tablet:pb-[6.625rem] tablet:pt-500 desktop:pb-400">
             <div className="mx-auto max-w-[66.25rem]">{children}</div>
           </main>
         </div>
