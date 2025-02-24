@@ -13,6 +13,9 @@ const CategoriesCombobox = async (props: CategoriesComboboxProps) => {
       id: true,
       name: true,
     },
+    orderBy: {
+      createdAt: "asc",
+    },
   });
 
   return (

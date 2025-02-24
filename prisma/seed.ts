@@ -43,14 +43,23 @@ const themes = [
   { name: "Purple", color: "#826CB0" },
 ];
 
+const createdAtBase = new Date();
+
 async function main() {
   const persistedThemes = await db.theme.createManyAndReturn({
-    data: themes,
+    data: themes.map((theme, i) => {
+      return { ...theme, createdAt: new Date(createdAtBase.getTime() + i) };
+    }),
   });
   const themeIdByColor = new Map(persistedThemes.map((c) => [c.color, c.id]));
 
   const persistedCategories = await db.category.createManyAndReturn({
-    data: categories.map((name) => ({ name })),
+    data: categories.map((name, i) => {
+      return {
+        name,
+        createdAt: new Date(createdAtBase.getTime() + i),
+      };
+    }),
     select: {
       id: true,
       name: true,
@@ -106,7 +115,7 @@ async function main() {
   });
 
   await db.budget.createMany({
-    data: data.budgets.map((budget) => {
+    data: data.budgets.map((budget, i) => {
       const categoryId = categoryIdByName.get(budget.category);
       if (categoryId === undefined) {
         throw new Error(
@@ -123,12 +132,13 @@ async function main() {
         maximum: budget.maximum,
         categoryId,
         themeId,
+        createdAt: new Date(createdAtBase.getTime() + i),
       };
     }),
   });
 
   await db.pot.createMany({
-    data: data.pots.map((pot) => {
+    data: data.pots.map((pot, i) => {
       const themeId = themeIdByColor.get(pot.theme);
       if (themeId === undefined) {
         throw new Error(`Could not find theme with color "${pot.theme}"`);
@@ -139,6 +149,7 @@ async function main() {
         target: pot.target,
         total: pot.total,
         themeId,
+        createdAt: new Date(createdAtBase.getTime() + i),
       };
     }),
   });

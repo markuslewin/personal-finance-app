@@ -83,6 +83,9 @@ model Category {
 
     Transaction Transaction[]
     Budget      Budget?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Theme {
@@ -92,6 +95,9 @@ model Theme {
 
     Budget Budget[]
     Pot    Pot[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -100,6 +106,9 @@ model User {
     name  String
 
     password Password?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Password {
@@ -108,4 +117,7 @@ model Password {
 
     userId String @unique
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

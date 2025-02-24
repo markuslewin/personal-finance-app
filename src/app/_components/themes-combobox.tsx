@@ -13,6 +13,9 @@ const ThemesCombobox = async (props: ThemesComboboxProps) => {
       id: true,
       name: true,
     },
+    orderBy: {
+      createdAt: "asc",
+    },
   });
 
   return (

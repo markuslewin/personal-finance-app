@@ -40,6 +40,9 @@ const TransactionsPage = async ({
         id: true,
         name: true,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     }),
     db.transaction.findMany({
       select: {
