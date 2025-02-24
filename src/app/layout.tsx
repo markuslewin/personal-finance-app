@@ -54,7 +54,7 @@ export default async function RootLayout({
     <html lang="en" className={`${publicSans.variable}`}>
       <body className="bg-grey-900 font-public-sans text-preset-4">
         <div className="min-h-screen bg-beige-100 text-grey-900 desktop:grid desktop:grid-cols-[18.75rem_1fr]">
-          <header className="fixed inset-x-0 bottom-0 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:static desktop:flex desktop:h-auto desktop:flex-col desktop:gap-300 desktop:rounded-r-2xl desktop:rounded-tl-none desktop:pb-500 desktop:text-preset-3">
+          <header className="fixed inset-x-0 bottom-0 z-10 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:sticky desktop:top-0 desktop:flex desktop:h-screen desktop:flex-col desktop:gap-300 desktop:overflow-y-auto desktop:rounded-r-2xl desktop:rounded-tl-none desktop:pb-500 desktop:text-preset-3">
             <p className="hidden px-400 py-500 text-white desktop:block">
               <Link href={"/"}>
                 {/* <AssetLogoSmall /> */}
