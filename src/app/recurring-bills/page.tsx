@@ -4,13 +4,20 @@ import IconRecurringBills from "~/app/_assets/icon-recurring-bills.svg";
 import { type ComponentPropsWithRef, useId } from "react";
 import { cx } from "class-variance-authority";
 import Image from "next/image";
+import IconBillDue from "~/app/_assets/icon-bill-due.svg";
+import IconBillPaid from "~/app/_assets/icon-bill-paid.svg";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { currency } from "~/app/_format";
+import { nowDate } from "~/app/_now";
+import { sum } from "~/app/_math";
+import { getIsDueSoon, getIsPaid } from "~/app/recurring-bills/_utils/bills";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
 };
+
+const date = nowDate.getDate();
 
 const RecurringBillsPage = async () => {
   const recurringBills = await db.recurringBill.findMany({
@@ -26,6 +33,14 @@ const RecurringBillsPage = async () => {
     },
   });
 
+  const total = sum(recurringBills, (b) => b.amount);
+
+  const billByDueType = Object.groupBy(recurringBills, (bill) =>
+    getIsPaid(date, bill) ? "paid" : "upcoming",
+  );
+  const billsDueSoon =
+    billByDueType.upcoming?.filter((b) => getIsDueSoon(date, b)) ?? [];
+
   return (
     <>
       <h1 className="text-preset-1">Recurring Bills</h1>
@@ -37,7 +52,7 @@ const RecurringBillsPage = async () => {
             </div>
             <div className="grid gap-150">
               <h2>Total Bills</h2>
-              <p className="text-preset-1">TODO</p>
+              <p className="text-preset-1">{currency(total)}</p>
             </div>
           </div>
           <div className="rounded-xl bg-white p-250 text-grey-500">
@@ -46,18 +61,24 @@ const RecurringBillsPage = async () => {
               <div className="flex flex-wrap items-center justify-between">
                 <h3>Paid Bills</h3>
                 <p className="text-end text-preset-5-bold text-grey-900">
-                  TODO
+                  {billByDueType.paid?.length ?? 0} (
+                  {currency(sum(billByDueType.paid ?? [], (b) => b.amount))})
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-between">
                 <h3>Total Upcoming</h3>
                 <p className="text-end text-preset-5-bold text-grey-900">
-                  TODO
+                  {billByDueType.upcoming?.length ?? 0} (
+                  {currency(sum(billByDueType.upcoming ?? [], (b) => b.amount))}
+                  )
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-between text-red">
                 <h3>Due Soon</h3>
-                <p className="text-end text-preset-5-bold">TODO</p>
+                <p className="text-end text-preset-5-bold">
+                  {billsDueSoon.length} (
+                  {currency(sum(billsDueSoon, (b) => b.amount))})
+                </p>
               </div>
             </div>
           </div>
@@ -109,6 +130,9 @@ const RecurringBillsPage = async () => {
               role="list"
             >
               {recurringBills.map((bill) => {
+                const isPaid = getIsPaid(date, bill);
+                const isDueSoon = getIsDueSoon(date, bill);
+
                 return (
                   <li className="grid gap-100" key={bill.id}>
                     <div className="grid grid-cols-[auto_1fr] items-center gap-200">
@@ -124,11 +148,32 @@ const RecurringBillsPage = async () => {
                       </h4>
                     </div>
                     <div className="flex flex-wrap items-center justify-between">
-                      <p className="text-preset-5">
+                      <p
+                        className={cx(
+                          "flex flex-wrap items-center gap-100 text-preset-5",
+                          isPaid ? "text-green" : null,
+                        )}
+                      >
                         <span className="sr-only">Due Date: </span>
                         Monthly-{bill.day}
+                        {isPaid ? (
+                          <span>
+                            <IconBillPaid />
+                            <span className="sr-only">(Paid)</span>
+                          </span>
+                        ) : isDueSoon ? (
+                          <span className="text-red">
+                            <IconBillDue />
+                            <span className="sr-only">(Due soon)</span>
+                          </span>
+                        ) : null}
                       </p>
-                      <p className="text-end text-preset-4-bold text-grey-900">
+                      <p
+                        className={cx(
+                          "text-end text-preset-4-bold text-grey-900",
+                          isDueSoon ? "text-red" : null,
+                        )}
+                      >
                         <span className="sr-only">Amount: </span>
                         {currency(bill.amount)}
                       </p>
@@ -153,6 +198,9 @@ const RecurringBillsPage = async () => {
               </thead>
               <tbody className="mt-100 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100">
                 {recurringBills.map((bill) => {
+                  const isPaid = getIsPaid(date, bill);
+                  const isDueSoon = getIsDueSoon(date, bill);
+
                   return (
                     <tr key={bill.id}>
                       <td className="py-250 desktop:px-200">
@@ -169,10 +217,33 @@ const RecurringBillsPage = async () => {
                           </p>
                         </div>
                       </td>
-                      <td className="py-200 text-preset-5 desktop:px-200">
-                        Monthly-{bill.day}
+                      <td
+                        className={cx(
+                          "py-200 text-preset-5 desktop:px-200",
+                          isPaid ? "text-green" : null,
+                        )}
+                      >
+                        <span className="flex flex-wrap items-center gap-100">
+                          Monthly-{bill.day}
+                          {isPaid ? (
+                            <span>
+                              <IconBillPaid />
+                              <span className="sr-only">(Paid)</span>
+                            </span>
+                          ) : isDueSoon ? (
+                            <span className="text-red">
+                              <IconBillDue />
+                              <span className="sr-only">(Due soon)</span>
+                            </span>
+                          ) : null}
+                        </span>
                       </td>
-                      <td className="py-200 text-end text-preset-4-bold text-grey-900 desktop:px-200">
+                      <td
+                        className={cx(
+                          "py-200 text-end text-preset-4-bold text-grey-900 desktop:px-200",
+                          isDueSoon ? "text-red" : null,
+                        )}
+                      >
                         {currency(bill.amount)}
                       </td>
                     </tr>

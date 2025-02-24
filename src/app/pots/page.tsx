@@ -3,7 +3,7 @@ import Link from "next/link";
 import { db } from "~/server/db";
 import * as Meter from "~/app/_components/meter";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
-import { currency } from "~/app/_format";
+import { currency, percent } from "~/app/_format";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import PotActions from "~/app/pots/_components/pot-actions-menu";
 import { useId } from "react";
@@ -112,7 +112,9 @@ const Pot = ({ pot }: PotProps) => {
           </Meter.Root>
         </p>
         <div className="mt-150 flex items-center justify-between">
-          <p className="text-preset-5-bold">TODO</p>
+          <p className="text-preset-5-bold">
+            {percent(pot.total / pot.target)}
+          </p>
           <p className="text-end">
             Target of{" "}
             {currency(pot.target, {

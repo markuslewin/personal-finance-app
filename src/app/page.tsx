@@ -9,6 +9,8 @@ import Image from "next/image";
 import * as Donut from "~/app/_components/ui/donut";
 import { currency, date } from "~/app/_format";
 import { nowDate } from "~/app/_now";
+import { sum } from "~/app/_math";
+import { getIsDueSoon, getIsPaid } from "~/app/recurring-bills/_utils/bills";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -91,15 +93,17 @@ const OverviewPage = async () => {
   );
 
   // Intro
-  const income = transactionsThisMonth
-    .filter((t) => t.amount > 0)
-    .reduce((total, transaction) => total + transaction.amount, 0);
-  const expenses = transactionsThisMonth
-    .filter((t) => t.amount < 0)
-    .reduce((total, transaction) => total + transaction.amount, 0);
+  const income = sum(
+    transactionsThisMonth.filter((t) => t.amount > 0),
+    (t) => t.amount,
+  );
+  const expenses = sum(
+    transactionsThisMonth.filter((t) => t.amount < 0),
+    (t) => t.amount,
+  );
 
   // Pots
-  const totalSaved = pots.reduce((total, pot) => total + pot.total, 0);
+  const totalSaved = sum(pots, (p) => p.total);
 
   // Budgets
   const totalByBudgetId = transactionsThisMonth.reduce(
@@ -115,28 +119,23 @@ const OverviewPage = async () => {
     },
     {} as Record<string, number>,
   );
-  const budgetsTotal = Object.values(totalByBudgetId).reduce(
-    (total, amount) => total + amount,
-    0,
-  );
-  const budgetsLimit = budgets.reduce(
-    (limit, budget) => limit + budget.maximum,
-    0,
-  );
+  const budgetsTotal = sum(Object.values(totalByBudgetId), (n) => n);
+  const budgetsLimit = sum(budgets, (b) => b.maximum);
 
   // Recurring bills
-  const totalPaid = recurringBills
-    .filter((bill) => bill.day < nowDate.getUTCDate())
-    .reduce((total, bill) => total + bill.amount, 0);
-  const totalUpcoming = recurringBills
-    .filter((bill) => bill.day >= nowDate.getUTCDate())
-    .reduce((total, bill) => total + bill.amount, 0);
-  const totalDueSoon = recurringBills
-    .filter(
-      (bill) =>
-        bill.day >= nowDate.getUTCDate() && bill.day < nowDate.getUTCDate() + 5,
-    )
-    .reduce((total, bill) => total + bill.amount, 0);
+  const currentDate = nowDate.getDate();
+  const totalPaid = sum(
+    recurringBills.filter((bill) => getIsPaid(currentDate, bill)),
+    (b) => b.amount,
+  );
+  const totalUpcoming = sum(
+    recurringBills.filter((bill) => !getIsPaid(currentDate, bill)),
+    (b) => b.amount,
+  );
+  const totalDueSoon = sum(
+    recurringBills.filter((bill) => getIsDueSoon(currentDate, bill)),
+    (b) => b.amount,
+  );
 
   return (
     <>

@@ -12,6 +12,7 @@ import Button from "~/app/_components/ui/button";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import BudgetActions from "~/app/budgets/_components/budget-actions-menu";
 import { useId } from "react";
+import { sum } from "~/app/_math";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -85,11 +86,8 @@ const BudgetsPage = async () => {
     );
   };
 
-  const total = categorySums.reduce(
-    (acc, category) => acc + (category._sum.amount ?? 0),
-    0,
-  );
-  const limit = budgets.reduce((acc, budget) => acc + budget.maximum, 0);
+  const total = sum(categorySums, (s) => s._sum.amount ?? 0);
+  const limit = sum(budgets, (b) => b.maximum);
 
   return (
     <article>
