@@ -7,6 +7,7 @@ import { currency, percent } from "~/app/_format";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import PotActions from "~/app/pots/_components/pot-actions-menu";
 import { useId } from "react";
+import { clamp } from "~/app/_math";
 
 export const metadata: Metadata = {
   title: "Pots",
@@ -106,8 +107,11 @@ const Pot = ({ pot }: PotProps) => {
             aria-labelledby={meterLabelId}
           >
             <Meter.Indicator
-              className="w-1/2 rounded-full"
-              style={{ background: pot.theme.color }}
+              className="rounded-full"
+              style={{
+                background: pot.theme.color,
+                width: `${clamp(0, 100, (pot.total / pot.target) * 100)}%`,
+              }}
             />
           </Meter.Root>
         </p>

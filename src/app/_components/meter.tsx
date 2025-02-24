@@ -2,6 +2,7 @@
 
 import { cx } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
+import { clamp } from "~/app/_math";
 
 type RootProps = ComponentPropsWithRef<"span"> & {
   min: number;
@@ -16,7 +17,7 @@ export const Root = ({ className, max, min, value, ...props }: RootProps) => {
       role="meter"
       aria-valuemin={min}
       aria-valuemax={max}
-      aria-valuenow={Math.min(max, Math.max(min, value))}
+      aria-valuenow={clamp(min, max, value)}
       {...props}
       className={cx(className, "")}
     />

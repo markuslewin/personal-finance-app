@@ -12,7 +12,7 @@ import Button from "~/app/_components/ui/button";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import BudgetActions from "~/app/budgets/_components/budget-actions-menu";
 import { useId } from "react";
-import { sum } from "~/app/_math";
+import { clamp, sum } from "~/app/_math";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -231,12 +231,15 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           className="grid h-400 rounded bg-beige-100 p-50"
           min={0}
           max={budget.maximum}
-          value={50}
+          value={spent}
           aria-labelledby={meterLabelId}
         >
           <Meter.Indicator
-            className="w-1/2 rounded"
-            style={{ background: budget.theme.color }}
+            className="rounded"
+            style={{
+              background: budget.theme.color,
+              width: `${clamp(0, 100, (spent / budget.maximum) * 100)}%`,
+            }}
           />
         </Meter.Root>
       </p>
