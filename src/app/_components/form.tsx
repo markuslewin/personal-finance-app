@@ -33,21 +33,21 @@ type RootProps<Schema extends ZodTypeAny> = Omit<
 export const Root = <Schema extends ZodTypeAny>({
   schema,
   defaultValue,
-  action: _action,
+  action,
   ...props
 }: RootProps<Schema>) => {
   // todo: Move into `useAppForm`
-  const [lastResult, action] = useActionState(_action, undefined);
+  const [lastResult, formAction] = useActionState(action, undefined);
   const [form] = useAppForm({
     schema,
     defaultValue,
     lastResult,
-    action,
+    action: formAction,
   });
 
   return (
     <FormProvider context={form.context}>
-      <Dialog.Form {...getFormProps(form)} action={action} {...props} />
+      <Dialog.Form {...getFormProps(form)} action={formAction} {...props} />
     </FormProvider>
   );
 };
