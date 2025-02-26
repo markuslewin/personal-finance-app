@@ -8,6 +8,7 @@ import IconFilterMobile from "~/app/_assets/icon-filter-mobile.svg";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { sortingOptions, type SearchSchema } from "~/app/transactions/_search";
+import Combobox from "~/app/_components/ui/combobox";
 
 type TransactionsSearchFormProps = ComponentPropsWithRef<"form"> & {
   categories: { id: string; name: string }[];
@@ -53,37 +54,39 @@ const TransactionsSearchForm = ({
           </span>
         </label>
       </div>
-      <label className="inline-flex items-center gap-100">
-        <span className="sr-only tablet:not-sr-only">Sort by </span>
-        <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-          <IconSortMobile />
-        </span>
-        <select
-          className="hidden tablet:block"
-          name="sort"
-          defaultValue={defaultValues.sort}
-        >
-          {sortingOptions.map((option) => {
-            return <option key={option}>{option}</option>;
-          })}
-        </select>
-      </label>
-      <label className="inline-flex items-center gap-100">
-        <span className="sr-only tablet:not-sr-only">Category </span>
-        <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-          <IconFilterMobile />
-        </span>
-        <select
-          className="hidden tablet:block"
-          name="category"
-          defaultValue={defaultValues.category}
-        >
-          <option value="">All Transactions</option>
-          {categories.map((category) => {
-            return <option key={category.id}>{category.name}</option>;
-          })}
-        </select>
-      </label>
+      <div className="flex flex-wrap gap-300">
+        <label className="relative inline-flex items-center gap-100">
+          <span className="sr-only tablet:not-sr-only">Sort by </span>
+          <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
+            <IconSortMobile />
+          </span>
+          <Combobox
+            className="absolute inset-0 h-auto px-0 opacity-0 tablet:static tablet:inset-auto tablet:h-[2.8125rem] tablet:px-[1.1875rem] tablet:opacity-100"
+            name="sort"
+            defaultValue={defaultValues.sort}
+          >
+            {sortingOptions.map((option) => {
+              return <option key={option}>{option}</option>;
+            })}
+          </Combobox>
+        </label>
+        <label className="relative inline-flex items-center gap-100">
+          <span className="sr-only tablet:not-sr-only">Category </span>
+          <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
+            <IconFilterMobile />
+          </span>
+          <Combobox
+            className="absolute inset-0 h-auto px-0 opacity-0 tablet:static tablet:inset-auto tablet:h-[2.8125rem] tablet:px-[1.1875rem] tablet:opacity-100"
+            name="category"
+            defaultValue={defaultValues.category}
+          >
+            <option value="">All Transactions</option>
+            {categories.map((category) => {
+              return <option key={category.id}>{category.name}</option>;
+            })}
+          </Combobox>
+        </label>
+      </div>
     </form>
   );
 };
