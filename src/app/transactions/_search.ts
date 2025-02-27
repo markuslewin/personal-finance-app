@@ -37,7 +37,7 @@ export const getOrderBy = (
 
 export const searchSchema = z.object({
   name: z.optional(z.string().min(1)).catch(undefined),
-  sort: z.enum(sortingOptions).catch("Latest"),
+  sort: z.optional(z.enum(sortingOptions)).catch(undefined),
   category: z.optional(z.string().min(1)).catch(undefined),
 });
 

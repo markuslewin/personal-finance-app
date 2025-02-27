@@ -66,7 +66,7 @@ const TransactionsPage = async ({
           name: category,
         },
       },
-      orderBy: getOrderBy(sort),
+      orderBy: getOrderBy(sort ?? "Latest"),
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
@@ -80,7 +80,7 @@ const TransactionsPage = async ({
           <h2 className="sr-only">Search</h2>
           <TransactionsSearchForm
             categories={categories}
-            defaultValues={{
+            values={{
               name,
               sort,
               category,
