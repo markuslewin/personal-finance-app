@@ -6,12 +6,13 @@ import { cx } from "class-variance-authority";
 import Image from "next/image";
 import IconBillDue from "~/app/_assets/icon-bill-due.svg";
 import IconBillPaid from "~/app/_assets/icon-bill-paid.svg";
-import IconSearch from "~/app/_assets/icon-search.svg";
-import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { currency } from "~/app/_format";
 import { nowDate } from "~/app/_now";
 import { sum } from "~/app/_math";
 import { getIsDueSoon, getIsPaid } from "~/app/recurring-bills/_utils/bills";
+import { z } from "zod";
+import { type SortingOption, sortingOptions } from "~/app/_sort";
+import { BillsSearchForm } from "~/app/recurring-bills/_components/bills-search-form";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
@@ -19,8 +20,44 @@ export const metadata: Metadata = {
 
 const date = nowDate.getDate();
 
-const RecurringBillsPage = async () => {
-  const recurringBills = await db.recurringBill.findMany({
+const DEFAULT_SORTING: SortingOption = "Oldest";
+
+type Bill = {
+  name: string;
+  amount: number;
+  day: number;
+};
+
+const getSortFn = (option: SortingOption): ((a: Bill, b: Bill) => number) => {
+  switch (option) {
+    case "A to Z":
+      return (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+    case "Highest":
+      return (a, b) => b.amount - a.amount;
+    case "Latest":
+      return (a, b) => b.day - a.day;
+    case "Lowest":
+      return (a, b) => a.amount - b.amount;
+    case "Oldest":
+      return (a, b) => a.day - b.day;
+    case "Z to A":
+      return (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1);
+  }
+};
+
+const RecurringBillsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<unknown>;
+}) => {
+  const { name, sort } = z
+    .object({
+      name: z.optional(z.string()).catch(undefined),
+      sort: z.optional(z.enum(sortingOptions)).catch(undefined),
+    })
+    .parse(await searchParams);
+
+  const allRecurringBills = await db.recurringBill.findMany({
     select: {
       id: true,
       amount: true,
@@ -33,13 +70,20 @@ const RecurringBillsPage = async () => {
     },
   });
 
-  const total = sum(recurringBills, (b) => b.amount);
-
-  const billByDueType = Object.groupBy(recurringBills, (bill) =>
+  const total = sum(allRecurringBills, (b) => b.amount);
+  const billByDueType = Object.groupBy(allRecurringBills, (bill) =>
     getIsPaid(date, bill) ? "paid" : "upcoming",
   );
   const billsDueSoon =
     billByDueType.upcoming?.filter((b) => getIsDueSoon(date, b)) ?? [];
+
+  const recurringBills = (
+    name === undefined
+      ? [...allRecurringBills]
+      : allRecurringBills.filter((b) =>
+          b.name.toLowerCase().includes(name.toLowerCase()),
+        )
+  ).sort(getSortFn(sort ?? DEFAULT_SORTING));
 
   return (
     <>
@@ -87,40 +131,12 @@ const RecurringBillsPage = async () => {
           <h2 className="sr-only">Bills</h2>
           <header>
             <h3 className="sr-only">Search</h3>
-            <form className="flex flex-wrap items-center gap-300">
-              <label className="grow">
-                <span className="sr-only">Search: </span>
-                <span className="relative text-grey-900">
-                  <input
-                    className="h-[2.8125rem] w-full max-w-[20rem] rounded-xl border-[0.0625rem] border-beige-500 pl-[1.1875rem] pr-[3.25rem] placeholder:text-beige-500"
-                    type="text"
-                    name="q"
-                    placeholder="Search bills"
-                  />
-                  <span className="absolute inset-y-0 right-250 grid size-200 place-items-center">
-                    <IconSearch />
-                  </span>
-                </span>
-              </label>
-              <label className="inline-flex items-center gap-100">
-                <span className="sr-only tablet:not-sr-only">Sort by </span>
-                <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-                  <IconSortMobile />
-                </span>
-                <select
-                  className="hidden tablet:block"
-                  name="sort"
-                  defaultValue={"latest"}
-                >
-                  <option value={"latest"}>Latest</option>
-                  <option value={"oldest"}>Oldest</option>
-                  <option value={"a-to-z"}>A to Z</option>
-                  <option value={"z-to-a"}>Z to A</option>
-                  <option value={"highest"}>Highest</option>
-                  <option value={"lowest"}>Lowest</option>
-                </select>
-              </label>
-            </form>
+            <BillsSearchForm
+              values={{
+                name: name ?? "",
+                sort: sort ?? DEFAULT_SORTING,
+              }}
+            />
           </header>
           <SearchResultsSection className="mt-300">
             {/* Duplicate HTML to match the design */}

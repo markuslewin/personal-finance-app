@@ -1,16 +1,6 @@
 import { type Prisma } from "@prisma/client";
 import { z } from "zod";
-
-export const sortingOptions = [
-  "Latest",
-  "Oldest",
-  "A to Z",
-  "Z to A",
-  "Highest",
-  "Lowest",
-] as const;
-
-type SortingOption = (typeof sortingOptions)[number];
+import { sortingOptions, type SortingOption } from "~/app/_sort";
 
 export const getOrderBy = (
   option: SortingOption,

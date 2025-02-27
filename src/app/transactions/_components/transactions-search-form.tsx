@@ -12,8 +12,9 @@ import Textbox from "~/app/_components/ui/textbox";
 import IconFilterMobile from "~/app/_assets/icon-filter-mobile.svg";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
-import { sortingOptions, type SearchSchema } from "~/app/transactions/_search";
-import Combobox from "~/app/_components/ui/combobox";
+import { type SearchSchema } from "~/app/transactions/_search";
+import * as IconCombobox from "~/app/_components/ui/icon-combobox";
+import { sortingOptions } from "~/app/_sort";
 
 type TransactionsSearchFormProps = ComponentPropsWithRef<"form"> & {
   categories: { id: string; name: string }[];
@@ -52,7 +53,7 @@ const TransactionsSearchForm = ({
         ...Object.fromEntries(searchParams),
         ...nextOptimisticValues,
       });
-      router.replace(`${pathname}?${params}`);
+      router.replace(`${pathname}?${params}`, { scroll: false });
     });
   };
 
@@ -79,13 +80,12 @@ const TransactionsSearchForm = ({
         </label>
       </div>
       <div className="flex flex-wrap gap-300">
-        <label className="relative inline-flex items-center gap-100">
-          <span className="sr-only tablet:not-sr-only">Sort by </span>
+        <IconCombobox.Root className="inline-flex items-center gap-100">
+          <IconCombobox.Name>Sort by </IconCombobox.Name>
           <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
             <IconSortMobile />
           </span>
-          <Combobox
-            className="absolute inset-0 h-auto px-0 opacity-0 tablet:static tablet:inset-auto tablet:h-[2.8125rem] tablet:px-[1.1875rem] tablet:opacity-100"
+          <IconCombobox.Control
             name="sort"
             value={optimisticValues.sort ?? sortingOptions[0]}
             onChange={handleChange}
@@ -93,15 +93,14 @@ const TransactionsSearchForm = ({
             {sortingOptions.map((option) => {
               return <option key={option}>{option}</option>;
             })}
-          </Combobox>
-        </label>
-        <label className="relative inline-flex items-center gap-100">
-          <span className="sr-only tablet:not-sr-only">Category </span>
+          </IconCombobox.Control>
+        </IconCombobox.Root>
+        <IconCombobox.Root className="inline-flex items-center gap-100">
+          <IconCombobox.Name>Category </IconCombobox.Name>
           <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
             <IconFilterMobile />
           </span>
-          <Combobox
-            className="absolute inset-0 h-auto px-0 opacity-0 tablet:static tablet:inset-auto tablet:h-[2.8125rem] tablet:px-[1.1875rem] tablet:opacity-100"
+          <IconCombobox.Control
             name="category"
             value={optimisticValues.category ?? ""}
             onChange={handleChange}
@@ -110,8 +109,8 @@ const TransactionsSearchForm = ({
             {categories.map((category) => {
               return <option key={category.id}>{category.name}</option>;
             })}
-          </Combobox>
-        </label>
+          </IconCombobox.Control>
+        </IconCombobox.Root>
       </div>
     </form>
   );
