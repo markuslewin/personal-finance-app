@@ -1,7 +1,7 @@
 "use client";
 
 import { cx } from "class-variance-authority";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   type ChangeEventHandler,
   useOptimistic,
@@ -29,7 +29,6 @@ const TransactionsSearchForm = ({
 }: TransactionsSearchFormProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   // todo: `isPending`
   const [isPending, startTransition] = useTransition();
   const [optimisticValues, setOptimisticValues] = useOptimistic(
@@ -48,12 +47,11 @@ const TransactionsSearchForm = ({
 
       setOptimisticValues(nextOptimisticValues);
 
-      // todo: Will have to merge in pending `page` somehow
-      const params = new URLSearchParams({
-        ...Object.fromEntries(searchParams),
-        ...nextOptimisticValues,
-      });
-      router.replace(`${pathname}?${params}`, { scroll: false });
+      // Reset `?page` by ignoring existing search params
+      router.replace(
+        `${pathname}?${new URLSearchParams(nextOptimisticValues)}`,
+        { scroll: false },
+      );
     });
   };
 

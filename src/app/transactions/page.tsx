@@ -11,6 +11,7 @@ import { currency, date } from "~/app/_format";
 import TransactionsSearchForm from "~/app/transactions/_components/transactions-search-form";
 import { getOrderBy, searchSchema } from "~/app/transactions/_search";
 import { z } from "zod";
+import { type Prisma } from "@prisma/client";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -34,7 +35,16 @@ const TransactionsPage = async ({
     })
     .parse(await searchParams);
 
-  const [categories, transactions] = await Promise.all([
+  const where: Prisma.TransactionWhereInput = {
+    name: {
+      contains: name,
+      mode: "insensitive",
+    },
+    category: {
+      name: category,
+    },
+  };
+  const [categories, transactions, transactionsCount] = await Promise.all([
     db.category.findMany({
       select: {
         id: true,
@@ -57,20 +67,26 @@ const TransactionsPage = async ({
           },
         },
       },
-      where: {
-        name: {
-          contains: name,
-          mode: "insensitive",
-        },
-        category: {
-          name: category,
-        },
-      },
+      where,
       orderBy: getOrderBy(sort ?? "Latest"),
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
+    db.transaction.count({ where }),
   ]);
+
+  const createSearchParams = (page: number) => {
+    return new URLSearchParams({
+      ...(name === undefined ? {} : { name }),
+      ...(sort === undefined ? {} : { sort }),
+      ...(category === undefined ? {} : { category }),
+      page: page.toString(),
+    });
+  };
+
+  const pageCount = Math.ceil(transactionsCount / PAGE_SIZE);
+  const isFirstPage = page === 1;
+  const isLastPage = page === pageCount;
 
   return (
     <>
@@ -195,22 +211,34 @@ const TransactionsPage = async ({
           </table>
         </SearchResultsSection>
         <footer className="mt-[3rem] flex flex-wrap gap-200 tablet:mt-400">
-          {/* todo: Pagination */}
           <p className="grid grow justify-start">
             <Link
-              className="group grid h-500 items-center gap-200 rounded-lg border-[0.0625rem] border-beige-500 px-[0.9375rem] transition-colors hocus:bg-beige-500 hocus:text-white tablet:grid-cols-[auto_1fr]"
-              href={`/transactions?page=${page - 1}`}
+              className={cx(
+                "group grid h-500 items-center gap-200 rounded-lg border-[0.0625rem] border-beige-500 px-[0.9375rem] transition tablet:grid-cols-[auto_1fr]",
+                isFirstPage
+                  ? "opacity-50"
+                  : "hocus:bg-beige-500 hocus:text-white",
+              )}
+              href={`/transactions?${createSearchParams(isFirstPage ? page : page - 1)}`}
+              scroll={false}
+              aria-current={isFirstPage ? "page" : undefined}
             >
               <span className="grid size-200 place-items-center">
                 <IconCaretLeft />
               </span>
-              <span className="sr-only text-grey-900 transition-colors group-hocus:text-white tablet:not-sr-only">
+              <span
+                className={cx(
+                  "sr-only text-grey-900 transition-colors tablet:not-sr-only",
+                  !isFirstPage ? "group-hocus:text-white" : "",
+                )}
+              >
                 Prev
               </span>
             </Link>
           </p>
           <ol className="flex gap-100" role="list">
-            {[1, 2, "...", 5].map((p) => {
+            {new Array(pageCount).fill(null).map((_, i) => {
+              const p = i + 1;
               const isCurrent = p === page;
               return (
                 <li className="grid" key={p}>
@@ -222,8 +250,9 @@ const TransactionsPage = async ({
                           ? "border-grey-900 bg-grey-900 text-white"
                           : "border-beige-500 hocus:bg-beige-500 hocus:text-white",
                       )}
-                      href={`/transactions?page=${p}`}
-                      aria-current={isCurrent ? "true" : undefined}
+                      href={`/transactions?${createSearchParams(p)}`}
+                      scroll={false}
+                      aria-current={isCurrent ? "page" : undefined}
                     >
                       {p}
                     </Link>
@@ -238,10 +267,22 @@ const TransactionsPage = async ({
           </ol>
           <p className="grid grow justify-end">
             <Link
-              className="group grid h-500 items-center gap-200 rounded-lg border-[0.0625rem] border-beige-500 px-[0.9375rem] transition-colors hocus:bg-beige-500 hocus:text-white tablet:grid-cols-[1fr_auto]"
-              href={`/transactions?page=${page + 1}`}
+              className={cx(
+                "group grid h-500 items-center gap-200 rounded-lg border-[0.0625rem] border-beige-500 px-[0.9375rem] transition tablet:grid-cols-[1fr_auto]",
+                isLastPage
+                  ? "opacity-50"
+                  : "hocus:bg-beige-500 hocus:text-white",
+              )}
+              href={`/transactions?${createSearchParams(isLastPage ? page : page + 1)}`}
+              scroll={false}
+              aria-current={isLastPage ? "page" : undefined}
             >
-              <span className="sr-only text-grey-900 transition-colors group-hocus:text-white tablet:not-sr-only">
+              <span
+                className={cx(
+                  "sr-only text-grey-900 transition-colors tablet:not-sr-only",
+                  !isLastPage ? "group-hocus:text-white" : "",
+                )}
+              >
                 Next
               </span>
               <span className="grid size-200 place-items-center">
