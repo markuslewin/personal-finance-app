@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @config '../../tailwind.config.ts';
 
@@ -24,5 +24,17 @@
   b,
   strong {
     font-weight: inherit;
+  }
+}
+
+@custom-variant hocus {
+  &:focus-visible {
+    @slot;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
   }
 }
