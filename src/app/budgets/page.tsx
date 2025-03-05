@@ -101,7 +101,7 @@ const BudgetsPage = async () => {
         </Button>
       </header>
       <div className="mt-400 grid items-start gap-300 desktop:grid-cols-[428fr_608fr]">
-        <div className="grid items-center gap-400 rounded-xl bg-white px-250 pb-200 pt-300 text-grey-500 tablet:grid-cols-2 tablet:p-400 desktop:grid-cols-none">
+        <div className="grid items-center gap-400 rounded-xl bg-white px-250 pt-300 pb-200 text-grey-500 tablet:grid-cols-2 tablet:p-400 desktop:grid-cols-none">
           <h2 className="sr-only">Spending</h2>
           <div className="py-250">
             <Donut.Root
@@ -228,14 +228,14 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           Amount spent
         </span>
         <Meter.Root
-          className="grid h-400 rounded bg-beige-100 p-50"
+          className="grid h-400 rounded-sm bg-beige-100 p-50"
           min={0}
           max={budget.maximum}
           value={spent}
           aria-labelledby={meterLabelId}
         >
           <Meter.Indicator
-            className="rounded"
+            className="rounded-sm"
             style={{
               background: budget.theme.color,
               width: `${clamp(0, 100, (spent / budget.maximum) * 100)}%`,

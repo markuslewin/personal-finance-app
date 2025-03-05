@@ -11,7 +11,7 @@ const Textbox = ({ className, ...props }: TextboxProps) => {
       {...props}
       className={cx(
         className,
-        "h-[2.8125rem] rounded-lg border-[0.0625rem] border-beige-500 pl-[1.1875rem] pr-[3.25rem] text-grey-900 transition-colors placeholder:text-beige-500 hover:border-grey-500 focus-visible:border-grey-900",
+        "h-[2.8125rem] rounded-lg border-[0.0625rem] border-beige-500 pr-[3.25rem] pl-[1.1875rem] text-grey-900 transition-colors placeholder:text-beige-500 hover:border-grey-500 focus-visible:border-grey-900",
       )}
     />
   );

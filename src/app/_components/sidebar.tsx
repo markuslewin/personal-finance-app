@@ -49,7 +49,7 @@ const Sidebar = ({
           : "desktop:grid-cols-[5.5rem_1fr]",
       )}
     >
-      <header className="fixed inset-x-0 bottom-0 z-10 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:sticky desktop:top-0 desktop:flex desktop:h-screen desktop:flex-col desktop:gap-300 desktop:overflow-y-auto desktop:rounded-r-2xl desktop:rounded-tl-none desktop:pb-500 desktop:text-preset-3">
+      <header className="fixed inset-x-0 bottom-0 z-10 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:sticky desktop:top-0 desktop:flex desktop:h-screen desktop:flex-col desktop:gap-300 desktop:overflow-y-auto desktop:rounded-tl-none desktop:rounded-r-2xl desktop:pb-500 desktop:text-preset-3">
         <p
           className={cx(
             "hidden px-400 py-500 text-white desktop:grid",
@@ -99,10 +99,10 @@ const Sidebar = ({
                 >
                   <Link
                     className={cx(
-                      "grid gap-50 rounded-t-lg border-b-[0.25rem] py-100 transition-[background,border-color] desktop:grid-cols-[auto_1fr] desktop:items-center desktop:gap-200 desktop:rounded-r-xl desktop:rounded-tl-none desktop:border-b-0 desktop:border-l-[0.25rem] desktop:py-200 desktop:pl-[1.75rem]",
+                      "grid gap-50 rounded-t-lg border-b-[0.25rem] py-100 transition-[background,border-color] desktop:grid-cols-[auto_1fr] desktop:items-center desktop:gap-200 desktop:rounded-tl-none desktop:rounded-r-xl desktop:border-b-0 desktop:border-l-[0.25rem] desktop:py-200 desktop:pl-[1.75rem]",
                       isActive
                         ? "border-green bg-beige-100 text-grey-900"
-                        : "border-[transparent] hocus:text-white forced-colors:border-[Canvas]",
+                        : "border-[transparent] forced-colors:border-[Canvas] hocus:text-white",
                     )}
                     href={link.href}
                     aria-current={isActive ? "page" : undefined}
@@ -119,7 +119,7 @@ const Sidebar = ({
                     </span>
                     <span
                       className={cx(
-                        "sr-only !whitespace-nowrap transition-colors tablet:not-sr-only",
+                        "sr-only whitespace-nowrap! transition-colors tablet:not-sr-only",
                         !isOpen ? "desktop:sr-only" : "",
                       )}
                     >

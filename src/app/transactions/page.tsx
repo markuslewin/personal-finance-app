@@ -156,16 +156,16 @@ const TransactionsPage = async ({
           <table className="hidden w-full tablet:table">
             <thead className="border-b-[0.0625rem] border-grey-100">
               <tr>
-                <th className="pb-[0.6875rem] pt-150 text-start text-preset-5 desktop:px-200">
+                <th className="pt-150 pb-[0.6875rem] text-start text-preset-5 desktop:px-200">
                   Recipient / Sender
                 </th>
-                <th className="pb-[0.6875rem] pt-150 text-start text-preset-5 desktop:px-200">
+                <th className="pt-150 pb-[0.6875rem] text-start text-preset-5 desktop:px-200">
                   Category
                 </th>
-                <th className="pb-[0.6875rem] pt-150 text-start text-preset-5 desktop:px-200">
+                <th className="pt-150 pb-[0.6875rem] text-start text-preset-5 desktop:px-200">
                   Transaction Date
                 </th>
-                <th className="pb-[0.6875rem] pt-150 text-end text-preset-5 desktop:px-200">
+                <th className="pt-150 pb-[0.6875rem] text-end text-preset-5 desktop:px-200">
                   Amount
                 </th>
               </tr>
