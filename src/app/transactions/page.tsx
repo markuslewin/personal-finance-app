@@ -210,7 +210,7 @@ const TransactionsPage = async ({
             </tbody>
           </table>
         </SearchResultsSection>
-        <footer className="mt-[3rem] flex flex-wrap gap-200 tablet:mt-400">
+        <footer className="mt-[3rem] grid grid-cols-[1fr_auto_1fr] items-center gap-200 tablet:mt-400">
           <p className="grid grow justify-start">
             <Link
               className={cx(
@@ -236,7 +236,8 @@ const TransactionsPage = async ({
               </span>
             </Link>
           </p>
-          <ol className="flex gap-100" role="list">
+          <ol className="flex flex-wrap justify-center gap-100" role="list">
+            {/* todo: Ellipsis */}
             {new Array(pageCount).fill(null).map((_, i) => {
               const p = i + 1;
               const isCurrent = p === page;
