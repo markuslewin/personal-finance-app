@@ -313,19 +313,19 @@ const OverviewPage = async () => {
             </p>
           </CardHeader>
           <CardContent className="mt-400 grid gap-150">
-            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
+            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pr-200 pl-150 text-grey-500">
               <h3>Paid Bills</h3>
               <p className="text-preset-4-bold text-grey-900">
                 {currency(totalPaid)}
               </p>
             </div>
-            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
+            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pr-200 pl-150 text-grey-500">
               <h3>Total Upcoming</h3>
               <p className="text-preset-4-bold text-grey-900">
                 {currency(totalUpcoming)}
               </p>
             </div>
-            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pl-150 pr-200 text-grey-500">
+            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pr-200 pl-150 text-grey-500">
               <h3>Due Soon</h3>
               <p className="text-preset-4-bold text-grey-900">
                 {currency(totalDueSoon)}

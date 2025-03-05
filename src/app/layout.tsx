@@ -52,7 +52,7 @@ export default async function RootLayout({
       <body className="bg-grey-900 font-public-sans text-preset-4">
         <Sidebar isOpen={isSidebarOpen}>
           {/* Padding creates buffer for fixed `header` */}
-          <main className="isolate px-200 pb-[5.25rem] pt-300 tablet:px-500 tablet:pb-[6.625rem] tablet:pt-500 desktop:pb-400">
+          <main className="isolate px-200 pt-300 pb-[5.25rem] tablet:px-500 tablet:pt-500 tablet:pb-[6.625rem] desktop:pb-400">
             <div className="mx-auto max-w-[66.25rem]">{children}</div>
           </main>
         </Sidebar>
