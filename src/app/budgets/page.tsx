@@ -228,14 +228,14 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           Amount spent
         </span>
         <Meter.Root
-          className="grid h-400 rounded bg-beige-100 p-50"
+          className="grid h-400 rounded-sm bg-beige-100 p-50"
           min={0}
           max={budget.maximum}
           value={spent}
           aria-labelledby={meterLabelId}
         >
           <Meter.Indicator
-            className="rounded"
+            className="rounded-sm"
             style={{
               background: budget.theme.color,
               width: `${clamp(0, 100, (spent / budget.maximum) * 100)}%`,

@@ -119,7 +119,7 @@ const Sidebar = ({
                     </span>
                     <span
                       className={cx(
-                        "sr-only !whitespace-nowrap transition-colors tablet:not-sr-only",
+                        "sr-only whitespace-nowrap! transition-colors tablet:not-sr-only",
                         !isOpen ? "desktop:sr-only" : "",
                       )}
                     >
