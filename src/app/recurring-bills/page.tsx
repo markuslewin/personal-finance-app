@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Recurring bills",
 };
 
-const date = nowDate.getDate();
+const date = nowDate.getUTCDate();
 
 const DEFAULT_SORTING: SortingOption = "Oldest";
 

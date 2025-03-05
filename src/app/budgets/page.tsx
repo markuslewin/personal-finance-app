@@ -13,6 +13,7 @@ import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import BudgetActions from "~/app/budgets/_components/budget-actions-menu";
 import { useId } from "react";
 import { clamp, sum } from "~/app/_math";
+import { inUTCMonth } from "~/app/_prisma";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -65,16 +66,7 @@ const BudgetsPage = async () => {
           },
         },
         {
-          date: {
-            gte: new Date(Date.UTC(nowDate.getFullYear(), nowDate.getMonth())),
-          },
-        },
-        {
-          date: {
-            lt: new Date(
-              Date.UTC(nowDate.getFullYear(), nowDate.getMonth() + 1),
-            ),
-          },
+          date: inUTCMonth(nowDate),
         },
       ],
     },

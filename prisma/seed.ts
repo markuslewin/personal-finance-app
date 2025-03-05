@@ -27,7 +27,7 @@ const recurringBills = Object.values(
             amount: Math.abs(transaction.amount),
             avatar: transaction.avatar,
             name: transaction.name,
-            day: new Date(transaction.date).getDate(),
+            day: new Date(transaction.date).getUTCDate(),
           } satisfies RecurringBillData,
         };
       },

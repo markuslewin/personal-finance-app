@@ -11,86 +11,101 @@ import { currency, date } from "~/app/_format";
 import { nowDate } from "~/app/_now";
 import { clamp, sum } from "~/app/_math";
 import { getIsDueSoon, getIsPaid } from "~/app/recurring-bills/_utils/bills";
+import { inUTCMonth } from "~/app/_prisma";
 
 export const metadata: Metadata = {
   title: "Overview",
 };
 
 const OverviewPage = async () => {
-  const [balance, pots, transactions, budgets, recurringBills] =
-    await Promise.all([
-      db.balance.findFirstOrThrow({
-        select: {
-          current: true,
-        },
-      }),
-      db.pot.findMany({
-        select: {
-          id: true,
-          name: true,
-          theme: {
-            select: {
-              color: true,
-            },
+  const [
+    balance,
+    pots,
+    transactions,
+    transactionsThisMonth,
+    budgets,
+    recurringBills,
+  ] = await Promise.all([
+    db.balance.findFirstOrThrow({
+      select: {
+        current: true,
+      },
+    }),
+    db.pot.findMany({
+      select: {
+        id: true,
+        name: true,
+        theme: {
+          select: {
+            color: true,
           },
-          total: true,
         },
-        orderBy: {
-          createdAt: "asc",
-        },
-      }),
-      // todo: Only need transactions of current month. Fill to 5.
-      db.transaction.findMany({
-        select: {
-          id: true,
-          amount: true,
-          avatar: true,
-          date: true,
-          name: true,
-          category: {
-            select: {
-              Budget: {
-                select: {
-                  id: true,
-                },
+        total: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+    db.transaction.findMany({
+      select: {
+        id: true,
+        amount: true,
+        avatar: true,
+        date: true,
+        name: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+      take: 5,
+    }),
+    db.transaction.findMany({
+      select: {
+        id: true,
+        amount: true,
+        category: {
+          select: {
+            Budget: {
+              select: {
+                id: true,
               },
             },
           },
         },
-        orderBy: {
-          date: "desc",
-        },
-      }),
-      db.budget.findMany({
-        select: {
-          id: true,
-          maximum: true,
-          theme: {
-            select: {
-              color: true,
-            },
-          },
-          category: {
-            select: {
-              name: true,
-            },
+      },
+      where: {
+        date: inUTCMonth(nowDate),
+      },
+      orderBy: {
+        date: "desc",
+      },
+    }),
+    db.budget.findMany({
+      select: {
+        id: true,
+        maximum: true,
+        theme: {
+          select: {
+            color: true,
           },
         },
-        orderBy: {
-          createdAt: "asc",
+        category: {
+          select: {
+            name: true,
+          },
         },
-      }),
-      db.recurringBill.findMany({
-        select: {
-          amount: true,
-          day: true,
-        },
-      }),
-    ]);
-
-  const transactionsThisMonth = transactions.filter(
-    (t) => t.date.getUTCMonth() === nowDate.getUTCMonth(),
-  );
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+    db.recurringBill.findMany({
+      select: {
+        amount: true,
+        day: true,
+      },
+    }),
+  ]);
 
   // Intro
   const income = sum(
@@ -123,7 +138,7 @@ const OverviewPage = async () => {
   const budgetsLimit = sum(budgets, (b) => b.maximum);
 
   // Recurring bills
-  const currentDate = nowDate.getDate();
+  const currentDate = nowDate.getUTCDate();
   const totalPaid = sum(
     recurringBills.filter((bill) => getIsPaid(currentDate, bill)),
     (b) => b.amount,
@@ -206,7 +221,7 @@ const OverviewPage = async () => {
               className="mt-400 [&>*+*]:mt-250 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-250"
               role="list"
             >
-              {transactions.slice(0, 5).map((transaction) => {
+              {transactions.map((transaction) => {
                 return (
                   <li
                     className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
