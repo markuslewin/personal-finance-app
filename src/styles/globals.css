@@ -1,10 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-  --breakpoint-*: initial;
-  --breakpoint-tablet: 40em;
-  --breakpoint-desktop: 64em;
-
+/* Always generate variables for values stored in the DB */
+@theme static {
   --color-*: initial;
   /* Beige */
   --color-beige-500: hsl(23 6% 57%);
@@ -33,6 +30,12 @@
   --color-orange: hsl(18 47% 52%);
   /* White */
   --color-white: hsl(0 0% 100%);
+}
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-tablet: 40em;
+  --breakpoint-desktop: 64em;
 
   --font-*: initial;
   --font-public-sans: var(--font-public-sans);
