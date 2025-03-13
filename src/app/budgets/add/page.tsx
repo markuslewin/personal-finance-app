@@ -4,8 +4,26 @@ import AddBudgetForm from "~/app/budgets/add/_components/add-budget-form";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
+import { db } from "~/server/db";
 
-const AddBudgetPage = () => {
+const AddBudgetPage = async () => {
+  const suggestedTheme = await db.theme.findFirst({
+    select: {
+      id: true,
+    },
+    where: {
+      Budget: {
+        is: null,
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+  if (suggestedTheme === null) {
+    throw new Error("No available theme left for budget.");
+  }
+
   return (
     <Dialog.Content>
       <Dialog.Heading>Add New Budget</Dialog.Heading>
@@ -13,7 +31,7 @@ const AddBudgetPage = () => {
         Choose a category to set a spending budget. These categories can help
         you monitor spending.
       </Dialog.Description>
-      <AddBudgetForm>
+      <AddBudgetForm suggestedThemeId={suggestedTheme.id}>
         <Dialog.Groups>
           <Dialog.Group>
             <Form.Label name="category">Budget Category</Form.Label>

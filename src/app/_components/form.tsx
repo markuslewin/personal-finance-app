@@ -2,12 +2,14 @@
 
 import {
   type DefaultValue,
+  type FieldName,
   FormProvider,
   getFormProps,
   getInputProps,
   getSelectProps,
   type SubmissionResult,
   useField,
+  useInputControl,
 } from "@conform-to/react";
 import { useActionState, type ComponentPropsWithRef } from "react";
 import { useAppForm } from "~/app/_form";
@@ -17,6 +19,7 @@ import ComboboxUI from "~/app/_components/ui/combobox";
 import type z from "zod";
 import { type ZodTypeAny } from "zod";
 import { cx } from "class-variance-authority";
+import * as Select from "~/app/_components/ui/select";
 
 type RootProps<Schema extends ZodTypeAny> = Omit<
   ComponentPropsWithRef<"form">,
@@ -114,4 +117,50 @@ export const Combobox = ({ name, ...props }: ComboboxProps) => {
   const [meta] = useField(name);
 
   return <ComboboxUI {...getSelectProps(meta)} {...props} />;
+};
+
+type EnhancedComboboxProps = ComponentPropsWithRef<typeof Select.Root> & {
+  name: FieldName<string>;
+};
+
+export const EnhancedCombobox = ({ name, ...props }: EnhancedComboboxProps) => {
+  const [meta] = useField(name);
+  const control = useInputControl(meta);
+
+  return (
+    <Select.Root
+      name={meta.name}
+      value={control.value}
+      onValueChange={(value) => {
+        // Conform tries to set value of the visually hidden `select` before its `option`s have been rendered during hydration
+        // Should be OK to ignore the resulting events, since the component is controlled
+        if (value === "") {
+          return;
+        }
+        control.change(value);
+      }}
+      // todo: Focus/blur when trigger is blurred?
+      onOpenChange={(open) => {
+        if (!open) {
+          control.blur();
+        }
+      }}
+      {...props}
+    />
+  );
+};
+
+type EnhancedComboboxTriggerProps = ComponentPropsWithRef<
+  typeof Select.Trigger
+> & {
+  name: FieldName<string>;
+};
+
+export const EnhancedComboboxTrigger = ({
+  name,
+  ...props
+}: EnhancedComboboxTriggerProps) => {
+  const [meta] = useField(name);
+
+  return <Select.Trigger {...getSelectProps(meta)} {...props} />;
 };

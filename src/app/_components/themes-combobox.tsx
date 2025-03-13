@@ -1,15 +1,14 @@
-import { type ComponentPropsWithRef } from "react";
-import type Combobox from "~/app/_components/ui/combobox";
 import * as Form from "~/app/_components/form";
 import { db } from "~/server/db";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
-import { SelectItem } from "~/app/_components/ui/select";
+import * as Select from "~/app/_components/ui/select";
 
-type ThemesComboboxProps = ComponentPropsWithRef<typeof Combobox> & {
+type ThemesComboboxProps = {
   name: string;
 };
 
-const ThemesCombobox = async (props: ThemesComboboxProps) => {
+const ThemesCombobox = async ({ name }: ThemesComboboxProps) => {
+  // todo: Hoist to check availability
   const themes = await db.theme.findMany({
     select: {
       id: true,
@@ -22,30 +21,40 @@ const ThemesCombobox = async (props: ThemesComboboxProps) => {
   });
 
   return (
-    <Form.Combobox {...props}>
-      {/* <Dehydrated>
-        {themes.map((theme) => {
-          return (
-            <option key={theme.id} value={theme.id}>
-              {theme.name}
-            </option>
-          );
-        })}
+    <>
+      <Dehydrated>
+        <Form.Combobox name={name}>
+          {themes.map((theme) => {
+            return (
+              <option key={theme.id} value={theme.id}>
+                {theme.name}
+              </option>
+            );
+          })}
+        </Form.Combobox>
       </Dehydrated>
       <Hydrated>
-        {themes.map((theme) => {
-          return (
-            <SelectItem key={theme.id} value={theme.id}>
-              <span
-                className="inline-block size-200 rounded-full"
-                style={{ background: theme.color }}
-              />
-              {theme.name}
-            </SelectItem>
-          );
-        })}
-      </Hydrated> */}
-    </Form.Combobox>
+        <Form.EnhancedCombobox name={name}>
+          <Form.EnhancedComboboxTrigger name={name} />
+          <Select.Portal>
+            {themes.map((theme) => {
+              return (
+                <Select.Item key={theme.id} value={theme.id}>
+                  <Select.ItemText>
+                    <span
+                      className="mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full"
+                      style={{ background: theme.color }}
+                    />
+                    {theme.name}
+                  </Select.ItemText>
+                  <Select.ItemIndicator />
+                </Select.Item>
+              );
+            })}
+          </Select.Portal>
+        </Form.EnhancedCombobox>
+      </Hydrated>
+    </>
   );
 };
 
