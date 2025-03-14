@@ -16,12 +16,12 @@ export const Trigger = ({ className, ...props }: TriggerProps) => {
       {...props}
       className={cx(
         className,
-        "grid h-[2.8125rem] grid-cols-[1fr_auto] items-center rounded-lg border-[0.0625rem] border-beige-500 bg-white px-[1.1875rem] text-start text-grey-900 transition-colors hover:border-grey-500 focus-visible:border-grey-900",
+        "group grid h-[2.8125rem] grid-cols-[1fr_auto] items-center rounded-lg border-[0.0625rem] border-beige-500 bg-white px-[1.1875rem] text-start text-grey-900 transition-colors hover:border-grey-500 focus-visible:border-grey-900",
       )}
     >
       <Select.Value />
       <Select.Icon className="grid size-200 place-items-center">
-        <IconCaretDown />
+        <IconCaretDown className="transition-transform group-data-[state=open]:rotate-180" />
       </Select.Icon>
     </Select.Trigger>
   );
