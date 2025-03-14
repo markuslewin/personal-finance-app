@@ -27,19 +27,23 @@ export const Trigger = ({ className, ...props }: TriggerProps) => {
   );
 };
 
-type PortalProps = ComponentPropsWithRef<typeof Select.Portal>;
+export const Portal = Select.Portal;
 
-export const Portal = ({ children, ...props }: PortalProps) => {
+type ContentProps = ComponentPropsWithRef<typeof Select.Content>;
+
+export const Content = ({ className, children, ...props }: ContentProps) => {
   return (
-    <Select.Portal {...props}>
-      <Select.Content
-        className="min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg bg-white shadow"
-        position="popper"
-        sideOffset={16}
-      >
-        <Select.Viewport>{children}</Select.Viewport>
-      </Select.Content>
-    </Select.Portal>
+    <Select.Content
+      className={cx(
+        className,
+        "min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg bg-white shadow",
+      )}
+      position="popper"
+      sideOffset={16}
+      {...props}
+    >
+      <Select.Viewport>{children}</Select.Viewport>
+    </Select.Content>
   );
 };
 

@@ -2,6 +2,7 @@
 
 import {
   type DefaultValue,
+  type FieldMetadata,
   type FieldName,
   FormProvider,
   getFormProps,
@@ -11,7 +12,17 @@ import {
   useField,
   useInputControl,
 } from "@conform-to/react";
-import { useActionState, type ComponentPropsWithRef } from "react";
+import {
+  createContext,
+  type FocusEvent,
+  type FocusEventHandler,
+  type RefObject,
+  useActionState,
+  useContext,
+  useMemo,
+  useRef,
+  type ComponentPropsWithRef,
+} from "react";
 import { useAppForm } from "~/app/_form";
 import * as Dialog from "~/app/_components/ui/dialog";
 import TextboxUI from "~/app/_components/ui/textbox";
@@ -119,6 +130,24 @@ export const Combobox = ({ name, ...props }: ComboboxProps) => {
   return <ComboboxUI {...getSelectProps(meta)} {...props} />;
 };
 
+type EnhancedComboboxContextValue = {
+  contentRef: RefObject<HTMLDivElement | null>;
+  triggerProps: ReturnType<typeof getEnhancedComboboxProps>["triggerProps"];
+  handleBlur: FocusEventHandler;
+} | null;
+
+const EnhancedComboboxContext =
+  createContext<EnhancedComboboxContextValue>(null);
+
+const useEnhancedCombobox = () => {
+  const value = useContext(EnhancedComboboxContext);
+  if (value === null) {
+    throw new Error("No provider for `useEnhancedCombobox`.");
+  }
+
+  return value;
+};
+
 type EnhancedComboboxProps = ComponentPropsWithRef<typeof Select.Root> & {
   name: FieldName<string>;
 };
@@ -126,41 +155,90 @@ type EnhancedComboboxProps = ComponentPropsWithRef<typeof Select.Root> & {
 export const EnhancedCombobox = ({ name, ...props }: EnhancedComboboxProps) => {
   const [meta] = useField(name);
   const control = useInputControl(meta);
-
-  return (
-    <Select.Root
-      name={meta.name}
-      value={control.value}
-      onValueChange={(value) => {
-        // Conform tries to set value of the visually hidden `select` before its `option`s have been rendered during hydration
-        // Should be OK to ignore the resulting events, since the component is controlled
-        if (value === "") {
-          return;
-        }
-        control.change(value);
-      }}
-      // todo: Focus/blur when trigger is blurred?
-      onOpenChange={(open) => {
-        if (!open) {
+  const {
+    rootProps: { key, ...rootProps },
+    triggerProps,
+  } = getEnhancedComboboxProps(meta);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const contextValue: EnhancedComboboxContextValue = useMemo(() => {
+    return {
+      contentRef,
+      triggerProps,
+      handleBlur: (e: FocusEvent) => {
+        if (!contentRef.current?.contains(e.relatedTarget)) {
           control.blur();
         }
-      }}
-      {...props}
-    />
+      },
+    };
+  }, [control, triggerProps]);
+
+  return (
+    <EnhancedComboboxContext.Provider value={contextValue}>
+      <Select.Root
+        {...rootProps}
+        key={key}
+        value={control.value}
+        onValueChange={(value) => {
+          // Conform tries to set value of the visually hidden `select` before its `option`s have been rendered during hydration
+          // Should be OK to ignore the resulting events, since the component is controlled
+          if (value === "") {
+            return;
+          }
+          control.change(value);
+        }}
+        {...props}
+      />
+    </EnhancedComboboxContext.Provider>
   );
 };
 
 type EnhancedComboboxTriggerProps = ComponentPropsWithRef<
   typeof Select.Trigger
-> & {
-  name: FieldName<string>;
+>;
+
+export const EnhancedComboboxTrigger = (
+  props: EnhancedComboboxTriggerProps,
+) => {
+  const { triggerProps, handleBlur } = useEnhancedCombobox();
+
+  return <Select.Trigger {...triggerProps} onBlur={handleBlur} {...props} />;
 };
 
-export const EnhancedComboboxTrigger = ({
-  name,
-  ...props
-}: EnhancedComboboxTriggerProps) => {
-  const [meta] = useField(name);
+export const EnhancedComboboxPortal = Select.Portal;
 
-  return <Select.Trigger {...getSelectProps(meta)} {...props} />;
+type EnhancedComboboxContentProps = ComponentPropsWithRef<
+  typeof Select.Content
+>;
+
+export const EnhancedComboboxContent = (
+  props: EnhancedComboboxContentProps,
+) => {
+  const { contentRef } = useEnhancedCombobox();
+
+  return <Select.Content ref={contentRef} {...props} />;
+};
+
+const getEnhancedComboboxProps = (meta: FieldMetadata) => {
+  const props = getSelectProps(meta);
+
+  return {
+    rootProps: {
+      // `Select.Root` only allows `string | undefined`
+      defaultValue:
+        typeof props.defaultValue === "string" ||
+        props.defaultValue === undefined
+          ? props.defaultValue
+          : undefined,
+      form: props.form,
+      key: props.key,
+      multiple: props.multiple,
+      name: props.name,
+      required: props.required,
+    },
+    triggerProps: {
+      "aria-describedby": props["aria-describedby"],
+      "aria-invalid": props["aria-invalid"],
+      id: props.id,
+    },
+  };
 };

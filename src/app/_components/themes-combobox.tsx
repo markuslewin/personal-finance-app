@@ -35,23 +35,25 @@ const ThemesCombobox = async ({ name }: ThemesComboboxProps) => {
       </Dehydrated>
       <Hydrated>
         <Form.EnhancedCombobox name={name}>
-          <Form.EnhancedComboboxTrigger name={name} />
-          <Select.Portal>
-            {themes.map((theme) => {
-              return (
-                <Select.Item key={theme.id} value={theme.id}>
-                  <Select.ItemText>
-                    <span
-                      className="mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full"
-                      style={{ background: theme.color }}
-                    />
-                    {theme.name}
-                  </Select.ItemText>
-                  <Select.ItemIndicator />
-                </Select.Item>
-              );
-            })}
-          </Select.Portal>
+          <Form.EnhancedComboboxTrigger />
+          <Form.EnhancedComboboxPortal>
+            <Form.EnhancedComboboxContent>
+              {themes.map((theme) => {
+                return (
+                  <Select.Item key={theme.id} value={theme.id}>
+                    <Select.ItemText>
+                      <span
+                        className="mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full"
+                        style={{ background: theme.color }}
+                      />
+                      {theme.name}
+                    </Select.ItemText>
+                    <Select.ItemIndicator />
+                  </Select.Item>
+                );
+              })}
+            </Form.EnhancedComboboxContent>
+          </Form.EnhancedComboboxPortal>
         </Form.EnhancedCombobox>
       </Hydrated>
     </>
