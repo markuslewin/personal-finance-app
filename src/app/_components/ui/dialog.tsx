@@ -11,7 +11,7 @@ export const Overlay = ({ className, ...props }: OverlayProps) => {
       {...props}
       className={cx(
         className,
-        "fixed inset-0 z-20 grid grid-cols-[minmax(auto,35rem)] items-center justify-center overflow-y-auto bg-[hsl(0_0%_0%/0.5)] p-250",
+        "fixed inset-0 grid grid-cols-[minmax(auto,35rem)] items-center justify-center overflow-y-auto bg-[hsl(0_0%_0%/0.5)] p-250",
       )}
     />
   );
