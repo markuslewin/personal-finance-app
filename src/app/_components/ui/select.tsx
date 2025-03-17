@@ -1,5 +1,3 @@
-// todo: Merge into Hydrated Combobox
-
 import { type ComponentPropsWithRef } from "react";
 import * as Select from "@radix-ui/react-select";
 import IconCaretDown from "~/app/_assets/icon-caret-down.svg";

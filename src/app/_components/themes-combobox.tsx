@@ -1,36 +1,32 @@
+import { cx } from "class-variance-authority";
 import * as Form from "~/app/_components/form";
-import { db } from "~/server/db";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import * as Select from "~/app/_components/ui/select";
 
 type ThemesComboboxProps = {
   name: string;
+  themes: {
+    id: string;
+    name: string;
+    color: string;
+    unavailable: boolean;
+  }[];
 };
 
-const ThemesCombobox = async ({ name }: ThemesComboboxProps) => {
-  // todo: Hoist to check availability
-  const themes = await db.theme.findMany({
-    select: {
-      id: true,
-      name: true,
-      color: true,
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-
+const ThemesCombobox = async ({ name, themes }: ThemesComboboxProps) => {
   return (
     <>
       <Dehydrated>
         <Form.Combobox name={name}>
-          {themes.map((theme) => {
-            return (
-              <option key={theme.id} value={theme.id}>
-                {theme.name}
-              </option>
-            );
-          })}
+          {themes
+            .filter((t) => !t.unavailable)
+            .map((theme) => {
+              return (
+                <option key={theme.id} value={theme.id}>
+                  {theme.name}
+                </option>
+              );
+            })}
         </Form.Combobox>
       </Dehydrated>
       <Hydrated>
@@ -40,15 +36,29 @@ const ThemesCombobox = async ({ name }: ThemesComboboxProps) => {
             <Form.EnhancedComboboxContent>
               {themes.map((theme) => {
                 return (
-                  <Select.Item key={theme.id} value={theme.id}>
+                  <Select.Item
+                    className={cx(theme.unavailable ? "text-grey-500" : "")}
+                    key={theme.id}
+                    value={theme.id}
+                    disabled={theme.unavailable}
+                  >
                     <Select.ItemText>
                       <span
-                        className="mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full"
+                        className={cx(
+                          "mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full",
+                          theme.unavailable ? "opacity-10" : "",
+                        )}
                         style={{ background: theme.color }}
                       />
                       {theme.name}
                     </Select.ItemText>
-                    <Select.ItemIndicator />
+                    {theme.unavailable ? (
+                      <span className="text-preset-5" aria-hidden="true">
+                        Already used
+                      </span>
+                    ) : (
+                      <Select.ItemIndicator />
+                    )}
                   </Select.Item>
                 );
               })}

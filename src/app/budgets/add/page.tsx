@@ -7,20 +7,23 @@ import Button from "~/app/_components/ui/button";
 import { db } from "~/server/db";
 
 const AddBudgetPage = async () => {
-  const suggestedTheme = await db.theme.findFirst({
+  const themes = await db.theme.findMany({
     select: {
       id: true,
-    },
-    where: {
+      name: true,
+      color: true,
       Budget: {
-        is: null,
+        select: {
+          id: true,
+        },
       },
     },
     orderBy: {
       createdAt: "asc",
     },
   });
-  if (suggestedTheme === null) {
+  const suggestedTheme = themes.find((t) => t.Budget === null);
+  if (suggestedTheme === undefined) {
     throw new Error("No available theme left for budget.");
   }
 
@@ -45,7 +48,13 @@ const AddBudgetPage = async () => {
           </Dialog.Group>
           <Dialog.Group>
             <Form.Label name="theme">Theme</Form.Label>
-            <ThemesCombobox name="theme" />
+            <ThemesCombobox
+              name="theme"
+              themes={themes.map((t) => ({
+                ...t,
+                unavailable: t.Budget !== null,
+              }))}
+            />
             <Form.Message name="theme" />
           </Dialog.Group>
         </Dialog.Groups>
