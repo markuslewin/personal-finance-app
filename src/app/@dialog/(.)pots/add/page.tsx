@@ -6,8 +6,31 @@ import Button from "~/app/_components/ui/button";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddPotForm from "~/app/pots/_components/add-pot-form";
 import CharactersLeft from "~/app/pots/_components/characters-left";
+import { db } from "~/server/db";
 
-const AddBudgetPage = () => {
+const AddPotPage = async () => {
+  const themes = await db.theme.findMany({
+    select: {
+      id: true,
+      name: true,
+      color: true,
+      Pot: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  // todo: Disable "Add New Pot"
+  const defaultTheme = themes.find((t) => t.Pot === null);
+  if (defaultTheme === undefined) {
+    throw new Error("No available theme left for budget.");
+  }
+
   return (
     <RoutedDialog>
       <Dialog.Portal>
@@ -32,7 +55,11 @@ const AddBudgetPage = () => {
                       you on track as you save for special purchases.
                     </DialogUI.Description>
                   </Dialog.Description>
-                  <AddPotForm>
+                  <AddPotForm
+                    defaultValue={{
+                      theme: defaultTheme.id,
+                    }}
+                  >
                     <DialogUI.Groups>
                       <DialogUI.Group>
                         <Form.Label name="name">Pot Name</Form.Label>
@@ -53,7 +80,13 @@ const AddBudgetPage = () => {
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="theme">Theme</Form.Label>
-                        <ThemesCombobox name="theme" />
+                        <ThemesCombobox
+                          name="theme"
+                          themes={themes.map((t) => ({
+                            ...t,
+                            unavailable: t.Pot !== null,
+                          }))}
+                        />
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
@@ -69,4 +102,4 @@ const AddBudgetPage = () => {
   );
 };
 
-export default AddBudgetPage;
+export default AddPotPage;

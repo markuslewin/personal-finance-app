@@ -13,21 +13,38 @@ import CharactersLeft from "~/app/pots/_components/characters-left";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
-  const pot = await db.pot.findUnique({
-    select: {
-      id: true,
-      name: true,
-      target: true,
-      theme: {
-        select: {
-          id: true,
+  const [pot, themes] = await Promise.all([
+    db.pot.findUnique({
+      select: {
+        id: true,
+        name: true,
+        target: true,
+        theme: {
+          select: {
+            id: true,
+          },
         },
       },
-    },
-    where: {
-      id,
-    },
-  });
+      where: {
+        id,
+      },
+    }),
+    db.theme.findMany({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        Pot: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+  ]);
   if (!pot) {
     notFound();
   }
@@ -88,7 +105,13 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="theme">Theme</Form.Label>
-                        <ThemesCombobox name="theme" />
+                        <ThemesCombobox
+                          name="theme"
+                          themes={themes.map((t) => ({
+                            ...t,
+                            unavailable: t.Pot !== null && t.Pot.id !== pot.id,
+                          }))}
+                        />
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
