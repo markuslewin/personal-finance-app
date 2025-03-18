@@ -40,6 +40,43 @@ const EditBudgetPage = async ({
     notFound();
   }
 
+  const [categories, themes] = await Promise.all([
+    db.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      where: {
+        OR: [
+          { Budget: { is: null } },
+          {
+            Budget: {
+              categoryId: budget.category.id,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+    db.theme.findMany({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        Budget: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+  ]);
+
   return (
     <Dialog.Content>
       <Dialog.Heading>Edit Budget</Dialog.Heading>
@@ -58,7 +95,7 @@ const EditBudgetPage = async ({
         <Dialog.Groups>
           <Dialog.Group>
             <Form.Label name="category">Budget Category</Form.Label>
-            <CategoriesCombobox name="category" />
+            <CategoriesCombobox name="category" categories={categories} />
             <Form.Message name="category" />
           </Dialog.Group>
           <Dialog.Group>
@@ -68,7 +105,13 @@ const EditBudgetPage = async ({
           </Dialog.Group>
           <Dialog.Group>
             <Form.Label name="theme">Theme</Form.Label>
-            <ThemesCombobox name="theme" />
+            <ThemesCombobox
+              name="theme"
+              themes={themes.map((t) => ({
+                ...t,
+                unavailable: t.Budget !== null && t.Budget.id !== budget.id,
+              }))}
+            />
             <Form.Message name="theme" />
           </Dialog.Group>
         </Dialog.Groups>

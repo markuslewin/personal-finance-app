@@ -1,29 +1,20 @@
 import * as Form from "~/app/_components/form";
 import * as Select from "~/app/_components/ui/select";
-import { db } from "~/server/db";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import { Fragment } from "react";
 
 type CategoriesComboboxProps = {
   name: string;
+  categories: {
+    id: string;
+    name: string;
+  }[];
 };
 
-const CategoriesCombobox = async ({ name }: CategoriesComboboxProps) => {
-  const categories = await db.category.findMany({
-    select: {
-      id: true,
-      name: true,
-    },
-    where: {
-      Budget: {
-        is: null,
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-
+const CategoriesCombobox = async ({
+  name,
+  categories,
+}: CategoriesComboboxProps) => {
   return (
     <>
       <Dehydrated>

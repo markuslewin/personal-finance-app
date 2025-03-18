@@ -38,6 +38,43 @@ const EditBudgetPage = async ({
     notFound();
   }
 
+  const [categories, themes] = await Promise.all([
+    db.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      where: {
+        OR: [
+          { Budget: { is: null } },
+          {
+            Budget: {
+              categoryId: budget.category.id,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+    db.theme.findMany({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        Budget: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+  ]);
+
   return (
     <RoutedDialog>
       <Dialog.Portal>
@@ -74,7 +111,10 @@ const EditBudgetPage = async ({
                     <DialogUI.Groups>
                       <DialogUI.Group>
                         <Form.Label name="category">Budget Category</Form.Label>
-                        <CategoriesCombobox name="category" />
+                        <CategoriesCombobox
+                          name="category"
+                          categories={categories}
+                        />
                         <Form.Message name="category" />
                       </DialogUI.Group>
                       <DialogUI.Group>
@@ -84,7 +124,14 @@ const EditBudgetPage = async ({
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="theme">Theme</Form.Label>
-                        <ThemesCombobox name="theme" />
+                        <ThemesCombobox
+                          name="theme"
+                          themes={themes.map((t) => ({
+                            ...t,
+                            unavailable:
+                              t.Budget !== null && t.Budget.id !== budget.id,
+                          }))}
+                        />
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>

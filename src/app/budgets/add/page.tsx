@@ -7,35 +7,37 @@ import Button from "~/app/_components/ui/button";
 import { db } from "~/server/db";
 
 const AddBudgetPage = async () => {
-  const categories = await db.category.findMany({
-    select: {
-      id: true,
-      name: true,
-    },
-    where: {
-      Budget: {
-        is: null,
+  const [categories, themes] = await Promise.all([
+    db.category.findMany({
+      select: {
+        id: true,
+        name: true,
       },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-  const themes = await db.theme.findMany({
-    select: {
-      id: true,
-      name: true,
-      color: true,
-      Budget: {
-        select: {
-          id: true,
+      where: {
+        Budget: {
+          is: null,
         },
       },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+    db.theme.findMany({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        Budget: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+  ]);
 
   // todo: Disable "Add New Budget"
   const defaultCategory = categories[0];
@@ -64,7 +66,7 @@ const AddBudgetPage = async () => {
         <Dialog.Groups>
           <Dialog.Group>
             <Form.Label name="category">Budget Category</Form.Label>
-            <CategoriesCombobox name="category" />
+            <CategoriesCombobox name="category" categories={categories} />
             <Form.Message name="category" />
           </Dialog.Group>
           <Dialog.Group>

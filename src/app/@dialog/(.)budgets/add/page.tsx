@@ -83,7 +83,10 @@ const AddBudgetPage = async () => {
                     <DialogUI.Groups>
                       <DialogUI.Group>
                         <Form.Label name="category">Budget Category</Form.Label>
-                        <CategoriesCombobox name="category" />
+                        <CategoriesCombobox
+                          name="category"
+                          categories={categories}
+                        />
                         <Form.Message name="category" />
                       </DialogUI.Group>
                       <DialogUI.Group>
