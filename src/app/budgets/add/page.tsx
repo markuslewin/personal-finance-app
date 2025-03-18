@@ -7,6 +7,20 @@ import Button from "~/app/_components/ui/button";
 import { db } from "~/server/db";
 
 const AddBudgetPage = async () => {
+  const categories = await db.category.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      Budget: {
+        is: null,
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
   const themes = await db.theme.findMany({
     select: {
       id: true,
@@ -22,8 +36,15 @@ const AddBudgetPage = async () => {
       createdAt: "asc",
     },
   });
-  const suggestedTheme = themes.find((t) => t.Budget === null);
-  if (suggestedTheme === undefined) {
+
+  // todo: Disable "Add New Budget"
+  const defaultCategory = categories[0];
+  if (defaultCategory === undefined) {
+    throw new Error("No categories without budget left.");
+  }
+
+  const defaultTheme = themes.find((t) => t.Budget === null);
+  if (defaultTheme === undefined) {
     throw new Error("No available theme left for budget.");
   }
 
@@ -34,7 +55,12 @@ const AddBudgetPage = async () => {
         Choose a category to set a spending budget. These categories can help
         you monitor spending.
       </Dialog.Description>
-      <AddBudgetForm suggestedThemeId={suggestedTheme.id}>
+      <AddBudgetForm
+        defaultValue={{
+          category: defaultCategory.id,
+          theme: defaultTheme.id,
+        }}
+      >
         <Dialog.Groups>
           <Dialog.Group>
             <Form.Label name="category">Budget Category</Form.Label>
