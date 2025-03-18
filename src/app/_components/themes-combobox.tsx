@@ -1,4 +1,5 @@
 import { cx } from "class-variance-authority";
+import { Fragment } from "react";
 import * as Form from "~/app/_components/form";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import * as Select from "~/app/_components/ui/select";
@@ -34,32 +35,34 @@ const ThemesCombobox = async ({ name, themes }: ThemesComboboxProps) => {
           <Form.EnhancedComboboxTrigger />
           <Form.EnhancedComboboxPortal>
             <Form.EnhancedComboboxContent>
-              {themes.map((theme) => {
+              {themes.map((theme, i) => {
                 return (
-                  <Select.Item
-                    className={cx(theme.unavailable ? "text-grey-500" : "")}
-                    key={theme.id}
-                    value={theme.id}
-                    disabled={theme.unavailable}
-                  >
-                    <Select.ItemText>
-                      <span
-                        className={cx(
-                          "mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full",
-                          theme.unavailable ? "opacity-10" : "",
-                        )}
-                        style={{ background: theme.color }}
-                      />
-                      {theme.name}
-                    </Select.ItemText>
-                    {theme.unavailable ? (
-                      <span className="text-preset-5" aria-hidden="true">
-                        Already used
-                      </span>
-                    ) : (
-                      <Select.ItemIndicator />
-                    )}
-                  </Select.Item>
+                  <Fragment key={theme.id}>
+                    {i !== 0 ? <Select.Separator /> : null}
+                    <Select.Item
+                      className={cx(theme.unavailable ? "text-grey-500" : "")}
+                      value={theme.id}
+                      disabled={theme.unavailable}
+                    >
+                      <Select.ItemText>
+                        <span
+                          className={cx(
+                            "mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full",
+                            theme.unavailable ? "opacity-10" : "",
+                          )}
+                          style={{ background: theme.color }}
+                        />
+                        {theme.name}
+                      </Select.ItemText>
+                      {theme.unavailable ? (
+                        <span className="text-preset-5" aria-hidden="true">
+                          Already used
+                        </span>
+                      ) : (
+                        <Select.ItemIndicator />
+                      )}
+                    </Select.Item>
+                  </Fragment>
                 );
               })}
             </Form.EnhancedComboboxContent>

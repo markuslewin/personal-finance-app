@@ -45,6 +45,16 @@ export const Content = ({ className, children, ...props }: ContentProps) => {
   );
 };
 
+type SeparatorProps = ComponentPropsWithRef<typeof Select.Separator>;
+
+export const Separator = ({ className, ...props }: SeparatorProps) => {
+  return (
+    <Select.Separator {...props} className={cx(className, "px-250")}>
+      <div className="border-t-[0.0625rem] border-grey-100" />
+    </Select.Separator>
+  );
+};
+
 type ItemProps = ComponentPropsWithRef<typeof Select.Item>;
 
 export const Item = ({ className, ...props }: ItemProps) => {
