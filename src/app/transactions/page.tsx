@@ -3,7 +3,6 @@ import { type Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { db } from "~/server/db";
-// import IconCaretDown from "~/app/_assets/icon-caret-down.svg";
 import IconCaretLeft from "~/app/_assets/icon-caret-left.svg";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import { type ComponentPropsWithRef, useId } from "react";

@@ -19,7 +19,7 @@
   --color-red: hsl(7 58% 50%);
   --color-purple: hsl(259 30% 56%);
   /* Other */
-  --color-purple-1: hsl(288 29% 62%);
+  --color-pink: hsl(288 29% 62%);
   --color-turquoise: hsl(180 16% 42%);
   --color-brown: hsl(21 30% 44%);
   --color-magenta: hsl(332 30% 44%);
@@ -80,6 +80,9 @@
   --spacing-300: 1.5rem;
   --spacing-400: 2rem;
   --spacing-500: 2.5rem;
+
+  --shadow-*: initial;
+  --shadow: 0 0.25rem 1.5rem hsl(0 0% 0% / 0.25);
 }
 
 @layer base {

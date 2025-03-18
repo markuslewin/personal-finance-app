@@ -36,12 +36,30 @@ const recurringBills = Object.values(
 );
 
 const themes = [
-  { name: "Green", color: "#277C78" },
-  { name: "Cyan", color: "#82C9D7" },
-  { name: "Yellow", color: "#F2CDAC" },
-  { name: "Navy", color: "#626070" },
-  { name: "Purple", color: "#826CB0" },
+  { name: "Green", color: "var(--color-green)" },
+  { name: "Yellow", color: "var(--color-yellow)" },
+  { name: "Cyan", color: "var(--color-cyan)" },
+  { name: "Navy", color: "var(--color-navy)" },
+  { name: "Red", color: "var(--color-red)" },
+  { name: "Purple", color: "var(--color-purple)" },
+  { name: "Turquoise", color: "var(--color-turquoise)" },
+  { name: "Brown", color: "var(--color-brown)" },
+  { name: "Magenta", color: "var(--color-magenta)" },
+  { name: "Blue", color: "var(--color-blue)" },
+  { name: "Navy Grey", color: "var(--color-navy-grey)" },
+  { name: "Army Green", color: "var(--color-army-green)" },
+  { name: "Pink", color: "var(--color-pink)" },
+  { name: "Gold", color: "var(--color-gold)" },
+  { name: "Orange", color: "var(--color-orange)" },
 ];
+
+const themeNameByHex = new Map([
+  ["#277C78", "Green"],
+  ["#82C9D7", "Cyan"],
+  ["#F2CDAC", "Yellow"],
+  ["#626070", "Navy"],
+  ["#826CB0", "Purple"],
+]);
 
 const createdAtBase = new Date();
 
@@ -51,7 +69,7 @@ async function main() {
       return { ...theme, createdAt: new Date(createdAtBase.getTime() + i) };
     }),
   });
-  const themeIdByColor = new Map(persistedThemes.map((c) => [c.color, c.id]));
+  const themeIdByName = new Map(persistedThemes.map((c) => [c.name, c.id]));
 
   const persistedCategories = await db.category.createManyAndReturn({
     data: categories.map((name, i) => {
@@ -123,9 +141,13 @@ async function main() {
         );
       }
 
-      const themeId = themeIdByColor.get(budget.theme);
+      const themeName = themeNameByHex.get(budget.theme);
+      if (themeName === undefined) {
+        throw new Error(`Could not find name with hex code "${budget.theme}"`);
+      }
+      const themeId = themeIdByName.get(themeName);
       if (themeId === undefined) {
-        throw new Error(`Could not find theme with color "${budget.theme}"`);
+        throw new Error(`Could not find theme with name "${themeName}"`);
       }
 
       return {
@@ -139,9 +161,13 @@ async function main() {
 
   await db.pot.createMany({
     data: data.pots.map((pot, i) => {
-      const themeId = themeIdByColor.get(pot.theme);
+      const themeName = themeNameByHex.get(pot.theme);
+      if (themeName === undefined) {
+        throw new Error(`Could not find name with hex code "${pot.theme}"`);
+      }
+      const themeId = themeIdByName.get(themeName);
       if (themeId === undefined) {
-        throw new Error(`Could not find theme with color "${pot.theme}"`);
+        throw new Error(`Could not find theme with name "${themeName}"`);
       }
 
       return {

@@ -6,8 +6,29 @@ import Button from "~/app/_components/ui/button";
 import CategoriesCombobox from "~/app/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddBudgetForm from "~/app/budgets/add/_components/add-budget-form";
+import { db } from "~/server/db";
 
-const AddBudgetPage = () => {
+const AddBudgetPage = async () => {
+  const themes = await db.theme.findMany({
+    select: {
+      id: true,
+      name: true,
+      color: true,
+      Budget: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+  const suggestedTheme = themes.find((t) => t.Budget === null);
+  if (suggestedTheme === undefined) {
+    throw new Error("No available theme left for budget.");
+  }
+
   return (
     <RoutedDialog>
       <Dialog.Portal>
@@ -32,7 +53,7 @@ const AddBudgetPage = () => {
                       categories can help you monitor spending.
                     </DialogUI.Description>
                   </Dialog.Description>
-                  <AddBudgetForm>
+                  <AddBudgetForm suggestedThemeId={suggestedTheme.id}>
                     <DialogUI.Groups>
                       <DialogUI.Group>
                         <Form.Label name="category">Budget Category</Form.Label>
@@ -46,7 +67,13 @@ const AddBudgetPage = () => {
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="theme">Theme</Form.Label>
-                        <ThemesCombobox name="theme" />
+                        <ThemesCombobox
+                          name="theme"
+                          themes={themes.map((t) => ({
+                            ...t,
+                            unavailable: t.Budget !== null,
+                          }))}
+                        />
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>

@@ -110,6 +110,12 @@ CREATE TABLE "Password" (
 CREATE UNIQUE INDEX "Budget_categoryId_key" ON "Budget"("categoryId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Budget_themeId_key" ON "Budget"("themeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Pot_themeId_key" ON "Pot"("themeId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex

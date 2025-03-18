@@ -50,7 +50,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${publicSans.variable}`}>
       <body className="bg-grey-900 font-public-sans text-preset-4">
-        <Sidebar isOpen={isSidebarOpen}>
+        <Sidebar className="isolate" isOpen={isSidebarOpen}>
           {/* Padding creates buffer for fixed `header` */}
           <main className="isolate px-200 pt-300 pb-[5.25rem] tablet:px-500 tablet:pt-500 tablet:pb-[6.625rem] desktop:pb-400">
             <div className="mx-auto max-w-[66.25rem]">{children}</div>
