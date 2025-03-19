@@ -33,7 +33,7 @@ export const Content = ({
       {...props}
       className={cx(
         className,
-        "grid max-w-[35rem] gap-250 rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400",
+        "grid gap-250 rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400",
       )}
     />
   );
