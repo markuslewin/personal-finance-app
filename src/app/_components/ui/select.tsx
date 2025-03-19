@@ -3,6 +3,7 @@ import * as Select from "@radix-ui/react-select";
 import IconCaretDown from "~/app/_assets/icon-caret-down.svg";
 import IconSelected from "~/app/_assets/icon-selected.svg";
 import { cx } from "class-variance-authority";
+import { twMerge } from "tailwind-merge";
 
 export const Root = Select.Root;
 
@@ -12,16 +13,23 @@ export const Trigger = ({ className, ...props }: TriggerProps) => {
   return (
     <Select.Trigger
       {...props}
-      className={cx(
-        className,
-        "group grid h-[2.8125rem] grid-cols-[1fr_auto] items-center rounded-lg border-[0.0625rem] border-beige-500 bg-white px-[1.1875rem] text-start text-grey-900 transition-colors hover:border-grey-500 focus-visible:border-grey-900",
-      )}
+      className={cx(className, "group select-trigger")}
+    />
+  );
+};
+
+export const Value = Select.Value;
+
+type IconProps = ComponentPropsWithRef<typeof Select.Icon>;
+
+export const Icon = ({ className, ...props }: IconProps) => {
+  return (
+    <Select.Icon
+      {...props}
+      className={twMerge(cx("grid size-200 place-items-center", className))}
     >
-      <Select.Value />
-      <Select.Icon className="grid size-200 place-items-center">
-        <IconCaretDown className="transition-transform group-data-[state=open]:rotate-180" />
-      </Select.Icon>
-    </Select.Trigger>
+      <IconCaretDown className="transition-transform group-data-[state=open]:rotate-180" />
+    </Select.Icon>
   );
 };
 
@@ -34,16 +42,21 @@ export const Content = ({ className, children, ...props }: ContentProps) => {
     <Select.Content
       className={cx(
         className,
-        "max-h-[var(--radix-select-content-available-height)] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg bg-white shadow-md",
+        "max-h-[var(--radix-select-content-available-height)] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg bg-white text-grey-900 shadow-md",
       )}
       position="popper"
       sideOffset={16}
+      align="end"
       {...props}
     >
       <Select.Viewport>{children}</Select.Viewport>
     </Select.Content>
   );
 };
+
+export const Group = Select.Group;
+
+export const Label = Select.Label;
 
 type SeparatorProps = ComponentPropsWithRef<typeof Select.Separator>;
 
@@ -63,7 +76,21 @@ export const Item = ({ className, ...props }: ItemProps) => {
       {...props}
       className={cx(
         className,
-        "grid grid-cols-[1fr_auto] items-center rounded-lg px-250 py-150 -outline-offset-2 select-none data-[disabled]:pointer-events-none",
+        "grid items-center rounded-lg px-250 py-150 -outline-offset-2 select-none data-[disabled]:pointer-events-none data-[state=checked]:text-preset-4-bold",
+      )}
+    />
+  );
+};
+
+type ColorItemProps = ComponentPropsWithRef<typeof Select.Item>;
+
+export const ColorItem = ({ className, ...props }: ColorItemProps) => {
+  return (
+    <Select.Item
+      {...props}
+      className={cx(
+        className,
+        "grid grid-cols-[1fr_auto] items-center gap-200 rounded-lg px-250 py-150 -outline-offset-2 select-none data-[disabled]:pointer-events-none",
       )}
     />
   );

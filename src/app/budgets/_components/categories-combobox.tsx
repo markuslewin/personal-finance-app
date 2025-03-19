@@ -30,7 +30,10 @@ const CategoriesCombobox = async ({
       </Dehydrated>
       <Hydrated>
         <Form.EnhancedCombobox name={name}>
-          <Form.EnhancedComboboxTrigger />
+          <Form.EnhancedComboboxTrigger>
+            <Select.Value />
+            <Select.Icon />
+          </Form.EnhancedComboboxTrigger>
           <Form.EnhancedComboboxPortal>
             <Form.EnhancedComboboxContent>
               {categories.map((category, i) => {
@@ -39,7 +42,6 @@ const CategoriesCombobox = async ({
                     {i !== 0 ? <Select.Separator /> : null}
                     <Select.Item value={category.id}>
                       <Select.ItemText>{category.name}</Select.ItemText>
-                      <Select.ItemIndicator />
                     </Select.Item>
                   </Fragment>
                 );

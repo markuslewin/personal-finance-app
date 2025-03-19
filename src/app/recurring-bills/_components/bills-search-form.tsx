@@ -1,12 +1,17 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type ChangeEventHandler, useOptimistic, useTransition } from "react";
+import { Fragment, useOptimistic, useTransition } from "react";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import * as IconCombobox from "~/app/_components/ui/icon-combobox";
+import * as Select from "~/app/_components/ui/select";
 import Textbox from "~/app/_components/ui/textbox";
 import { type SortingOption, sortingOptions } from "~/app/_sort";
+import * as RadixSelect from "@radix-ui/react-select";
+
+const SORT_NAME = "sort";
 
 type BillsSearchValues = {
   name: string;
@@ -28,13 +33,11 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
     (_, values: BillsSearchValues) => values,
   );
 
-  const handleChange: ChangeEventHandler<
-    HTMLInputElement | HTMLSelectElement
-  > = (e) => {
+  const setSearchParam = (name: string, value: string) => {
     startTransition(() => {
       const nextOptimisticValues = {
         ...optimisticValues,
-        [e.target.name]: e.target.value,
+        [name]: value,
       };
 
       setOptimisticValues(nextOptimisticValues);
@@ -48,7 +51,12 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
   };
 
   return (
-    <form className="flex flex-wrap items-center gap-300">
+    <form
+      className="flex flex-wrap items-center gap-300"
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
       <div className="grow">
         <label>
           <span className="sr-only">Search: </span>
@@ -58,7 +66,9 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
               name="name"
               placeholder="Search transaction"
               value={optimisticValues.name}
-              onChange={handleChange}
+              onChange={(e) => {
+                setSearchParam(e.target.name, e.target.value);
+              }}
             />
             <span className="absolute inset-y-0 right-250 grid size-200 place-items-center">
               <IconSearch />
@@ -66,21 +76,65 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
           </span>
         </label>
       </div>
-      <IconCombobox.Root className="inline-flex items-center gap-100">
-        <IconCombobox.Name>Sort by </IconCombobox.Name>
-        <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-          <IconSortMobile />
-        </span>
-        <IconCombobox.Control
-          name="sort"
-          value={optimisticValues.sort}
-          onChange={handleChange}
-        >
-          {sortingOptions.map((option) => {
-            return <option key={option}>{option}</option>;
-          })}
-        </IconCombobox.Control>
-      </IconCombobox.Root>
+      <Dehydrated>
+        <IconCombobox.Root className="inline-flex items-center gap-100">
+          <IconCombobox.Name>Sort by </IconCombobox.Name>
+          <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
+            <IconSortMobile />
+          </span>
+          <IconCombobox.Control
+            name={SORT_NAME}
+            defaultValue={optimisticValues.sort}
+          >
+            {sortingOptions.map((option) => {
+              return <option key={option}>{option}</option>;
+            })}
+          </IconCombobox.Control>
+        </IconCombobox.Root>
+      </Dehydrated>
+      <Hydrated>
+        <label className="inline-flex items-center gap-100">
+          <span className="sr-only tablet:not-sr-only">Sort by </span>
+          <Select.Root
+            value={optimisticValues.sort}
+            onValueChange={(value) => {
+              setSearchParam(SORT_NAME, value);
+            }}
+          >
+            <RadixSelect.Trigger className="group tablet:select-trigger">
+              <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
+                <IconSortMobile />
+              </span>
+              {/* `Select.Value` shouldn't be styled, but we have to hide it to match the mobile design. */}
+              {/* Mobile widget more closely resembles a `DropdownMenu`, but with the semantics for a currently selected value. */}
+              <span className="sr-only tablet:not-sr-only">
+                <Select.Value />
+              </span>
+              <Select.Icon className="hidden tablet:grid" />
+            </RadixSelect.Trigger>
+            <Select.Portal>
+              <Select.Content>
+                <Select.Group>
+                  <Select.Label className="px-250 py-150 text-grey-500 tablet:sr-only">
+                    Sort by
+                  </Select.Label>
+                  <Select.Separator className="tablet:hidden" />
+                  {sortingOptions.map((option, i) => {
+                    return (
+                      <Fragment key={option}>
+                        {i !== 0 ? <Select.Separator /> : null}
+                        <Select.Item value={option}>
+                          <Select.ItemText>{option}</Select.ItemText>
+                        </Select.Item>
+                      </Fragment>
+                    );
+                  })}
+                </Select.Group>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+        </label>
+      </Hydrated>
     </form>
   );
 };

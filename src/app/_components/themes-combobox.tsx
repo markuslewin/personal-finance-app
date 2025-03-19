@@ -32,14 +32,17 @@ const ThemesCombobox = async ({ name, themes }: ThemesComboboxProps) => {
       </Dehydrated>
       <Hydrated>
         <Form.EnhancedCombobox name={name}>
-          <Form.EnhancedComboboxTrigger />
+          <Form.EnhancedComboboxTrigger>
+            <Select.Value />
+            <Select.Icon />
+          </Form.EnhancedComboboxTrigger>
           <Form.EnhancedComboboxPortal>
             <Form.EnhancedComboboxContent>
               {themes.map((theme, i) => {
                 return (
                   <Fragment key={theme.id}>
                     {i !== 0 ? <Select.Separator /> : null}
-                    <Select.Item
+                    <Select.ColorItem
                       className={cx(theme.unavailable ? "text-grey-500" : "")}
                       value={theme.id}
                       disabled={theme.unavailable}
@@ -61,7 +64,7 @@ const ThemesCombobox = async ({ name, themes }: ThemesComboboxProps) => {
                       ) : (
                         <Select.ItemIndicator />
                       )}
-                    </Select.Item>
+                    </Select.ColorItem>
                   </Fragment>
                 );
               })}
