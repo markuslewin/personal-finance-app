@@ -37,11 +37,18 @@ export const add = async (prevState: unknown, formData: FormData) => {
           },
         });
       } catch (error) {
+        // Currently no way to check related fields
+        // https://github.com/prisma/prisma/issues/5040
+        // Assume `theme` constraint failed
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          // Currently no way to check related fields
-          // https://github.com/prisma/prisma/issues/5040
-          // Assume `theme` constraint failed
-          if (error.code === "P2025") {
+          if (error.code === "P2014") {
+            ctx.addIssue({
+              path: ["theme"] satisfies [keyof PotSchema],
+              code: z.ZodIssueCode.custom,
+              message: "Theme already in use.",
+            });
+            return z.NEVER;
+          } else if (error.code === "P2025") {
             ctx.addIssue({
               path: ["theme"] satisfies [keyof PotSchema],
               code: z.ZodIssueCode.custom,
@@ -85,11 +92,18 @@ export const edit = async (prevState: unknown, formData: FormData) => {
           },
         });
       } catch (error) {
+        // Currently no way to check related fields
+        // https://github.com/prisma/prisma/issues/5040
+        // Assume `theme` constraint failed
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          // Currently no way to check related fields
-          // https://github.com/prisma/prisma/issues/5040
-          // Assume `theme` constraint failed
-          if (error.code === "P2025") {
+          if (error.code === "P2014") {
+            ctx.addIssue({
+              path: ["theme"] satisfies [keyof PotSchema],
+              code: z.ZodIssueCode.custom,
+              message: "Theme already in use.",
+            });
+            return z.NEVER;
+          } else if (error.code === "P2025") {
             ctx.addIssue({
               path: ["theme"] satisfies [keyof PotSchema],
               code: z.ZodIssueCode.custom,

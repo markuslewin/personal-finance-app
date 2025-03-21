@@ -15,7 +15,7 @@ const Error = ({
   return (
     <>
       <h1 className="text-preset-1">Error</h1>
-      <p className="mt-200">{error.message}</p>
+      <p className="mt-200">Something went wrong! Please try again.</p>
     </>
   );
 };

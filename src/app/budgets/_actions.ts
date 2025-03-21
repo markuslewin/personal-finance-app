@@ -37,6 +37,7 @@ export const add = async (prevState: unknown, formData: FormData) => {
           },
         });
       } catch (error) {
+        // todo: Check `category` and `theme` constraints. See Pot actions
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           if (error.code === "P2002") {
             ctx.addIssue({
@@ -45,8 +46,6 @@ export const add = async (prevState: unknown, formData: FormData) => {
               message: "A budget of this category already exists",
             });
             return z.NEVER;
-          } else if (error.code === "P2025") {
-            // todo: Check whether `category` and `theme` existed. See Pot actions
           }
         }
         throw error;
