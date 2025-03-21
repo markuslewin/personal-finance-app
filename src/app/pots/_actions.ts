@@ -1,6 +1,7 @@
 "use server";
 
 import { parseWithZod } from "@conform-to/zod";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -11,28 +12,46 @@ import {
   addMoneySchema,
   type AddMoneySchema,
   withdrawSchema,
+  type PotSchema,
 } from "~/app/pots/_schemas";
 import { db } from "~/server/db";
 
 export const add = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
-    schema: potSchema.transform(async (val) => {
-      return await db.pot.create({
-        data: {
-          name: val.name,
-          target: val.target,
-          total: 0,
-          theme: {
-            connect: {
-              id: val.theme,
+    schema: potSchema.transform(async (val, ctx) => {
+      try {
+        return await db.pot.create({
+          data: {
+            name: val.name,
+            target: val.target,
+            total: 0,
+            theme: {
+              connect: {
+                id: val.theme,
+              },
             },
           },
-        },
-        select: {
-          id: true,
-        },
-      });
+          select: {
+            id: true,
+          },
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          // Currently no way to check related fields
+          // https://github.com/prisma/prisma/issues/5040
+          // Assume `theme` constraint failed
+          if (error.code === "P2025") {
+            ctx.addIssue({
+              path: ["theme"] satisfies [keyof PotSchema],
+              code: z.ZodIssueCode.custom,
+              message: "Theme doesn't exist.",
+            });
+            return z.NEVER;
+          }
+        }
+        throw error;
+      }
     }),
   });
   if (submission.status !== "success") {
@@ -44,27 +63,48 @@ export const add = async (prevState: unknown, formData: FormData) => {
 };
 
 export const edit = async (prevState: unknown, formData: FormData) => {
-  const submission = parseWithZod(formData, {
-    schema: editPotSchema,
+  const submission = await parseWithZod(formData, {
+    async: true,
+    schema: editPotSchema.transform(async (val, ctx) => {
+      try {
+        return await db.pot.update({
+          select: {
+            id: true,
+          },
+          data: {
+            name: val.name,
+            target: val.target,
+            theme: {
+              connect: {
+                id: val.theme,
+              },
+            },
+          },
+          where: {
+            id: val.id,
+          },
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          // Currently no way to check related fields
+          // https://github.com/prisma/prisma/issues/5040
+          // Assume `theme` constraint failed
+          if (error.code === "P2025") {
+            ctx.addIssue({
+              path: ["theme"] satisfies [keyof PotSchema],
+              code: z.ZodIssueCode.custom,
+              message: "Theme doesn't exist.",
+            });
+            return z.NEVER;
+          }
+        }
+        throw error;
+      }
+    }),
   });
   if (submission.status !== "success") {
     return submission.reply();
   }
-
-  await db.pot.update({
-    data: {
-      name: submission.value.name,
-      target: submission.value.target,
-      theme: {
-        connect: {
-          id: submission.value.theme,
-        },
-      },
-    },
-    where: {
-      id: submission.value.id,
-    },
-  });
 
   revalidatePath("/pots");
   redirect("/pots");
