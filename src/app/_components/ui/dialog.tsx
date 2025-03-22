@@ -86,7 +86,7 @@ export const Close = ({ className, ...props }: CloseProps) => {
         "rounded-full transition-colors hocus:text-grey-900",
       )}
     >
-      <IconCloseModal />
+      <IconCloseModal className="h-[1.625rem]" />
       <span className="sr-only">Close</span>
     </button>
   );

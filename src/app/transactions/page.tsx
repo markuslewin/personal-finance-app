@@ -223,7 +223,7 @@ const TransactionsPage = async ({
               aria-current={isFirstPage ? "page" : undefined}
             >
               <span className="grid size-200 place-items-center">
-                <IconCaretLeft />
+                <IconCaretLeft className="h-[0.6875rem]" />
               </span>
               <span
                 className={cx(
@@ -286,7 +286,7 @@ const TransactionsPage = async ({
                 Next
               </span>
               <span className="grid size-200 place-items-center">
-                <IconCaretRight />
+                <IconCaretRight className="h-[0.6875rem]" />
               </span>
             </Link>
           </p>

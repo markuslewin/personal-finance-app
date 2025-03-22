@@ -8,8 +8,8 @@ import {
   useOptimistic,
 } from "react";
 import { minimizeMenu } from "~/app/_actions";
-import AssetLogoLarge from "~/app/_assets/logo-large.svg";
-import AssetLogoSmall from "~/app/_assets/logo-small.svg";
+import LogoLarge from "~/app/_assets/logo-large.svg";
+import LogoSmall from "~/app/_assets/logo-small.svg";
 import IconNavBudgets from "~/app/_assets/icon-nav-budgets.svg";
 import IconNavOverview from "~/app/_assets/icon-nav-overview.svg";
 import IconNavPots from "~/app/_assets/icon-nav-pots.svg";
@@ -57,7 +57,11 @@ const Sidebar = ({
           )}
         >
           <Link href={"/"}>
-            {isOpen ? <AssetLogoLarge /> : <AssetLogoSmall />}
+            {isOpen ? (
+              <LogoLarge className="h-[1.375rem]" />
+            ) : (
+              <LogoSmall className="h-[1.375rem]" />
+            )}
             <span className="sr-only">Finance</span>
           </Link>
         </p>
@@ -72,22 +76,30 @@ const Sidebar = ({
             role="list"
           >
             {[
-              { name: "Overview", href: "/", icon: <IconNavOverview /> },
+              {
+                name: "Overview",
+                href: "/",
+                icon: <IconNavOverview className="h-[1.1875rem]" />,
+              },
               {
                 name: "Transactions",
                 href: "/transactions",
-                icon: <IconNavTransactions />,
+                icon: <IconNavTransactions className="h-[1.125rem]" />,
               },
               {
                 name: "Budgets",
                 href: "/budgets",
-                icon: <IconNavBudgets />,
+                icon: <IconNavBudgets className="h-[1.25rem]" />,
               },
-              { name: "Pots", href: "/pots", icon: <IconNavPots /> },
+              {
+                name: "Pots",
+                href: "/pots",
+                icon: <IconNavPots className="h-[1.375rem]" />,
+              },
               {
                 name: "Recurring Bills",
                 href: "/recurring-bills",
-                icon: <IconNavRecurringBills />,
+                icon: <IconNavRecurringBills className="h-[1.0625rem]" />,
               },
             ].map((link) => {
               const isActive = `/${pathname.split("/")[1] ?? ""}` === link.href;
@@ -163,7 +175,7 @@ const Sidebar = ({
                 !isOpen ? "rotate-180" : "",
               )}
             >
-              <IconMinimizeMenu />
+              <IconMinimizeMenu className="h-[1.25rem]" />
             </span>
             <span className={cx(!isOpen ? "desktop:sr-only" : "")}>
               Minimize menu

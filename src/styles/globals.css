@@ -86,6 +86,11 @@
 }
 
 @layer base {
+  /* Calculate width from CSS `height` and aspect ratio of `width` and `height` attributes set on the SVG element */
+  svg {
+    width: auto;
+  }
+
   b,
   strong {
     font-weight: inherit;
@@ -93,7 +98,7 @@
 }
 
 @utility select-trigger {
-  @apply gap-200 border-beige-500 text-grey-900 hover:border-grey-500 focus-visible:border-grey-900 grid h-[2.8125rem] grid-cols-[1fr_auto] items-center rounded-lg border-[0.0625rem] bg-white px-[1.1875rem] text-start transition-colors;
+  @apply grid h-[2.8125rem] grid-cols-[1fr_auto] items-center gap-200 rounded-lg border-[0.0625rem] border-beige-500 bg-white px-[1.1875rem] text-start text-grey-900 transition-colors hover:border-grey-500 focus-visible:border-grey-900;
 }
 
 @custom-variant hocus {

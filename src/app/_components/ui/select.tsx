@@ -28,7 +28,7 @@ export const Icon = ({ className, ...props }: IconProps) => {
       {...props}
       className={twMerge(cx("grid size-200 place-items-center", className))}
     >
-      <IconCaretDown className="transition-transform group-data-[state=open]:rotate-180" />
+      <IconCaretDown className="h-[0.375rem] transition-transform group-data-[state=open]:rotate-180" />
     </Select.Icon>
   );
 };
@@ -103,7 +103,7 @@ type ItemIndicatorProps = ComponentPropsWithRef<typeof Select.ItemIndicator>;
 export const ItemIndicator = ({ className, ...props }: ItemIndicatorProps) => {
   return (
     <Select.ItemIndicator {...props} className={cx(className, "text-green")}>
-      <IconSelected />
+      <IconSelected className="h-[0.875rem]" />
     </Select.ItemIndicator>
   );
 };

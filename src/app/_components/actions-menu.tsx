@@ -20,7 +20,7 @@ export const Trigger = ({ className, ...props }: TriggerProps) => {
       className={cx(className, "transition-colors hocus:text-grey-900")}
     >
       <span className="grid size-200 place-items-center">
-        <IconEllipsis />
+        <IconEllipsis className="h-[0.25rem]" />
       </span>
       <span className="sr-only">Actions</span>
     </DropdownMenu.Trigger>

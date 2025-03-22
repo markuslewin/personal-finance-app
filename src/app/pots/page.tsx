@@ -85,7 +85,7 @@ const Pot = ({ pot }: PotProps) => {
             href={`/pots/${pot.id}/edit`}
           >
             <span className="grid size-200 place-items-center">
-              <IconEllipsis />
+              <IconEllipsis className="h-[0.25rem]" />
             </span>
             <span className="sr-only">{`Edit pot "${pot.name}"`}</span>
           </Link>

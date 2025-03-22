@@ -92,7 +92,7 @@ const RecurringBillsPage = async ({
         <div className="grid gap-150 tablet:grid-cols-2 tablet:gap-300 desktop:grid-cols-none">
           <div className="grid grid-cols-[auto_1fr] items-center gap-250 rounded-xl bg-grey-900 px-250 py-300 text-white tablet:grid-cols-none tablet:gap-400 tablet:px-300">
             <div className="grid size-500 place-items-center">
-              <IconRecurringBills />
+              <IconRecurringBills className="h-[1.75rem]" />
             </div>
             <div className="grid gap-150">
               <h2>Total Bills</h2>
@@ -174,12 +174,12 @@ const RecurringBillsPage = async ({
                         Monthly-{bill.day}
                         {isPaid ? (
                           <span>
-                            <IconBillPaid />
+                            <IconBillPaid className="h-[0.875rem]" />
                             <span className="sr-only">(Paid)</span>
                           </span>
                         ) : isDueSoon ? (
                           <span className="text-red">
-                            <IconBillDue />
+                            <IconBillDue className="h-[0.875rem]" />
                             <span className="sr-only">(Due soon)</span>
                           </span>
                         ) : null}
@@ -243,12 +243,12 @@ const RecurringBillsPage = async ({
                           Monthly-{bill.day}
                           {isPaid ? (
                             <span>
-                              <IconBillPaid />
+                              <IconBillPaid className="h-[0.875rem]" />
                               <span className="sr-only">(Paid)</span>
                             </span>
                           ) : isDueSoon ? (
                             <span className="text-red">
-                              <IconBillDue />
+                              <IconBillDue className="h-[0.875rem]" />
                               <span className="sr-only">(Due soon)</span>
                             </span>
                           ) : null}

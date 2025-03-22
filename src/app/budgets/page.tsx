@@ -206,7 +206,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
             href={`/budgets/${budget.id}/edit`}
           >
             <span className="grid size-200 place-items-center">
-              <IconEllipsis />
+              <IconEllipsis className="h-[0.25rem]" />
             </span>
             <span className="sr-only">
               {`Edit budget "${budget.category.name}"`}
@@ -265,7 +265,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           >
             See All
             <span className="grid size-150 place-items-center">
-              <IconCaretRight />
+              <IconCaretRight className="h-[0.6875rem]" />
             </span>
           </Link>
         </header>

@@ -71,7 +71,7 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
               }}
             />
             <span className="absolute inset-y-0 right-250 grid size-200 place-items-center">
-              <IconSearch />
+              <IconSearch className="h-[0.875rem]" />
             </span>
           </span>
         </label>
@@ -80,7 +80,7 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
         <IconCombobox.Root className="inline-flex items-center gap-100">
           <IconCombobox.Name>Sort by </IconCombobox.Name>
           <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-            <IconSortMobile />
+            <IconSortMobile className="h-[0.9375rem]" />
           </span>
           <IconCombobox.Control
             name={SORT_NAME}
@@ -103,7 +103,7 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
           >
             <RadixSelect.Trigger className="group tablet:select-trigger">
               <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
-                <IconSortMobile />
+                <IconSortMobile className="h-[0.9375rem]" />
               </span>
               {/* `Select.Value` shouldn't be styled, but we have to hide it to match the mobile design. */}
               {/* Mobile widget more closely resembles a `DropdownMenu`, but with the semantics for a currently selected value. */}
