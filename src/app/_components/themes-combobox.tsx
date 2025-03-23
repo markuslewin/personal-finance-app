@@ -50,7 +50,7 @@ const ThemesCombobox = async ({ name, themes }: ThemesComboboxProps) => {
                       <Select.ItemText>
                         <span
                           className={cx(
-                            "mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full",
+                            "mr-150 inline-block size-200 translate-y-[0.1875rem] rounded-full forced-color-adjust-none",
                             theme.unavailable ? "opacity-10" : "",
                           )}
                           style={{ background: theme.color }}

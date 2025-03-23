@@ -18,7 +18,7 @@ export const Root = ({ className, data, ...props }: DonutProps) => {
       {...props}
       className={cx(
         className,
-        "mx-auto grid size-[15rem] place-items-center rounded-full bg-grey-500",
+        "mx-auto grid size-[15rem] place-items-center rounded-full bg-grey-500 forced-color-adjust-none",
       )}
       style={{
         background:
@@ -52,7 +52,7 @@ export const Hole = ({ className, ...props }: HoleProps) => {
       {...props}
       className={cx(
         className,
-        "grid size-[67.5%] items-center rounded-full bg-white text-center text-preset-5 text-grey-500 shadow-[0_0_0_0.8125rem_hsl(0_0%_100%/0.25)]",
+        "grid size-[67.5%] items-center rounded-full bg-white text-center text-preset-5 text-grey-500 shadow-[0_0_0_0.8125rem_hsl(0_0%_100%/0.25)] forced-color-adjust-auto",
       )}
     />
   );

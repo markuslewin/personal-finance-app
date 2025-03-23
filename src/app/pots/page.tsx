@@ -67,13 +67,15 @@ const Pot = ({ pot }: PotProps) => {
   const meterLabelId = useId();
 
   return (
-    <article className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:px-300">
+    <article
+      className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:px-300"
+      style={{
+        ["--theme-color" as string]: pot.theme.color,
+      }}
+    >
       <header className="flex flex-wrap items-center justify-between">
         <div className="grid grid-cols-[auto_1fr] items-center gap-200">
-          <div
-            className="size-200 rounded-full"
-            style={{ background: pot.theme.color }}
-          />
+          <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
           <h2 className="text-preset-2 text-grey-900">{pot.name}</h2>
         </div>
         <Hydrated>
@@ -100,16 +102,15 @@ const Pot = ({ pot }: PotProps) => {
       <div className="mt-200 text-preset-5">
         <p>
           <Meter.Root
-            className="grid h-100 rounded-full bg-beige-100"
+            className="grid h-100 rounded-full bg-beige-100 forced-colors:bg-[Canvas]"
             min={0}
             max={pot.target}
             value={pot.total}
             aria-labelledby={meterLabelId}
           >
             <Meter.Indicator
-              className="rounded-full"
+              className="rounded-full bg-[var(--theme-color)] forced-colors:bg-[CanvasText]"
               style={{
-                background: pot.theme.color,
                 width: `${clamp(0, 100, (pot.total / pot.target) * 100)}%`,
               }}
             />

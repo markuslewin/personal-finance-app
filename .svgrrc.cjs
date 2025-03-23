@@ -4,15 +4,23 @@ const config = {
     focusable: "false",
     "aria-hidden": "true",
   },
-  // We need `viewBox`es in order to scale icons with font size
   svgoConfig: {
     plugins: [
       {
         name: "preset-default",
         params: {
           overrides: {
+            // Use custom config for plugin
+            convertColors: false,
+            // We need `viewBox`es in order to scale icons with font size
             removeViewBox: false,
           },
+        },
+      },
+      {
+        name: "convertColors",
+        params: {
+          currentColor: true,
         },
       },
     ],

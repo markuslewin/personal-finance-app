@@ -180,7 +180,7 @@ const OverviewPage = async () => {
           </CardHeader>
           <CardContent className="mt-250 grid gap-250 tablet:grid-cols-[247fr_277fr]">
             <div className="grid grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900">
-              <div className="grid size-500 place-items-center">
+              <div className="grid size-500 place-items-center text-green">
                 <IconPot className="h-[2.25rem]" />
               </div>
               <div>
@@ -425,7 +425,7 @@ const LegendItem = ({
       className={cx(className, "grid grid-cols-[auto_1fr] gap-200")}
     >
       <div
-        className="rounded-full border-l-[0.25rem]"
+        className="rounded-full border-l-[0.25rem] forced-color-adjust-none"
         style={{ borderColor: color }}
       />
       <div>{children}</div>

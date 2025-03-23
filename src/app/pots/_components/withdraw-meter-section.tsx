@@ -44,7 +44,7 @@ const WithdrawMeterSection = ({
       </p>
       <p className="mt-200">
         <Meter.Root
-          className="grid h-100 rounded-full bg-beige-100"
+          className="grid h-100 rounded-full bg-beige-100 forced-colors:bg-[Canvas]"
           min={0}
           max={target}
           value={nextTotal}
@@ -59,13 +59,13 @@ const WithdrawMeterSection = ({
             >
               {greyPercent > 0 ? (
                 <span
-                  className="bg-grey-900"
+                  className="bg-grey-900 forced-colors:bg-[CanvasText]"
                   style={{ flexGrow: greyPercent * 100 }}
                 />
               ) : null}
               {redPercent > 0 ? (
                 <span
-                  className="bg-red"
+                  className="bg-red forced-color-adjust-none"
                   style={{ flexGrow: redPercent * 100 }}
                 />
               ) : null}

@@ -39,7 +39,7 @@ const MeterSection = ({ name, total, target }: MeterSectionProps) => {
       </p>
       <p className="mt-200">
         <Meter.Root
-          className="grid h-100 rounded-full bg-beige-100"
+          className="grid h-100 rounded-full bg-beige-100 forced-colors:bg-[Canvas]"
           min={0}
           max={target}
           value={nextTotal}
@@ -54,13 +54,13 @@ const MeterSection = ({ name, total, target }: MeterSectionProps) => {
             >
               {greyPercent > 0 ? (
                 <span
-                  className="bg-grey-900"
+                  className="bg-grey-900 forced-colors:bg-[CanvasText]"
                   style={{ flexGrow: greyPercent * 100 }}
                 />
               ) : null}
               {greenPercent > 0 ? (
                 <span
-                  className="bg-green"
+                  className="bg-green forced-colors:bg-[CanvasText]"
                   style={{ flexGrow: greenPercent * 100 }}
                 />
               ) : null}

@@ -130,7 +130,7 @@ const BudgetsPage = async () => {
                 return (
                   <li className="flex gap-200" key={budget.id}>
                     <div
-                      className="w-50 rounded-full"
+                      className="w-50 rounded-full forced-color-adjust-none"
                       style={{
                         background: budget.theme.color,
                       }}
@@ -190,12 +190,14 @@ const Budget = ({ budget, spent }: BudgetProps) => {
   const free = Math.max(0, budget.maximum - spent);
 
   return (
-    <article className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400">
+    <article
+      className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400"
+      style={{
+        ["--theme-color" as string]: budget.theme.color,
+      }}
+    >
       <header className="grid grid-cols-[auto_1fr_auto] items-center gap-200">
-        <div
-          className="size-200 rounded-full"
-          style={{ background: budget.theme.color }}
-        />
+        <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
         <h3 className="text-preset-2 text-grey-900">{budget.category.name}</h3>
         <Hydrated>
           <BudgetActions budget={budget} />
@@ -220,16 +222,15 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           Amount spent
         </span>
         <Meter.Root
-          className="grid h-400 rounded-sm bg-beige-100 p-50"
+          className="grid h-400 rounded-sm bg-beige-100 p-50 forced-colors:bg-[Canvas]"
           min={0}
           max={budget.maximum}
           value={spent}
           aria-labelledby={meterLabelId}
         >
           <Meter.Indicator
-            className="rounded-sm"
+            className="rounded-sm bg-[var(--theme-color)] forced-colors:bg-[CanvasText]"
             style={{
-              background: budget.theme.color,
               width: `${clamp(0, 100, (spent / budget.maximum) * 100)}%`,
             }}
           />
@@ -237,10 +238,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
       </p>
       <div className="mt-200 grid grid-cols-2 gap-200 text-preset-5">
         <div className="grid grid-cols-[auto_1fr] gap-200">
-          <div
-            className="w-50 rounded-full"
-            style={{ background: budget.theme.color }}
-          />
+          <div className="w-50 rounded-full bg-[var(--theme-color)] forced-colors:bg-[CanvasText]" />
           <div className="grid gap-50">
             <h4>Spent</h4>
             <p className="text-preset-4-bold text-grey-900">
@@ -249,7 +247,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           </div>
         </div>
         <div className="grid grid-cols-[auto_1fr] gap-200">
-          <div className="w-50 rounded-full bg-beige-100" />
+          <div className="w-50 rounded-full bg-beige-100 forced-colors:bg-[Canvas]" />
           <div className="grid gap-50">
             <h4>Free</h4>
             <p className="text-preset-4-bold text-grey-900">{currency(free)}</p>
