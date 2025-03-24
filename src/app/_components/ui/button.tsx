@@ -6,10 +6,10 @@ const buttonVariants = cva("transition-colors", {
   variants: {
     intent: {
       primary:
-        "bg-grey-900 text-white hocus:bg-grey-500 p-200 text-preset-4-bold rounded-lg",
+        "bg-grey-900 text-white hocus:bg-grey-500 p-200 text-preset-4-bold rounded-lg forced-colors:border-[0.0625rem]",
       tertiary: "text-grey-500 hocus:text-grey-900 text-preset-4",
       destroy:
-        "bg-red text-white hocus:bg-[hsl(7_58%_60%)] p-200 text-preset-4-bold rounded-lg",
+        "bg-red text-white hocus:bg-[hsl(7_58%_60%)] p-200 text-preset-4-bold rounded-lg forced-colors:border-[0.0625rem]",
     },
   },
   defaultVariants: {

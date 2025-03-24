@@ -44,7 +44,7 @@ const WithdrawMeterSection = ({
       </p>
       <p className="mt-200">
         <Meter.Root
-          className="grid h-100 rounded-full bg-beige-100 forced-colors:bg-[Canvas]"
+          className="grid h-100 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]"
           min={0}
           max={target}
           value={nextTotal}

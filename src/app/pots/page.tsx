@@ -8,6 +8,7 @@ import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import PotActions from "~/app/pots/_components/pot-actions-menu";
 import { useId } from "react";
 import { clamp } from "~/app/_math";
+import Button from "~/app/_components/ui/button";
 
 export const metadata: Metadata = {
   title: "Pots",
@@ -35,12 +36,11 @@ const PotsPage = async () => {
     <article>
       <header className="flex flex-wrap items-center justify-between">
         <h1 className="text-preset-1">Pots</h1>
-        <Link
-          className="rounded-lg bg-grey-900 p-200 text-preset-4-bold text-white transition-colors hocus:bg-grey-500"
-          href={"/pots/add"}
-        >
-          <span aria-hidden="true">+ </span>Add New Pot
-        </Link>
+        <Button asChild>
+          <Link href={"/pots/add"}>
+            <span aria-hidden="true">+ </span>Add New Pot
+          </Link>
+        </Button>
       </header>
       <div className="mt-400 grid gap-300 desktop:grid-cols-2">
         {pots.map((pot) => {
@@ -68,7 +68,7 @@ const Pot = ({ pot }: PotProps) => {
 
   return (
     <article
-      className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:px-300"
+      className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:px-300 forced-colors:border-[0.0625rem]"
       style={{
         ["--theme-color" as string]: pot.theme.color,
       }}
@@ -102,7 +102,7 @@ const Pot = ({ pot }: PotProps) => {
       <div className="mt-200 text-preset-5">
         <p>
           <Meter.Root
-            className="grid h-100 rounded-full bg-beige-100 forced-colors:bg-[Canvas]"
+            className="grid h-100 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]"
             min={0}
             max={pot.target}
             value={pot.total}

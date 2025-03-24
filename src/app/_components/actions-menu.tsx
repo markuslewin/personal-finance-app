@@ -41,7 +41,10 @@ export const Content = ({ className, ...props }: ContentProps) => {
       sideOffset={12}
       align="end"
       {...props}
-      className={cx(className, "rounded-lg bg-white text-grey-900 shadow-md")}
+      className={cx(
+        className,
+        "rounded-lg bg-white text-grey-900 shadow-md forced-colors:border-[0.0625rem]",
+      )}
     />
   );
 };

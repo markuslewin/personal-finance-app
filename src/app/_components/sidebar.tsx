@@ -49,7 +49,7 @@ const Sidebar = ({
           : "desktop:grid-cols-[5.5rem_1fr]",
       )}
     >
-      <header className="fixed inset-x-0 bottom-0 z-10 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:sticky desktop:top-0 desktop:flex desktop:h-screen desktop:flex-col desktop:gap-300 desktop:overflow-y-auto desktop:rounded-tl-none desktop:rounded-r-2xl desktop:pb-500 desktop:text-preset-3">
+      <header className="fixed inset-x-0 bottom-0 z-10 rounded-t-lg bg-grey-900 text-preset-5-bold text-grey-300 desktop:sticky desktop:top-0 desktop:flex desktop:h-screen desktop:flex-col desktop:gap-300 desktop:overflow-y-auto desktop:rounded-tl-none desktop:rounded-r-2xl desktop:pb-500 desktop:text-preset-3 forced-colors:border-t-[0.0625rem] desktop:forced-colors:border-t-0 desktop:forced-colors:border-r-[0.0625rem]">
         <p
           className={cx(
             "hidden px-400 py-500 text-white desktop:grid",

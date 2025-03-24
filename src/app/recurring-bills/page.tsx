@@ -90,7 +90,7 @@ const RecurringBillsPage = async ({
       <h1 className="text-preset-1">Recurring Bills</h1>
       <div className="mt-500 grid gap-300 desktop:grid-cols-[337fr_699fr] desktop:items-start">
         <div className="grid gap-150 tablet:grid-cols-2 tablet:gap-300 desktop:grid-cols-none">
-          <div className="grid grid-cols-[auto_1fr] items-center gap-250 rounded-xl bg-grey-900 px-250 py-300 text-white tablet:grid-cols-none tablet:gap-400 tablet:px-300">
+          <div className="grid grid-cols-[auto_1fr] items-center gap-250 rounded-xl bg-grey-900 px-250 py-300 text-white tablet:grid-cols-none tablet:gap-400 tablet:px-300 forced-colors:border-[0.0625rem]">
             <div className="grid size-500 place-items-center">
               <IconRecurringBills className="h-[1.75rem]" />
             </div>
@@ -99,7 +99,7 @@ const RecurringBillsPage = async ({
               <p className="text-preset-1">{currency(total)}</p>
             </div>
           </div>
-          <div className="rounded-xl bg-white p-250 text-grey-500">
+          <div className="rounded-xl bg-white p-250 text-grey-500 forced-colors:border-[0.0625rem]">
             <h2 className="text-preset-3 text-grey-900">Summary</h2>
             <div className="mt-250 text-preset-5 [&>*+*]:mt-200 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-500/15 [&>*+*]:pt-200">
               <div className="flex flex-wrap items-center justify-between">
@@ -127,7 +127,7 @@ const RecurringBillsPage = async ({
             </div>
           </div>
         </div>
-        <div className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 tablet:pb-150">
+        <div className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 tablet:pb-150 forced-colors:border-[0.0625rem]">
           <h2 className="sr-only">Bills</h2>
           <header>
             <h3 className="sr-only">Search</h3>

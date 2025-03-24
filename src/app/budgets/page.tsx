@@ -93,7 +93,7 @@ const BudgetsPage = async () => {
         </Button>
       </header>
       <div className="mt-400 grid items-start gap-300 desktop:grid-cols-[428fr_608fr]">
-        <div className="grid items-center gap-400 rounded-xl bg-white px-250 pt-300 pb-200 text-grey-500 tablet:grid-cols-2 tablet:p-400 desktop:grid-cols-none">
+        <div className="grid items-center gap-400 rounded-xl bg-white px-250 pt-300 pb-200 text-grey-500 tablet:grid-cols-2 tablet:p-400 desktop:grid-cols-none forced-colors:border-[0.0625rem]">
           <h2 className="sr-only">Spending</h2>
           <div className="py-250">
             <Donut.Root
@@ -191,7 +191,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
 
   return (
     <article
-      className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400"
+      className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 forced-colors:border-[0.0625rem]"
       style={{
         ["--theme-color" as string]: budget.theme.color,
       }}
@@ -222,7 +222,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           Amount spent
         </span>
         <Meter.Root
-          className="grid h-400 rounded-sm bg-beige-100 p-50 forced-colors:bg-[Canvas]"
+          className="grid h-400 rounded-sm bg-beige-100 p-50 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]"
           min={0}
           max={budget.maximum}
           value={spent}
@@ -247,14 +247,14 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           </div>
         </div>
         <div className="grid grid-cols-[auto_1fr] gap-200">
-          <div className="w-50 rounded-full bg-beige-100 forced-colors:bg-[Canvas]" />
+          <div className="w-50 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]" />
           <div className="grid gap-50">
             <h4>Free</h4>
             <p className="text-preset-4-bold text-grey-900">{currency(free)}</p>
           </div>
         </div>
       </div>
-      <article className="mt-250 rounded-xl bg-beige-100 p-200 text-grey-500 tablet:p-250">
+      <article className="mt-250 rounded-xl bg-beige-100 p-200 text-grey-500 tablet:p-250 forced-colors:border-[0.0625rem]">
         <header className="flex flex-wrap justify-between">
           <h4 className="text-preset-3 text-grey-900">Latest Spending</h4>
           <Link

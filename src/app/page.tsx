@@ -157,15 +157,15 @@ const OverviewPage = async () => {
       <h1 className="text-preset-1">Overview</h1>
       <h2 className="sr-only">Balance</h2>
       <div className="mt-400 flex flex-col gap-150 tablet:mt-[2.625rem] tablet:flex-row tablet:flex-wrap tablet:gap-300">
-        <div className="grow basis-0 rounded-xl bg-grey-900 p-250 text-white tablet:p-300">
+        <div className="grow basis-0 rounded-xl bg-grey-900 p-250 text-white tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3>Current Balance</h3>
           <p className="mt-150 text-preset-1">{currency(balance.current)}</p>
         </div>
-        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
+        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Income</h3>
           <p className="mt-150 text-preset-1">{currency(income)}</p>
         </div>
-        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300">
+        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Expenses</h3>
           <p className="mt-150 text-preset-1">{currency(Math.abs(expenses))}</p>
         </div>
@@ -179,7 +179,7 @@ const OverviewPage = async () => {
             </p>
           </CardHeader>
           <CardContent className="mt-250 grid gap-250 tablet:grid-cols-[247fr_277fr]">
-            <div className="grid grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900">
+            <div className="grid grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900 forced-colors:border-[0.0625rem]">
               <div className="grid size-500 place-items-center text-green">
                 <IconPot className="h-[2.25rem]" />
               </div>
@@ -328,19 +328,19 @@ const OverviewPage = async () => {
             </p>
           </CardHeader>
           <CardContent className="mt-400 grid gap-150">
-            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pr-200 pl-150 text-grey-500">
+            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
               <h3>Paid Bills</h3>
               <p className="text-preset-4-bold text-grey-900">
                 {currency(totalPaid)}
               </p>
             </div>
-            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pr-200 pl-150 text-grey-500">
+            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
               <h3>Total Upcoming</h3>
               <p className="text-preset-4-bold text-grey-900">
                 {currency(totalUpcoming)}
               </p>
             </div>
-            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pr-200 pl-150 text-grey-500">
+            <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
               <h3>Due Soon</h3>
               <p className="text-preset-4-bold text-grey-900">
                 {currency(totalDueSoon)}
@@ -361,7 +361,7 @@ const Card = ({ className, ...props }: CardProps) => {
       {...props}
       className={cx(
         className,
-        "grid grid-rows-[auto_1fr] rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400",
+        "grid grid-rows-[auto_1fr] rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 forced-colors:border-[0.0625rem]",
       )}
     />
   );

@@ -42,7 +42,7 @@ export const Content = ({ className, children, ...props }: ContentProps) => {
     <Select.Content
       className={cx(
         className,
-        "max-h-[var(--radix-select-content-available-height)] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg bg-white text-grey-900 shadow-md",
+        "max-h-[var(--radix-select-content-available-height)] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg bg-white text-grey-900 shadow-md forced-colors:border-[0.0625rem]",
       )}
       position="popper"
       sideOffset={16}
