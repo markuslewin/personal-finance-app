@@ -1,7 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Fragment, useOptimistic, useTransition } from "react";
+import { Fragment } from "react";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
@@ -10,45 +9,26 @@ import * as Select from "~/app/_components/ui/select";
 import Textbox from "~/app/_components/ui/textbox";
 import { type SortingOption, sortingOptions } from "~/app/_sort";
 import * as RadixSelect from "@radix-ui/react-select";
+import { useOptimisticSearchParams } from "~/app/_routing";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
+const NAME_NAME = "name";
 const SORT_NAME = "sort";
 
-type BillsSearchValues = {
-  name: string;
-  sort: SortingOption;
-};
-
 type BillsSearchFormProps = {
-  values: BillsSearchValues;
+  defaultSort: SortingOption;
 };
 
-export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  // todo: `isPending`
-  const [isPending, startTransition] = useTransition();
-  const [optimisticValues, setOptimisticValues] = useOptimistic(
-    values,
-    (_, values: BillsSearchValues) => values,
-  );
+export const BillsSearchForm = ({ defaultSort }: BillsSearchFormProps) => {
+  const {
+    // todo: `isPending`
+    isPending,
+    searchParams,
+    setSearchParams,
+  } = useOptimisticSearchParams();
 
-  const setSearchParam = (name: string, value: string) => {
-    startTransition(() => {
-      const nextOptimisticValues = {
-        ...optimisticValues,
-        [name]: value,
-      };
-
-      setOptimisticValues(nextOptimisticValues);
-
-      const params = new URLSearchParams({
-        ...Object.fromEntries(searchParams),
-        ...nextOptimisticValues,
-      });
-      router.replace(`${pathname}?${params}`, { scroll: false });
-    });
-  };
+  const name = searchParams.get(NAME_NAME) ?? "";
+  const sort = searchParams.get(SORT_NAME) ?? defaultSort;
 
   return (
     <form
@@ -63,11 +43,16 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
           <span className="relative text-grey-900">
             <Textbox
               className="w-full max-w-[20rem]"
-              name="name"
-              placeholder="Search transaction"
-              value={optimisticValues.name}
+              name={NAME_NAME}
+              placeholder="Search bills"
+              value={name}
               onChange={(e) => {
-                setSearchParam(e.target.name, e.target.value);
+                setSearchParams(
+                  new ReadonlyURLSearchParams({
+                    ...Object.fromEntries(searchParams),
+                    [e.target.name]: e.target.value,
+                  }),
+                );
               }}
             />
             <span className="absolute inset-y-0 right-250 grid size-200 place-items-center">
@@ -82,10 +67,7 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
           <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
             <IconSortMobile className="h-[0.9375rem]" />
           </span>
-          <IconCombobox.Control
-            name={SORT_NAME}
-            defaultValue={optimisticValues.sort}
-          >
+          <IconCombobox.Control name={SORT_NAME} defaultValue={sort}>
             {sortingOptions.map((option) => {
               return <option key={option}>{option}</option>;
             })}
@@ -96,9 +78,14 @@ export const BillsSearchForm = ({ values }: BillsSearchFormProps) => {
         <label className="inline-flex items-center gap-100">
           <span className="sr-only tablet:not-sr-only">Sort by </span>
           <Select.Root
-            value={optimisticValues.sort}
+            value={sort}
             onValueChange={(value) => {
-              setSearchParam(SORT_NAME, value);
+              setSearchParams(
+                new ReadonlyURLSearchParams({
+                  ...Object.fromEntries(searchParams),
+                  [SORT_NAME]: value,
+                }),
+              );
             }}
           >
             <RadixSelect.Trigger className="group tablet:select-trigger">

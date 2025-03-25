@@ -131,12 +131,7 @@ const RecurringBillsPage = async ({
           <h2 className="sr-only">Bills</h2>
           <header>
             <h3 className="sr-only">Search</h3>
-            <BillsSearchForm
-              values={{
-                name: name ?? "",
-                sort: sort ?? DEFAULT_SORTING,
-              }}
-            />
+            <BillsSearchForm defaultSort={DEFAULT_SORTING} />
           </header>
           <SearchResultsSection className="mt-300">
             {/* Duplicate HTML to match the design */}
