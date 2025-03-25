@@ -121,7 +121,7 @@ const BudgetsPage = async () => {
           <div>
             <h3 className="text-preset-2 text-grey-900">Spending Summary</h3>
             <ul
-              className="mt-300 [&>*+*]:mt-200 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-200"
+              className="mt-300 space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200"
               role="list"
             >
               {budgets.map((budget) => {
@@ -268,7 +268,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           </Link>
         </header>
         <ol
-          className="mt-250 text-preset-5 [&>*+*]:mt-150 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-500/15 [&>*+*]:pt-150"
+          className="mt-250 space-y-150 divide-y-[0.0625rem] divide-grey-500/15 text-preset-5 add-space-y-150"
           role="list"
         >
           {budget.category.Transaction.map((transaction) => {

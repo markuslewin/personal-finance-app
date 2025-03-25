@@ -218,7 +218,7 @@ const OverviewPage = async () => {
           </CardHeader>
           <CardContent>
             <ul
-              className="mt-400 [&>*+*]:mt-250 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-250"
+              className="mt-400 space-y-250 divide-y-[0.0625rem] divide-grey-100 add-space-y-250"
               role="list"
             >
               {transactions.map((transaction) => {

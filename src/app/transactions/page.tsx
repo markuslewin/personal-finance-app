@@ -106,7 +106,7 @@ const TransactionsPage = async ({
           {/* Duplicate HTML to match the design */}
           {/* A list on mobile turns into a table on tablet */}
           <ul
-            className="tablet:hidden [&>*+*]:mt-200 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-200"
+            className="space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200 tablet:hidden"
             role="list"
           >
             {transactions.map((transaction) => {
@@ -169,7 +169,7 @@ const TransactionsPage = async ({
                 </th>
               </tr>
             </thead>
-            <tbody className="mt-100 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100">
+            <tbody className="mt-100 divide-y-[0.0625rem] divide-grey-100">
               {transactions.map((transaction) => {
                 return (
                   <tr key={transaction.id}>

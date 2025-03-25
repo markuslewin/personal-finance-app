@@ -101,7 +101,7 @@ const RecurringBillsPage = async ({
           </div>
           <div className="rounded-xl bg-white p-250 text-grey-500 forced-colors:border-[0.0625rem]">
             <h2 className="text-preset-3 text-grey-900">Summary</h2>
-            <div className="mt-250 text-preset-5 [&>*+*]:mt-200 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-500/15 [&>*+*]:pt-200">
+            <div className="mt-250 space-y-200 divide-y-[0.0625rem] divide-grey-500/15 text-preset-5 add-space-y-200">
               <div className="flex flex-wrap items-center justify-between">
                 <h3>Paid Bills</h3>
                 <p className="text-end text-preset-5-bold text-grey-900">
@@ -142,7 +142,7 @@ const RecurringBillsPage = async ({
             {/* Duplicate HTML to match the design */}
             {/* A list on mobile turns into a table on tablet */}
             <ul
-              className="tablet:hidden [&>*+*]:mt-200 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100 [&>*+*]:pt-200"
+              className="space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200 tablet:hidden"
               role="list"
             >
               {recurringBills.map((bill) => {
@@ -212,7 +212,7 @@ const RecurringBillsPage = async ({
                   </th>
                 </tr>
               </thead>
-              <tbody className="mt-100 [&>*+*]:border-t-[0.0625rem] [&>*+*]:border-grey-100">
+              <tbody className="mt-100 divide-y-[0.0625rem] divide-grey-100">
                 {recurringBills.map((bill) => {
                   const isPaid = getIsPaid(date, bill);
                   const isDueSoon = getIsDueSoon(date, bill);
