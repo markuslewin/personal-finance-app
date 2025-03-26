@@ -11,11 +11,13 @@ import TransactionsSearchForm from "~/app/transactions/_components/transactions-
 import { getOrderBy, searchSchema } from "~/app/transactions/_search";
 import { z } from "zod";
 import { type Prisma } from "@prisma/client";
+import { type SortingOption } from "~/app/_sort";
 
 export const metadata: Metadata = {
   title: "Transactions",
 };
 
+const DEFAULT_SORT: SortingOption = "Latest";
 const PAGE_SIZE = 10;
 
 const TransactionsPage = async ({
@@ -67,7 +69,7 @@ const TransactionsPage = async ({
         },
       },
       where,
-      orderBy: getOrderBy(sort ?? "Latest"),
+      orderBy: getOrderBy(sort ?? DEFAULT_SORT),
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
@@ -95,11 +97,7 @@ const TransactionsPage = async ({
           <h2 className="sr-only">Search</h2>
           <TransactionsSearchForm
             categories={categories}
-            values={{
-              name,
-              sort,
-              category,
-            }}
+            defaultSort={DEFAULT_SORT}
           />
         </header>
         <SearchResultsSection className="mt-300">

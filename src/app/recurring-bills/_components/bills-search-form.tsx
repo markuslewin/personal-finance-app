@@ -27,6 +27,7 @@ export const BillsSearchForm = ({ defaultSort }: BillsSearchFormProps) => {
     setSearchParams,
   } = useOptimisticSearchParams();
 
+  // todo: Schema validation
   const name = searchParams.get(NAME_NAME) ?? "";
   const sort = searchParams.get(SORT_NAME) ?? defaultSort;
 
