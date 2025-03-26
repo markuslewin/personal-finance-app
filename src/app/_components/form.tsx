@@ -106,14 +106,15 @@ export const HiddenField = ({ name, ...props }: HiddenFieldProps) => {
 
 type TextboxProps = ComponentPropsWithRef<typeof TextboxUI> & {
   name: string;
+  type?: Parameters<typeof getInputProps>[1]["type"];
 };
 
-export const Textbox = ({ name, ...props }: TextboxProps) => {
+export const Textbox = ({ name, type = "text", ...props }: TextboxProps) => {
   const [meta] = useField(name);
 
   return (
     <TextboxUI
-      {...getInputProps(meta, { type: "text" })}
+      {...getInputProps(meta, { type, ariaAttributes: true })}
       key={meta.key}
       {...props}
     />
