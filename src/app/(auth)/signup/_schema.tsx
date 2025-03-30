@@ -5,6 +5,7 @@ export const schema = z.object({
   email: z.string().email(),
   "create-password": z
     .string()
+    .min(8, "Passwords must be at least 8 characters")
     // `bcrypt` uses only the first 72 bytes
     .refine(
       (val) => new TextEncoder().encode(val).length <= 72,

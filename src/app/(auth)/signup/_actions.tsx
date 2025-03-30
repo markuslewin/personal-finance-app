@@ -28,7 +28,7 @@ export const signup = async (prevState: unknown, formData: FormData) => {
   });
   if (submission.status !== "success") {
     return submission.reply({
-      hideFields: ["create-password"] satisfies (keyof Schema)[],
+      hideFields: ["create-password"] satisfies [keyof Schema],
     });
   }
 
