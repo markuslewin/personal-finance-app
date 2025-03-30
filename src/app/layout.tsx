@@ -44,7 +44,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${publicSans.variable}`}>
-      <body className="bg-grey-900 font-public-sans text-preset-4">
+      <body className="bg-grey-900 font-public-sans text-preset-4 text-white">
         {children}
       </body>
     </html>

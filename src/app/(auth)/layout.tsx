@@ -8,7 +8,7 @@ type AuthLayoutProps = {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="bg-beige-100 text-grey-500">
+    <div className="bg-beige-100 text-grey-900">
       <div className="mx-auto grid min-h-screen max-w-[90rem] grid-rows-[auto_1fr] desktop:grid-cols-[600fr_840fr] desktop:grid-rows-none">
         <div className="grid items-center desktop:p-250">
           <div className="grid rounded-b-lg bg-grey-900 py-300 text-white desktop:min-h-[57.5rem] desktop:grid-rows-[1fr_auto] desktop:rounded-xl desktop:bg-[url(/assets/images/illustration-authentication.svg)] desktop:bg-cover desktop:bg-center desktop:p-500">
@@ -32,7 +32,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
           </div>
         </div>
         <main className="grid grid-cols-[minmax(auto,35rem)] items-center justify-center px-200 py-250">
-          {children}
+          <div>{children}</div>
         </main>
       </div>
     </div>
