@@ -85,7 +85,7 @@ const TransactionsPage = async ({
     });
   };
 
-  const pageCount = Math.ceil(transactionsCount / PAGE_SIZE);
+  const pageCount = Math.max(1, Math.ceil(transactionsCount / PAGE_SIZE));
   const isFirstPage = page === 1;
   const isLastPage = page === pageCount;
 
