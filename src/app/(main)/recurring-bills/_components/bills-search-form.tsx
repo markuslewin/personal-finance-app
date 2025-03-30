@@ -43,7 +43,7 @@ export const BillsSearchForm = ({ defaultSort }: BillsSearchFormProps) => {
           <span className="sr-only">Search: </span>
           <span className="relative text-grey-900">
             <Textbox
-              className="w-full max-w-[20rem]"
+              className="max-w-[20rem]"
               name={NAME_NAME}
               placeholder="Search bills"
               value={name}

@@ -28,6 +28,7 @@ export const login = async (prevState: unknown, formData: FormData) => {
       // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       if (!user || user.password === null) {
         ctx.addIssue({
+          path: ["password"] satisfies [keyof Schema],
           code: z.ZodIssueCode.custom,
           message: "Invalid credentials",
         });
@@ -37,6 +38,7 @@ export const login = async (prevState: unknown, formData: FormData) => {
       const isSuccess = await bcrypt.compare(val.password, user.password.hash);
       if (!isSuccess) {
         ctx.addIssue({
+          path: ["password"] satisfies [keyof Schema],
           code: z.ZodIssueCode.custom,
           message: "Invalid credentials",
         });

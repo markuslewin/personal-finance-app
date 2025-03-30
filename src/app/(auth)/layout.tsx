@@ -12,7 +12,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
       <div className="mx-auto grid min-h-screen max-w-[90rem] grid-rows-[auto_1fr] desktop:grid-cols-[600fr_840fr] desktop:grid-rows-none">
         <div className="grid items-center desktop:p-250">
           <div className="grid rounded-b-lg bg-grey-900 py-300 text-white desktop:min-h-[57.5rem] desktop:grid-rows-[1fr_auto] desktop:rounded-xl desktop:bg-[url(/assets/images/illustration-authentication.svg)] desktop:bg-cover desktop:bg-center desktop:p-500">
-            <header className="flex justify-center desktop:justify-start">
+            <header className="flex justify-center desktop:items-start desktop:justify-start">
               <Link href={"/"}>
                 <LogoLarge className="h-[1.375rem]" />
                 <span className="sr-only">Finance</span>
