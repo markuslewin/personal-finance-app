@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import { createSession } from "~/app/_auth";
 
-export const login = async (prevState: unknown, formData: FormData) => {
+export const logIn = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: schema.transform(async (val, ctx) => {

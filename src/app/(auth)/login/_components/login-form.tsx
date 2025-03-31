@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { login } from "~/app/(auth)/login/_actions";
+import { logIn } from "~/app/(auth)/login/_actions";
 import { schema } from "~/app/(auth)/login/_schema";
 import * as Form from "~/app/_components/form";
 import * as Toggle from "@radix-ui/react-toggle";
@@ -14,7 +14,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Form.Root action={login} schema={schema}>
+    <Form.Root action={logIn} schema={schema}>
       <div className="grid gap-50">
         <Form.Label name="email">Email</Form.Label>
         <Form.Textbox name="email" />

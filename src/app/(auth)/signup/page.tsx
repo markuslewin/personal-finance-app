@@ -30,7 +30,7 @@ const SignupPage = async () => {
           className="text-preset-4-bold text-grey-900 underline transition-colors hocus:text-grey-500"
           href={"/login"}
         >
-          Login
+          Log In
         </Link>
       </p>
     </div>
