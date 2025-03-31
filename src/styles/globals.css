@@ -104,8 +104,17 @@
 /* Additional space to be used with `divide-y-*` and `space-y-*` */
 @utility add-space-y-* {
   & > :not(:last-child) {
-    padding-block-end: --value(--spacing-*);
+    padding-block-end: --value(--spacing- *);
   }
+}
+
+/* The Grid: https://every-layout.dev/layouts/grid/ */
+@utility the-grid-* {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(--value(--container- *, [length]), 100%), 1fr)
+  );
 }
 
 @custom-variant hocus {

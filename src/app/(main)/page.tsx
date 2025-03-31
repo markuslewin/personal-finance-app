@@ -159,16 +159,16 @@ const OverviewPage = async () => {
     <>
       <h1 className="text-preset-1">Overview</h1>
       <h2 className="sr-only">Balance</h2>
-      <div className="mt-400 flex flex-col gap-150 tablet:mt-[2.625rem] tablet:flex-row tablet:flex-wrap tablet:gap-300">
-        <div className="grow basis-0 rounded-xl bg-grey-900 p-250 text-white tablet:p-300 forced-colors:border-[0.0625rem]">
+      <div className="mt-400 the-grid-[15rem] gap-150 tablet:mt-[2.625rem] tablet:flex-row tablet:flex-wrap tablet:gap-300">
+        <div className="rounded-xl bg-grey-900 p-250 text-white tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3>Current Balance</h3>
           <p className="mt-150 text-preset-1">{currency(balance.current)}</p>
         </div>
-        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
+        <div className="rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Income</h3>
           <p className="mt-150 text-preset-1">{currency(income)}</p>
         </div>
-        <div className="grow basis-0 rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
+        <div className="rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Expenses</h3>
           <p className="mt-150 text-preset-1">{currency(Math.abs(expenses))}</p>
         </div>
@@ -181,8 +181,8 @@ const OverviewPage = async () => {
               <CardLink href={"/pots"}>See Details</CardLink>
             </p>
           </CardHeader>
-          <CardContent className="mt-250 grid gap-250 tablet:grid-cols-[247fr_277fr]">
-            <div className="grid grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900 forced-colors:border-[0.0625rem]">
+          <CardContent className="mt-250 flex flex-wrap gap-250">
+            <div className="grid grow basis-[15.4375rem] grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900 forced-colors:border-[0.0625rem]">
               <div className="grid size-500 place-items-center text-green">
                 <IconPot className="h-[2.25rem]" />
               </div>
@@ -196,8 +196,11 @@ const OverviewPage = async () => {
               </div>
             </div>
             <h3 className="sr-only">Per Pot</h3>
-            <ul className="grid grid-cols-2 gap-200 py-50" role="list">
-              {pots.slice(0, 4).map((pot) => {
+            <ul
+              className="grid grow basis-[17.3125rem] grid-cols-2 gap-200 py-50"
+              role="list"
+            >
+              {pots.map((pot) => {
                 return (
                   <LegendItem key={pot.id} color={pot.theme.color}>
                     <LegendName>{pot.name}</LegendName>
@@ -274,41 +277,40 @@ const OverviewPage = async () => {
               <CardLink href={"/budgets"}>See Details</CardLink>
             </p>
           </CardHeader>
-          <CardContent className="mt-250 grid">
-            <div className="grid items-center gap-200 tablet:grid-cols-[1fr_auto]">
+          <CardContent className="mt-250 grid items-center">
+            <div className="flex flex-wrap items-center gap-200">
               <h3 className="sr-only">Total</h3>
-              <Donut.Root
-                data={budgets.map((budget) => {
-                  return {
-                    color: budget.theme.color,
-                    percent: clamp(
-                      0,
-                      1,
-                      (totalByBudgetId[budget.id] ?? 0) / budgetsTotal,
-                    ),
-                  };
-                })}
-              >
-                <Donut.Hole>
-                  <p>
-                    <strong className="block text-preset-1 text-grey-900">
-                      {currency(-1 * budgetsTotal, {
+              <div className="grow-[999]">
+                <Donut.Root
+                  data={budgets.map((budget) => {
+                    return {
+                      color: budget.theme.color,
+                      percent: clamp(
+                        0,
+                        1,
+                        (totalByBudgetId[budget.id] ?? 0) / budgetsTotal,
+                      ),
+                    };
+                  })}
+                >
+                  <Donut.Hole>
+                    <p>
+                      <strong className="block text-preset-1 text-grey-900">
+                        {currency(-1 * budgetsTotal, {
+                          trailingZeroDisplay: "stripIfInteger",
+                        })}
+                      </strong>{" "}
+                      of{" "}
+                      {currency(budgetsLimit, {
                         trailingZeroDisplay: "stripIfInteger",
-                      })}
-                    </strong>{" "}
-                    of{" "}
-                    {currency(budgetsLimit, {
-                      trailingZeroDisplay: "stripIfInteger",
-                    })}{" "}
-                    limit
-                  </p>
-                </Donut.Hole>
-              </Donut.Root>
+                      })}{" "}
+                      limit
+                    </p>
+                  </Donut.Hole>
+                </Donut.Root>
+              </div>
               <h3 className="sr-only">Per Budget</h3>
-              <ul
-                className="grid grid-cols-2 gap-200 tablet:grid-cols-none"
-                role="list"
-              >
+              <ul className="the-grid-[7rem] grow gap-200" role="list">
                 {budgets.map((budget) => {
                   const total = totalByBudgetId[budget.id] ?? 0;
 
@@ -425,7 +427,7 @@ const LegendItem = ({
   return (
     <li
       {...props}
-      className={cx(className, "grid grid-cols-[auto_1fr] gap-200")}
+      className={cx(className, "grid grid-cols-[auto_minmax(0,1fr)] gap-200")}
     >
       <div
         className="rounded-full border-l-[0.25rem] forced-color-adjust-none"
@@ -439,7 +441,7 @@ const LegendItem = ({
 type LegendNameProps = ComponentPropsWithRef<"h4">;
 
 const LegendName = ({ className, ...props }: LegendNameProps) => {
-  return <h4 {...props} className={cx(className, "text-preset-5")} />;
+  return <h4 {...props} className={cx(className, "truncate text-preset-5")} />;
 };
 
 type LegendValueProps = ComponentPropsWithRef<"p">;

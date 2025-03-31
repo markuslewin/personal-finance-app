@@ -24,6 +24,7 @@ const LoginForm = () => {
         <Form.Label name="password">Password</Form.Label>
         <div className="relative isolate">
           <Form.Textbox
+            className="pr-[3.25rem]"
             type={showPassword ? "text" : "password"}
             name="password"
           />
