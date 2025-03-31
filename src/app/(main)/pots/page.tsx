@@ -73,11 +73,11 @@ const Pot = ({ pot }: PotProps) => {
         ["--theme-color" as string]: pot.theme.color,
       }}
     >
-      <header className="flex flex-wrap items-center justify-between">
-        <div className="grid grid-cols-[auto_1fr] items-center gap-200">
-          <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
-          <h2 className="text-preset-2 text-grey-900">{pot.name}</h2>
-        </div>
+      <header className="grid grid-cols-[auto_1fr_auto] items-center gap-200">
+        <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
+        <h2 className="text-preset-2 [overflow-wrap:anywhere] text-grey-900">
+          {pot.name}
+        </h2>
         <Hydrated>
           <PotActions pot={pot} />
         </Hydrated>

@@ -69,7 +69,7 @@ export const Heading = ({
       {...props}
       className={cx(
         className,
-        "text-preset-2 text-grey-900 tablet:text-preset-1",
+        "text-preset-2 [overflow-wrap:anywhere] text-grey-900 tablet:text-preset-1",
       )}
     />
   );
