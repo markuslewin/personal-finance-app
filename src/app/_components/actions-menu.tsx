@@ -52,11 +52,14 @@ export const Content = ({ className, ...props }: ContentProps) => {
   );
 };
 
-const itemVariants = cva("px-250 py-150", {
-  variants: {
-    intent: { destroy: "text-red" },
+const itemVariants = cva(
+  "px-250 py-150 -outline-offset-2 outline-grey-900 select-none rounded-lg focus:outline-2",
+  {
+    variants: {
+      intent: { destroy: "text-red" },
+    },
   },
-});
+);
 
 type ItemProps = ComponentPropsWithRef<typeof DropdownMenu.Item> &
   VariantProps<typeof itemVariants>;

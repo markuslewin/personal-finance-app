@@ -76,7 +76,7 @@ export const Item = ({ className, ...props }: ItemProps) => {
       {...props}
       className={cx(
         className,
-        "grid items-center rounded-lg px-250 py-150 -outline-offset-2 select-none data-[disabled]:pointer-events-none data-[state=checked]:text-preset-4-bold",
+        "grid items-center rounded-lg px-250 py-150 -outline-offset-2 outline-grey-900 select-none focus:outline-2 data-[disabled]:pointer-events-none data-[state=checked]:text-preset-4-bold",
       )}
     />
   );
@@ -90,7 +90,7 @@ export const ColorItem = ({ className, ...props }: ColorItemProps) => {
       {...props}
       className={cx(
         className,
-        "grid grid-cols-[1fr_auto] items-center gap-200 rounded-lg px-250 py-150 -outline-offset-2 select-none data-[disabled]:pointer-events-none",
+        "grid grid-cols-[1fr_auto] items-center gap-200 rounded-lg px-250 py-150 -outline-offset-2 outline-grey-900 select-none focus:outline-2 data-[disabled]:pointer-events-none",
       )}
     />
   );
