@@ -8,6 +8,9 @@ import { nbsp } from "~/app/_unicode";
 import WithdrawForm from "~/app/(main)/pots/_components/withdraw-form";
 import WithdrawMeterSection from "~/app/(main)/pots/_components/withdraw-meter-section";
 import DialogPage from "~/app/_components/ui/dialog-page";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const WithdrawFromPotPage = async ({
   params,
@@ -61,7 +64,15 @@ const WithdrawFromPotPage = async ({
               <Form.Message name="amount" />
             </Dialog.Group>
           </Dialog.Groups>
-          <Button type="submit">Confirm Withdrawal</Button>
+          <Button type="submit">
+            <Status>
+              <Idle>Confirm Withdrawal</Idle>
+              <Pending>
+                <Spinner />
+                <span className="sr-only">Withdrawing Money</span>
+              </Pending>
+            </Status>
+          </Button>
         </WithdrawForm>
       </Dialog.Content>
     </DialogPage>

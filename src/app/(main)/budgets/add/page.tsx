@@ -6,6 +6,9 @@ import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
 import { db } from "~/server/db";
 import DialogPage from "~/app/_components/ui/dialog-page";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const AddBudgetPage = async () => {
   const [categories, themes] = await Promise.all([
@@ -88,7 +91,15 @@ const AddBudgetPage = async () => {
               <Form.Message name="theme" />
             </Dialog.Group>
           </Dialog.Groups>
-          <Button type="submit">Add Budget</Button>
+          <Button type="submit">
+            <Status>
+              <Idle>Add Budget</Idle>
+              <Pending>
+                <Spinner />
+                <span className="sr-only">Adding Budget</span>
+              </Pending>
+            </Status>
+          </Button>
         </AddBudgetForm>
       </Dialog.Content>
     </DialogPage>

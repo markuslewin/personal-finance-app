@@ -9,6 +9,9 @@ import { Hydrated } from "~/app/_components/hydration";
 import Button from "~/app/_components/ui/button";
 import IconHidePassword from "~/app/_assets/icon-hide-password.svg";
 import IconShowPassword from "~/app/_assets/icon-show-password.svg";
+import Status from "~/app/_components/status";
+import { FormStatus } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -47,7 +50,20 @@ const LoginForm = () => {
       </div>
       <p>
         <Button className="w-full" type="submit">
-          Log In
+          <Status>
+            <FormStatus>
+              {(status) => {
+                return status.pending ? (
+                  <>
+                    <Spinner />
+                    <span className="sr-only">Logging In</span>
+                  </>
+                ) : (
+                  <>Log In</>
+                );
+              }}
+            </FormStatus>
+          </Status>
         </Button>
       </p>
     </Form.Root>

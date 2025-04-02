@@ -8,6 +8,9 @@ import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
 import { nbsp } from "~/app/_unicode";
 import { db } from "~/server/db";
 import DialogPage from "~/app/_components/ui/dialog-page";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const AddPotPage = async () => {
   const themes = await db.theme.findMany({
@@ -75,7 +78,15 @@ const AddPotPage = async () => {
               <Form.Message name="theme" />
             </Dialog.Group>
           </Dialog.Groups>
-          <Button type="submit">Add Pot</Button>
+          <Button type="submit">
+            <Status>
+              <Idle>Add Pot</Idle>
+              <Pending>
+                <Spinner />
+                <span className="sr-only">Adding Pot</span>
+              </Pending>
+            </Status>
+          </Button>
         </AddPotForm>
       </Dialog.Content>
     </DialogPage>

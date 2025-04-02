@@ -53,7 +53,9 @@ const Sidebar = ({
         <p
           className={cx(
             "hidden px-400 py-500 text-white desktop:grid",
-            !isOpen ? "desktop:justify-center desktop:px-0" : "",
+            !isOpen
+              ? "desktop:justify-center desktop:px-0"
+              : "desktop:justify-start",
           )}
         >
           <Link href={"/"}>

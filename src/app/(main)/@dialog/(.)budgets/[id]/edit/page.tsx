@@ -8,6 +8,9 @@ import ThemesCombobox from "~/app/_components/themes-combobox";
 import { db } from "~/server/db";
 import { notFound } from "next/navigation";
 import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budget-form";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const EditBudgetPage = async ({
   params,
@@ -135,7 +138,15 @@ const EditBudgetPage = async ({
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
-                    <Button type="submit">Save Changes</Button>
+                    <Button type="submit">
+                      <Status>
+                        <Idle>Save Changes</Idle>
+                        <Pending>
+                          <Spinner />
+                          <span className="sr-only">Saving Changes</span>
+                        </Pending>
+                      </Status>
+                    </Button>
                   </EditBudgetForm>
                 </article>
               </DialogUI.Content>

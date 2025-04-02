@@ -7,6 +7,9 @@ import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-comb
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
 import { db } from "~/server/db";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const AddBudgetPage = async () => {
   const categories = await db.category.findMany({
@@ -106,7 +109,15 @@ const AddBudgetPage = async () => {
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
-                    <Button type="submit">Add Budget</Button>
+                    <Button type="submit">
+                      <Status>
+                        <Idle>Add Budget</Idle>
+                        <Pending>
+                          <Spinner />
+                          <span className="sr-only">Adding Budget</span>
+                        </Pending>
+                      </Status>
+                    </Button>
                   </AddBudgetForm>
                 </article>
               </DialogUI.Content>

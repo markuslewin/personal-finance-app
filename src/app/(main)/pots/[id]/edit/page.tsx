@@ -11,6 +11,9 @@ import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
 import { nbsp } from "~/app/_unicode";
 import DialogPage from "~/app/_components/ui/dialog-page";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -96,7 +99,15 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               <Form.Message name="theme" />
             </Dialog.Group>
           </Dialog.Groups>
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit">
+            <Status>
+              <Idle>Save Changes</Idle>
+              <Pending>
+                <Spinner />
+                <span className="sr-only">Saving Changes</span>
+              </Pending>
+            </Status>
+          </Button>
         </EditPotForm>
         <Hydrated>
           <DeleteDialog.Root>

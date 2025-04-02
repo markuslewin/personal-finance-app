@@ -7,6 +7,9 @@ import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddPotForm from "~/app/(main)/pots/_components/add-pot-form";
 import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
 import { db } from "~/server/db";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const AddPotPage = async () => {
   const themes = await db.theme.findMany({
@@ -90,7 +93,15 @@ const AddPotPage = async () => {
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
-                    <Button type="submit">Add Pot</Button>
+                    <Button type="submit">
+                      <Status>
+                        <Idle>Add Pot</Idle>
+                        <Pending>
+                          <Spinner />
+                          <span className="sr-only">Adding Pot</span>
+                        </Pending>
+                      </Status>
+                    </Button>
                   </AddPotForm>
                 </article>
               </DialogUI.Content>

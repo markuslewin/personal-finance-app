@@ -4,6 +4,9 @@ import * as Form from "~/app/_components/form";
 import { type ComponentPropsWithRef } from "react";
 import DeletePotForm from "~/app/(main)/pots/_components/delete-pot-form";
 import Button from "~/app/_components/ui/button";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 type RootProps = ComponentPropsWithRef<typeof AlertDialog.Root>;
 
@@ -52,7 +55,13 @@ export const Portal = ({ pot, ...props }: PortalProps) => {
                 <DeletePotForm id={pot.id}>
                   <Form.HiddenField name="id" />
                   <Button type="submit" intent="destroy">
-                    Yes, Confirm Deletion
+                    <Status>
+                      <Idle>Yes, Confirm Deletion</Idle>
+                      <Pending>
+                        <Spinner />
+                        <span className="sr-only">Deleting Pot</span>
+                      </Pending>
+                    </Status>
                   </Button>
                 </DeletePotForm>
                 <AlertDialog.Cancel asChild>

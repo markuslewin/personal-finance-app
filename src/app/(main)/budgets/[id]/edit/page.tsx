@@ -10,6 +10,9 @@ import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budg
 import DeleteBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/delete-budget-form";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import DialogPage from "~/app/_components/ui/dialog-page";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const EditBudgetPage = async ({
   params,
@@ -117,7 +120,15 @@ const EditBudgetPage = async ({
               <Form.Message name="theme" />
             </Dialog.Group>
           </Dialog.Groups>
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit">
+            <Status>
+              <Idle>Save Changes</Idle>
+              <Pending>
+                <Spinner />
+                <span className="sr-only">Saving Changes</span>
+              </Pending>
+            </Status>
+          </Button>
         </EditBudgetForm>
         <Hydrated>
           <DeleteDialog.Root>

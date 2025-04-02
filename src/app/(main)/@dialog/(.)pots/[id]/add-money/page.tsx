@@ -7,6 +7,9 @@ import { db } from "~/server/db";
 import { notFound } from "next/navigation";
 import AddMoneyForm from "~/app/(main)/pots/_components/add-money-form";
 import MeterSection from "~/app/(main)/pots/_components/meter-section";
+import Status from "~/app/_components/status";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Spinner from "~/app/_components/ui/spinner";
 
 const AddMoneyToPotPage = async ({
   params,
@@ -68,7 +71,15 @@ const AddMoneyToPotPage = async ({
                         <Form.Message name="amount" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
-                    <Button type="submit">Confirm Addition</Button>
+                    <Button type="submit">
+                      <Status>
+                        <Idle>Confirm Addition</Idle>
+                        <Pending>
+                          <Spinner />
+                          <span className="sr-only">Adding Money</span>
+                        </Pending>
+                      </Status>
+                    </Button>
                   </AddMoneyForm>
                 </article>
               </DialogUI.Content>
