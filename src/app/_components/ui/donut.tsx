@@ -23,21 +23,24 @@ export const Root = ({ className, data, ...props }: DonutProps) => {
       style={{
         background:
           first !== undefined
-            ? `conic-gradient(${
-                rest.reduce(
-                  (last, current) => {
-                    const end = last.end + current.percent;
-                    return {
-                      end,
-                      string: `${last.string}, ${current.color} ${last.end}turn, ${current.color} ${end}turn`,
-                    };
-                  },
-                  {
-                    end: first.percent,
-                    string: `${first.color} ${first.percent}turn`,
-                  },
-                ).string
-              })`
+            ? rest.length === 0
+              ? // Single color stop not yet available in most browsers
+                `conic-gradient(${first.color}, ${first.color})`
+              : `conic-gradient(${
+                  rest.reduce(
+                    (last, current) => {
+                      const end = last.end + current.percent;
+                      return {
+                        end,
+                        string: `${last.string}, ${current.color} ${last.end}turn, ${current.color} ${end}turn`,
+                      };
+                    },
+                    {
+                      end: first.percent,
+                      string: `${first.color} ${first.percent}turn`,
+                    },
+                  ).string
+                })`
             : undefined,
       }}
     />
