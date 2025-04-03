@@ -6,11 +6,13 @@ import {
 } from "next/navigation";
 import { useTransition, useOptimistic, useCallback, useMemo } from "react";
 
-export const useOptimisticSearchParams = () => {
+export const useOptimisticSearchParams = (options?: {
+  onDone?: () => void;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
   const [optimisticSearchParams, setOptimisticSearchParams] = useOptimistic(
     searchParams,
     (_, values: ReadonlyURLSearchParams) => values,
@@ -24,17 +26,18 @@ export const useOptimisticSearchParams = () => {
         router.replace(`${pathname}?${searchParams.toString()}`, {
           scroll: false,
         });
+        options?.onDone?.();
       });
     },
-    [pathname, router, setOptimisticSearchParams],
+    [options, pathname, router, setOptimisticSearchParams],
   );
 
   return useMemo(
     () => ({
-      isPending,
+      pending,
       searchParams: optimisticSearchParams,
       setSearchParams,
     }),
-    [isPending, optimisticSearchParams, setSearchParams],
+    [pending, optimisticSearchParams, setSearchParams],
   );
 };
