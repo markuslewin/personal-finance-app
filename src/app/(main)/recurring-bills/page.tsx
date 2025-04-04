@@ -16,6 +16,7 @@ import {
 import { z } from "zod";
 import { type SortingOption, sortingOptions } from "~/app/_sort";
 import { BillsSearchForm } from "~/app/(main)/recurring-bills/_components/bills-search-form";
+import { unstable_cache as cache } from "next/cache";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
@@ -48,6 +49,31 @@ const getSortFn = (option: SortingOption): ((a: Bill, b: Bill) => number) => {
   }
 };
 
+const getRecurringBills = cache(
+  async () => {
+    return {
+      data: await db.recurringBill.findMany({
+        select: {
+          id: true,
+          amount: true,
+          avatar: true,
+          day: true,
+          name: true,
+        },
+        orderBy: {
+          day: "asc",
+        },
+      }),
+      timestamp: Date.now(),
+    };
+  },
+  undefined,
+  {
+    tags: ["recurring-bills"],
+    revalidate: 60,
+  },
+);
+
 const RecurringBillsPage = async ({
   searchParams,
 }: {
@@ -60,18 +86,7 @@ const RecurringBillsPage = async ({
     })
     .parse(await searchParams);
 
-  const allRecurringBills = await db.recurringBill.findMany({
-    select: {
-      id: true,
-      amount: true,
-      avatar: true,
-      day: true,
-      name: true,
-    },
-    orderBy: {
-      day: "asc",
-    },
-  });
+  const { data: allRecurringBills, timestamp } = await getRecurringBills();
 
   const total = sum(allRecurringBills, (b) => b.amount);
   const billByDueType = Object.groupBy(allRecurringBills, (bill) =>
@@ -90,7 +105,7 @@ const RecurringBillsPage = async ({
 
   return (
     <>
-      <h1 className="text-preset-1">Recurring Bills</h1>
+      <h1 className="text-preset-1">Recurring Bills {timestamp}</h1>
       <div className="mt-500 grid gap-300 desktop:grid-cols-[337fr_699fr] desktop:items-start">
         <div className="grid gap-150 tablet:grid-cols-2 tablet:gap-300 desktop:grid-cols-none">
           <div className="grid grid-cols-[auto_1fr] items-center gap-250 rounded-xl bg-grey-900 px-250 py-300 text-white tablet:grid-cols-none tablet:gap-400 tablet:px-300 forced-colors:border-[0.0625rem]">
