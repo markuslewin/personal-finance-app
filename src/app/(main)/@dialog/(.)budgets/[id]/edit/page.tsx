@@ -11,6 +11,7 @@ import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budg
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { getBudget } from "~/server/budget";
 
 const EditBudgetPage = async ({
   params,
@@ -18,25 +19,7 @@ const EditBudgetPage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const id = (await params).id;
-  const budget = await db.budget.findUnique({
-    select: {
-      id: true,
-      maximum: true,
-      category: {
-        select: {
-          id: true,
-        },
-      },
-      theme: {
-        select: {
-          id: true,
-        },
-      },
-    },
-    where: {
-      id,
-    },
-  });
+  const budget = await getBudget(id);
   if (!budget) {
     notFound();
   }

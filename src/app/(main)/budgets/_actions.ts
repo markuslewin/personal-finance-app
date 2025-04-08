@@ -1,7 +1,6 @@
 "use server";
 
 import { parseWithZod } from "@conform-to/zod";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -11,42 +10,31 @@ import {
   budgetSchema,
   budgetSchemaWithId,
 } from "~/app/(main)/budgets/_schemas";
-import { db } from "~/server/db";
+import {
+  BudgetError,
+  createBudget,
+  deleteBudget,
+  updateBudget,
+} from "~/server/budget";
 
 export const add = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: budgetSchema.transform(async (val, ctx) => {
       try {
-        return await db.budget.create({
-          data: {
-            maximum: val.maximum,
-            category: {
-              connect: {
-                id: val.category,
-              },
-            },
-            theme: {
-              connect: {
-                id: val.theme,
-              },
-            },
-          },
-          select: {
-            id: true,
-          },
+        return await createBudget({
+          maximum: val.maximum,
+          categoryId: val.category,
+          themeId: val.theme,
         });
       } catch (error) {
-        // todo: Check `category` and `theme` constraints. See Pot actions
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2002") {
-            ctx.addIssue({
-              path: ["category"] satisfies [keyof BudgetSchema],
-              code: z.ZodIssueCode.custom,
-              message: "A budget of this category already exists",
-            });
-            return z.NEVER;
-          }
+        if (error instanceof BudgetError) {
+          ctx.addIssue({
+            path: [error.cause.field] satisfies [keyof BudgetSchema],
+            code: z.ZodIssueCode.custom,
+            message: error.message,
+          });
+          return z.NEVER;
         }
         throw error;
       }
@@ -68,23 +56,11 @@ export const edit = async (prevState: unknown, formData: FormData) => {
     return submission.reply();
   }
 
-  await db.budget.update({
-    data: {
-      maximum: submission.value.maximum,
-      category: {
-        connect: {
-          id: submission.value.category,
-        },
-      },
-      theme: {
-        connect: {
-          id: submission.value.theme,
-        },
-      },
-    },
-    where: {
-      id: submission.value.id,
-    },
+  await updateBudget({
+    id: submission.value.id,
+    maximum: submission.value.maximum,
+    categoryId: submission.value.category,
+    themeId: submission.value.theme,
   });
 
   revalidatePath("/budgets");
@@ -99,11 +75,7 @@ export const remove = async (prevState: unknown, formData: FormData) => {
     return submission.reply();
   }
 
-  await db.budget.delete({
-    where: {
-      id: submission.value.id,
-    },
-  });
+  await deleteBudget(submission.value.id);
 
   revalidatePath("/budgets");
   redirect("/budgets");

@@ -14,45 +14,14 @@ import BudgetActions from "~/app/(main)/budgets/_components/budget-actions-menu"
 import { useId } from "react";
 import { clamp, sum } from "~/app/_math";
 import { inUTCMonth } from "~/app/_prisma";
+import { getBudgetsWithTransactions } from "~/server/budget";
 
 export const metadata: Metadata = {
   title: "Budgets",
 };
 
 const BudgetsPage = async () => {
-  const budgets = await db.budget.findMany({
-    select: {
-      id: true,
-      maximum: true,
-      category: {
-        select: {
-          id: true,
-          name: true,
-          Transaction: {
-            select: {
-              id: true,
-              name: true,
-              avatar: true,
-              amount: true,
-              date: true,
-            },
-            orderBy: {
-              date: "desc",
-            },
-            take: 3,
-          },
-        },
-      },
-      theme: {
-        select: {
-          color: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const budgets = await getBudgetsWithTransactions();
   const categorySums = await db.transaction.groupBy({
     by: "categoryId",
     _sum: {

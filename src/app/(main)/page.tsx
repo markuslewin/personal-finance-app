@@ -15,6 +15,7 @@ import {
   getIsPaid,
 } from "~/app/(main)/recurring-bills/_utils/bills";
 import { inUTCMonth } from "~/app/_prisma";
+import { getBudgets } from "~/server/budget";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -83,25 +84,7 @@ const OverviewPage = async () => {
         date: "desc",
       },
     }),
-    db.budget.findMany({
-      select: {
-        id: true,
-        maximum: true,
-        theme: {
-          select: {
-            color: true,
-          },
-        },
-        category: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
+    getBudgets(),
     db.recurringBill.findMany({
       select: {
         amount: true,
