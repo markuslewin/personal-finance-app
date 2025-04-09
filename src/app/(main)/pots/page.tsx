@@ -1,6 +1,5 @@
 import { type Metadata } from "next";
 import Link from "next/link";
-import { db } from "~/server/db";
 import * as Meter from "~/app/_components/meter";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import { currency, percent } from "~/app/_format";
@@ -9,28 +8,14 @@ import PotActions from "~/app/(main)/pots/_components/pot-actions-menu";
 import { useId } from "react";
 import { clamp } from "~/app/_math";
 import Button from "~/app/_components/ui/button";
+import { getPots } from "~/server/pot";
 
 export const metadata: Metadata = {
   title: "Pots",
 };
 
 const PotsPage = async () => {
-  const pots = await db.pot.findMany({
-    select: {
-      id: true,
-      name: true,
-      target: true,
-      total: true,
-      theme: {
-        select: {
-          color: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const pots = await getPots();
 
   return (
     <article>

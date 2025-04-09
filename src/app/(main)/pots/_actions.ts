@@ -1,7 +1,6 @@
 "use server";
 
 import { parseWithZod } from "@conform-to/zod";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -15,47 +14,32 @@ import {
   type PotSchema,
 } from "~/app/(main)/pots/_schemas";
 import { db } from "~/server/db";
+import {
+  createPot,
+  deletePot,
+  getPot,
+  PotError,
+  updatePot,
+} from "~/server/pot";
 
 export const add = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: potSchema.transform(async (val, ctx) => {
       try {
-        return await db.pot.create({
-          data: {
-            name: val.name,
-            target: val.target,
-            total: 0,
-            theme: {
-              connect: {
-                id: val.theme,
-              },
-            },
-          },
-          select: {
-            id: true,
-          },
+        return await createPot({
+          name: val.name,
+          target: val.target,
+          themeId: val.theme,
         });
       } catch (error) {
-        // Currently no way to check related fields
-        // https://github.com/prisma/prisma/issues/5040
-        // Assume `theme` constraint failed
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2014") {
-            ctx.addIssue({
-              path: ["theme"] satisfies [keyof PotSchema],
-              code: z.ZodIssueCode.custom,
-              message: "Theme already in use.",
-            });
-            return z.NEVER;
-          } else if (error.code === "P2025") {
-            ctx.addIssue({
-              path: ["theme"] satisfies [keyof PotSchema],
-              code: z.ZodIssueCode.custom,
-              message: "Theme doesn't exist.",
-            });
-            return z.NEVER;
-          }
+        if (error instanceof PotError) {
+          ctx.addIssue({
+            path: [error.cause.field] satisfies [keyof PotSchema],
+            code: z.ZodIssueCode.custom,
+            message: error.message,
+          });
+          return z.NEVER;
         }
         throw error;
       }
@@ -74,43 +58,21 @@ export const edit = async (prevState: unknown, formData: FormData) => {
     async: true,
     schema: editPotSchema.transform(async (val, ctx) => {
       try {
-        return await db.pot.update({
-          select: {
-            id: true,
-          },
-          data: {
-            name: val.name,
-            target: val.target,
-            theme: {
-              connect: {
-                id: val.theme,
-              },
-            },
-          },
-          where: {
-            id: val.id,
-          },
+        await updatePot({
+          id: val.id,
+          name: val.name,
+          target: val.target,
+          themeId: val.theme,
         });
+        return true;
       } catch (error) {
-        // Currently no way to check related fields
-        // https://github.com/prisma/prisma/issues/5040
-        // Assume `theme` constraint failed
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2014") {
-            ctx.addIssue({
-              path: ["theme"] satisfies [keyof PotSchema],
-              code: z.ZodIssueCode.custom,
-              message: "Theme already in use.",
-            });
-            return z.NEVER;
-          } else if (error.code === "P2025") {
-            ctx.addIssue({
-              path: ["theme"] satisfies [keyof PotSchema],
-              code: z.ZodIssueCode.custom,
-              message: "Theme doesn't exist.",
-            });
-            return z.NEVER;
-          }
+        if (error instanceof PotError) {
+          ctx.addIssue({
+            path: [error.cause.field] satisfies [keyof PotSchema],
+            code: z.ZodIssueCode.custom,
+            message: error.message,
+          });
+          return z.NEVER;
         }
         throw error;
       }
@@ -128,26 +90,7 @@ export const remove = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: removePotSchema.transform(async (val) => {
-      // todo: Transaction
-      const pot = await db.pot.delete({
-        select: {
-          total: true,
-        },
-        where: {
-          id: val.id,
-        },
-      });
-
-      const balance = await db.balance.findFirstOrThrow();
-      await db.balance.update({
-        data: {
-          current: balance.current + pot.total,
-        },
-        where: {
-          id: balance.id,
-        },
-      });
-
+      await deletePot(val.id);
       return true;
     }),
   });
@@ -189,20 +132,14 @@ export const addMoney = async (prevState: unknown, formData: FormData) => {
         },
       });
 
-      const pot = await db.pot.findUniqueOrThrow({
-        select: {
-          id: true,
-          total: true,
-        },
-        where: { id: val.id },
-      });
-      await db.pot.update({
-        data: {
-          total: pot.total + val.amount,
-        },
-        where: {
-          id: pot.id,
-        },
+      const pot = await getPot(val.id);
+      if (!pot) {
+        throw new Error("Pot not found");
+      }
+
+      await updatePot({
+        id: pot.id,
+        total: pot.total + val.amount,
       });
 
       return true;
@@ -222,13 +159,11 @@ export const withdraw = async (prevState: unknown, formData: FormData) => {
     schema: withdrawSchema.transform(async (val, ctx) => {
       // todo: Transaction
       // todo: Lock
-      const pot = await db.pot.findUniqueOrThrow({
-        select: {
-          id: true,
-          total: true,
-        },
-        where: { id: val.id },
-      });
+      const pot = await getPot(val.id);
+      if (!pot) {
+        throw new Error("Pot not found");
+      }
+
       if (pot.total < val.amount) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -238,13 +173,9 @@ export const withdraw = async (prevState: unknown, formData: FormData) => {
         return z.NEVER;
       }
 
-      await db.pot.update({
-        data: {
-          total: pot.total - val.amount,
-        },
-        where: {
-          id: pot.id,
-        },
+      await updatePot({
+        id: pot.id,
+        total: pot.total - val.amount,
       });
 
       const balance = await db.balance.findFirstOrThrow({

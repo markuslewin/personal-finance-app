@@ -1,7 +1,6 @@
 import * as Form from "~/app/_components/form";
 import { notFound } from "next/navigation";
 import * as Dialog from "~/app/_components/ui/dialog";
-import { db } from "~/server/db";
 import Button from "~/app/_components/ui/button";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import AddMoneyForm from "~/app/(main)/pots/_components/add-money-form";
@@ -11,6 +10,7 @@ import DialogPage from "~/app/_components/ui/dialog-page";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { getPot } from "~/server/pot";
 
 const AddMoneyToPotPage = async ({
   params,
@@ -18,17 +18,7 @@ const AddMoneyToPotPage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const id = (await params).id;
-  const pot = await db.pot.findUnique({
-    select: {
-      id: true,
-      name: true,
-      total: true,
-      target: true,
-    },
-    where: {
-      id,
-    },
-  });
+  const pot = await getPot(id);
   if (!pot) {
     notFound();
   }

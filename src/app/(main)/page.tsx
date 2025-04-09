@@ -16,6 +16,7 @@ import {
 } from "~/app/(main)/recurring-bills/_utils/bills";
 import { inUTCMonth } from "~/app/_prisma";
 import { getBudgets } from "~/server/budget";
+import { getPots } from "~/server/pot";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -35,21 +36,7 @@ const OverviewPage = async () => {
         current: true,
       },
     }),
-    db.pot.findMany({
-      select: {
-        id: true,
-        name: true,
-        theme: {
-          select: {
-            color: true,
-          },
-        },
-        total: true,
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
+    getPots(),
     db.transaction.findMany({
       select: {
         id: true,

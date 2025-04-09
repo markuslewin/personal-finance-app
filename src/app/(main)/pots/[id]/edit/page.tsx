@@ -14,25 +14,12 @@ import DialogPage from "~/app/_components/ui/dialog-page";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { getPot } from "~/server/pot";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
   const [pot, themes] = await Promise.all([
-    db.pot.findUnique({
-      select: {
-        id: true,
-        name: true,
-        target: true,
-        theme: {
-          select: {
-            id: true,
-          },
-        },
-      },
-      where: {
-        id,
-      },
-    }),
+    getPot(id),
     db.theme.findMany({
       select: {
         id: true,

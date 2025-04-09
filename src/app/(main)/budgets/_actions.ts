@@ -48,6 +48,7 @@ export const add = async (prevState: unknown, formData: FormData) => {
   redirect("/budgets");
 };
 
+// todo: Restructure, see Pot action
 export const edit = async (prevState: unknown, formData: FormData) => {
   const submission = parseWithZod(formData, {
     schema: budgetSchemaWithId,
@@ -67,6 +68,7 @@ export const edit = async (prevState: unknown, formData: FormData) => {
   redirect("/budgets");
 };
 
+// todo: Restructure, see Pot action
 export const remove = async (prevState: unknown, formData: FormData) => {
   const submission = parseWithZod(formData, {
     schema: budgetIdSchema,
