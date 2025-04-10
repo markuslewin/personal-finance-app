@@ -2,7 +2,6 @@ import * as Dialog from "~/app/_components/ui/dialog";
 import * as Form from "~/app/_components/form";
 import * as DeleteDialog from "~/app/(main)/pots/_components/delete-dialog";
 import { notFound } from "next/navigation";
-import { db } from "~/server/db";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
 import EditPotForm from "~/app/(main)/pots/_components/edit-pot-form";
@@ -15,27 +14,11 @@ import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
+import { getThemesWithPot } from "~/server/theme";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
-  const [pot, themes] = await Promise.all([
-    getPot(id),
-    db.theme.findMany({
-      select: {
-        id: true,
-        name: true,
-        color: true,
-        Pot: {
-          select: {
-            id: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
-  ]);
+  const [pot, themes] = await Promise.all([getPot(id), getThemesWithPot()]);
   if (!pot) {
     notFound();
   }

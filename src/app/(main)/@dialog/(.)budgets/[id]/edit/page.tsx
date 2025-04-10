@@ -5,7 +5,6 @@ import * as DialogUI from "~/app/_components/ui/dialog";
 import Button from "~/app/_components/ui/button";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/_components/themes-combobox";
-import { db } from "~/server/db";
 import { notFound } from "next/navigation";
 import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budget-form";
 import Status from "~/app/_components/status";
@@ -13,6 +12,7 @@ import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getBudget } from "~/server/budget";
 import { getAvailableCategories } from "~/server/category";
+import { getThemesWithBudget } from "~/server/theme";
 
 const EditBudgetPage = async ({
   params,
@@ -27,21 +27,7 @@ const EditBudgetPage = async ({
 
   const [categories, themes] = await Promise.all([
     getAvailableCategories(budget.category.id),
-    db.theme.findMany({
-      select: {
-        id: true,
-        name: true,
-        color: true,
-        Budget: {
-          select: {
-            id: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
+    getThemesWithBudget(),
   ]);
 
   return (

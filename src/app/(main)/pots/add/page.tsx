@@ -6,28 +6,14 @@ import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import AddPotForm from "~/app/(main)/pots/_components/add-pot-form";
 import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
 import { nbsp } from "~/app/_unicode";
-import { db } from "~/server/db";
 import DialogPage from "~/app/_components/ui/dialog-page";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { getThemesWithPot } from "~/server/theme";
 
 const AddPotPage = async () => {
-  const themes = await db.theme.findMany({
-    select: {
-      id: true,
-      name: true,
-      color: true,
-      Pot: {
-        select: {
-          id: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const themes = await getThemesWithPot();
 
   // todo: Disable "Add New Pot"
   const defaultTheme = themes.find((t) => t.Pot === null);
