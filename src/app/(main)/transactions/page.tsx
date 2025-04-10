@@ -2,7 +2,6 @@ import { cx } from "class-variance-authority";
 import { type Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { db } from "~/server/db";
 import IconCaretLeft from "~/app/_assets/icon-caret-left.svg";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import { type ComponentPropsWithRef, useId } from "react";
@@ -11,6 +10,7 @@ import TransactionsSearchForm from "~/app/(main)/transactions/_components/transa
 import { searchSchema } from "~/app/(main)/transactions/_search";
 import { z } from "zod";
 import { getPaginatedTransactions } from "~/server/transaction";
+import { getCategories } from "~/server/category";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -33,15 +33,7 @@ const TransactionsPage = async ({
     .parse(await searchParams);
 
   const [categories, { transactions, totalPages }] = await Promise.all([
-    db.category.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
+    getCategories(),
     getPaginatedTransactions({
       name,
       category,

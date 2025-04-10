@@ -12,6 +12,7 @@ import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getBudget } from "~/server/budget";
+import { getAvailableCategories } from "~/server/category";
 
 const EditBudgetPage = async ({
   params,
@@ -25,25 +26,7 @@ const EditBudgetPage = async ({
   }
 
   const [categories, themes] = await Promise.all([
-    db.category.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      where: {
-        OR: [
-          { Budget: { is: null } },
-          {
-            Budget: {
-              categoryId: budget.category.id,
-            },
-          },
-        ],
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
+    getAvailableCategories(budget.category.id),
     db.theme.findMany({
       select: {
         id: true,

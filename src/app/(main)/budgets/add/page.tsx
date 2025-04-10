@@ -9,23 +9,11 @@ import DialogPage from "~/app/_components/ui/dialog-page";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { getAvailableCategories } from "~/server/category";
 
 const AddBudgetPage = async () => {
   const [categories, themes] = await Promise.all([
-    db.category.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      where: {
-        Budget: {
-          is: null,
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    }),
+    getAvailableCategories(),
     db.theme.findMany({
       select: {
         id: true,

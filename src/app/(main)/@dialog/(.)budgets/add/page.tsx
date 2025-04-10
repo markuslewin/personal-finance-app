@@ -10,37 +10,27 @@ import { db } from "~/server/db";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { getAvailableCategories } from "~/server/category";
 
 const AddBudgetPage = async () => {
-  const categories = await db.category.findMany({
-    select: {
-      id: true,
-      name: true,
-    },
-    where: {
-      Budget: {
-        is: null,
-      },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-  const themes = await db.theme.findMany({
-    select: {
-      id: true,
-      name: true,
-      color: true,
-      Budget: {
-        select: {
-          id: true,
+  const [categories, themes] = await Promise.all([
+    getAvailableCategories(),
+    db.theme.findMany({
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        Budget: {
+          select: {
+            id: true,
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+      orderBy: {
+        createdAt: "asc",
+      },
+    }),
+  ]);
 
   // todo: Disable "Add New Budget"
   const defaultCategory = categories[0];
