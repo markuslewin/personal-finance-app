@@ -1,7 +1,6 @@
 import { type Metadata } from "next";
 import Link from "next/link";
 import { nowDate } from "~/app/_now";
-import { db } from "~/server/db";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import Image from "next/image";
@@ -13,8 +12,8 @@ import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import BudgetActions from "~/app/(main)/budgets/_components/budget-actions-menu";
 import { useId } from "react";
 import { clamp, sum } from "~/app/_math";
-import { inUTCMonth } from "~/app/_prisma";
 import { getBudgetsWithTransactions } from "~/server/budget";
+import { getSumByCategoryForMonth } from "~/server/transaction";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -22,32 +21,12 @@ export const metadata: Metadata = {
 
 const BudgetsPage = async () => {
   const budgets = await getBudgetsWithTransactions();
-  const categorySums = await db.transaction.groupBy({
-    by: "categoryId",
-    _sum: {
-      amount: true,
-    },
-    where: {
-      AND: [
-        {
-          categoryId: {
-            in: budgets.map((b) => b.category.id),
-          },
-        },
-        {
-          date: inUTCMonth(nowDate),
-        },
-      ],
-    },
-  });
+  const sumByCategory = await getSumByCategoryForMonth(
+    budgets.map((b) => b.category.id),
+    nowDate,
+  );
 
-  const getSum = (categoryId: string) => {
-    return (
-      categorySums.find((t) => t.categoryId === categoryId)?._sum.amount ?? 0
-    );
-  };
-
-  const total = sum(categorySums, (s) => s._sum.amount ?? 0);
+  const total = sum(Object.values(sumByCategory), (s) => s);
   const limit = sum(budgets, (b) => b.maximum);
 
   return (
@@ -69,7 +48,13 @@ const BudgetsPage = async () => {
               data={budgets.map((budget) => {
                 return {
                   color: budget.theme.color,
-                  percent: clamp(0, 1, getSum(budget.category.id) / total),
+                  percent: clamp(
+                    0,
+                    1,
+                    total === 0
+                      ? 0
+                      : (sumByCategory[budget.category.id] ?? 0) / total,
+                  ),
                 };
               })}
             >
@@ -94,7 +79,7 @@ const BudgetsPage = async () => {
               role="list"
             >
               {budgets.map((budget) => {
-                const sum = getSum(budget.category.id);
+                const sum = sumByCategory[budget.category.id] ?? 0;
 
                 return (
                   <li className="flex gap-200" key={budget.id}>
@@ -122,7 +107,7 @@ const BudgetsPage = async () => {
         <div className="grid gap-300">
           <h2 className="sr-only">Categories</h2>
           {budgets.map((budget) => {
-            const sum = getSum(budget.category.id);
+            const sum = sumByCategory[budget.category.id] ?? 0;
 
             return <Budget key={budget.id} budget={budget} spent={-1 * sum} />;
           })}

@@ -10,12 +10,13 @@ import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import * as IconCombobox from "~/app/_components/ui/icon-combobox";
 import * as Select from "~/app/_components/ui/select";
 import * as RadixSelect from "@radix-ui/react-select";
-import { type SortingOption, sortingOptions } from "~/app/_sort";
+import { sortingOptions } from "~/app/_sort";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import { useOptimisticSearchParams } from "~/app/_routing";
 import { Portal } from "@radix-ui/react-portal";
 import Status from "~/app/_components/status";
 import Spinner from "~/app/_components/ui/spinner";
+import { DEFAULT_SORT } from "~/app/(main)/transactions/_search";
 
 const NAME_NAME = "name";
 const SORT_NAME = "sort";
@@ -25,13 +26,11 @@ const ALL_CATEGORY_VALUE = "all";
 
 type TransactionsSearchFormProps = ComponentPropsWithRef<"form"> & {
   categories: { id: string; name: string }[];
-  defaultSort: SortingOption;
 };
 
 const TransactionsSearchForm = ({
   className,
   categories,
-  defaultSort,
   ...props
 }: TransactionsSearchFormProps) => {
   const [status, setStatus] = useState("");
@@ -51,7 +50,7 @@ const TransactionsSearchForm = ({
 
   // todo: Schema validation
   const name = searchParams.get(NAME_NAME) ?? "";
-  const sort = searchParams.get(SORT_NAME) ?? defaultSort;
+  const sort = searchParams.get(SORT_NAME) ?? DEFAULT_SORT;
   const category = searchParams.get(CATEGORY_NAME);
 
   return (

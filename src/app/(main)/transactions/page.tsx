@@ -8,17 +8,13 @@ import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import { type ComponentPropsWithRef, useId } from "react";
 import { currency, date } from "~/app/_format";
 import TransactionsSearchForm from "~/app/(main)/transactions/_components/transactions-search-form";
-import { getOrderBy, searchSchema } from "~/app/(main)/transactions/_search";
+import { searchSchema } from "~/app/(main)/transactions/_search";
 import { z } from "zod";
-import { type Prisma } from "@prisma/client";
-import { type SortingOption } from "~/app/_sort";
+import { getPaginatedTransactions } from "~/server/transaction";
 
 export const metadata: Metadata = {
   title: "Transactions",
 };
-
-const DEFAULT_SORT: SortingOption = "Latest";
-const PAGE_SIZE = 10;
 
 const TransactionsPage = async ({
   searchParams,
@@ -36,16 +32,7 @@ const TransactionsPage = async ({
     })
     .parse(await searchParams);
 
-  const where: Prisma.TransactionWhereInput = {
-    name: {
-      contains: name,
-      mode: "insensitive",
-    },
-    category: {
-      name: category,
-    },
-  };
-  const [categories, transactions, transactionsCount] = await Promise.all([
+  const [categories, { transactions, totalPages }] = await Promise.all([
     db.category.findMany({
       select: {
         id: true,
@@ -55,25 +42,12 @@ const TransactionsPage = async ({
         createdAt: "asc",
       },
     }),
-    db.transaction.findMany({
-      select: {
-        id: true,
-        amount: true,
-        avatar: true,
-        date: true,
-        name: true,
-        category: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      where,
-      orderBy: getOrderBy(sort ?? DEFAULT_SORT),
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
+    getPaginatedTransactions({
+      name,
+      category,
+      sort,
+      page,
     }),
-    db.transaction.count({ where }),
   ]);
 
   const createSearchParams = (page: number) => {
@@ -85,9 +59,8 @@ const TransactionsPage = async ({
     });
   };
 
-  const pageCount = Math.max(1, Math.ceil(transactionsCount / PAGE_SIZE));
   const isFirstPage = page === 1;
-  const isLastPage = page === pageCount;
+  const isLastPage = page === totalPages;
 
   return (
     <>
@@ -95,10 +68,7 @@ const TransactionsPage = async ({
       <article className="mt-[2.5625rem] rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 forced-colors:border-[0.0625rem]">
         <header>
           <h2 className="sr-only">Search</h2>
-          <TransactionsSearchForm
-            categories={categories}
-            defaultSort={DEFAULT_SORT}
-          />
+          <TransactionsSearchForm categories={categories} />
         </header>
         <SearchResultsSection className="mt-300">
           {/* Duplicate HTML to match the design */}
@@ -235,7 +205,7 @@ const TransactionsPage = async ({
           </p>
           <ol className="flex flex-wrap justify-center gap-100" role="list">
             {/* todo: Ellipsis */}
-            {new Array(pageCount).fill(null).map((_, i) => {
+            {new Array(totalPages).fill(null).map((_, i) => {
               const p = i + 1;
               const isCurrent = p === page;
               return (

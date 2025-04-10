@@ -14,9 +14,9 @@ import {
   getIsDueSoon,
   getIsPaid,
 } from "~/app/(main)/recurring-bills/_utils/bills";
-import { inUTCMonth } from "~/app/_prisma";
 import { getBudgets } from "~/server/budget";
 import { getPots } from "~/server/pot";
+import { getTransactions, getTransactionsForMonth } from "~/server/transaction";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -37,40 +37,10 @@ const OverviewPage = async () => {
       },
     }),
     getPots(),
-    db.transaction.findMany({
-      select: {
-        id: true,
-        amount: true,
-        avatar: true,
-        date: true,
-        name: true,
-      },
-      orderBy: {
-        date: "desc",
-      },
+    getTransactions({
       take: 5,
     }),
-    db.transaction.findMany({
-      select: {
-        id: true,
-        amount: true,
-        category: {
-          select: {
-            Budget: {
-              select: {
-                id: true,
-              },
-            },
-          },
-        },
-      },
-      where: {
-        date: inUTCMonth(nowDate),
-      },
-      orderBy: {
-        date: "desc",
-      },
-    }),
+    getTransactionsForMonth(nowDate),
     getBudgets(),
     db.recurringBill.findMany({
       select: {

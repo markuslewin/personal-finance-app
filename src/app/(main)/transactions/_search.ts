@@ -2,6 +2,8 @@ import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 import { sortingOptions, type SortingOption } from "~/app/_sort";
 
+export const DEFAULT_SORT: SortingOption = "Latest";
+
 export const getOrderBy = (
   option: SortingOption,
 ): Prisma.TransactionOrderByWithRelationInput => {
