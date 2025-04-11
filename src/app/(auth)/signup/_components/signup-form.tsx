@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signup } from "~/app/(auth)/signup/_actions";
+import { signUp } from "~/app/(auth)/signup/_actions";
 import { schema } from "~/app/(auth)/signup/_schema";
 import * as Form from "~/app/_components/form";
 import * as Toggle from "@radix-ui/react-toggle";
@@ -17,7 +17,7 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Form.Root action={signup} schema={schema}>
+    <Form.Root action={signUp} schema={schema}>
       <div className="grid gap-50">
         <Form.Label name="name">Name</Form.Label>
         <Form.Textbox name="name" />

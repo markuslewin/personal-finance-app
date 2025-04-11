@@ -3,51 +3,32 @@
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { type Schema, schema } from "~/app/(auth)/login/_schema";
-import { db } from "~/server/db";
-import bcrypt from "bcrypt";
 import { z } from "zod";
-import { createSession } from "~/app/_auth";
+import { logIn as _logIn, UserError } from "~/server/user";
 
 export const logIn = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: schema.transform(async (val, ctx) => {
-      const user = await db.user.findUnique({
-        select: {
-          id: true,
-          password: {
-            select: {
-              hash: true,
-            },
-          },
-        },
-        where: {
+      try {
+        await _logIn({
           email: val.email,
-        },
-      });
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-      if (!user || user.password === null) {
-        ctx.addIssue({
-          path: ["password"] satisfies [keyof Schema],
-          code: z.ZodIssueCode.custom,
-          message: "Invalid credentials",
+          password: val.password,
         });
-        return z.NEVER;
-      }
 
-      const isSuccess = await bcrypt.compare(val.password, user.password.hash);
-      if (!isSuccess) {
-        ctx.addIssue({
-          path: ["password"] satisfies [keyof Schema],
-          code: z.ZodIssueCode.custom,
-          message: "Invalid credentials",
-        });
-        return z.NEVER;
-      }
+        return true;
+      } catch (error) {
+        if (error instanceof UserError) {
+          ctx.addIssue({
+            path: [error.cause.field] satisfies [keyof Schema],
+            code: z.ZodIssueCode.custom,
+            message: error.message,
+          });
+          return z.NEVER;
+        }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
+        throw error;
+      }
     }),
   });
   if (submission.status !== "success") {
@@ -55,8 +36,6 @@ export const logIn = async (prevState: unknown, formData: FormData) => {
       hideFields: ["password"] satisfies (keyof Schema)[],
     });
   }
-
-  await createSession(submission.value.id);
 
   redirect("/");
 };
