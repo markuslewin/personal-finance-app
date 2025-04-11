@@ -1,5 +1,4 @@
 import { type Metadata } from "next";
-import { db } from "~/server/db";
 import IconRecurringBills from "~/app/_assets/icon-recurring-bills.svg";
 import { type ComponentPropsWithRef, useId } from "react";
 import { cx } from "class-variance-authority";
@@ -16,6 +15,7 @@ import {
 import { z } from "zod";
 import { type SortingOption, sortingOptions } from "~/app/_sort";
 import { BillsSearchForm } from "~/app/(main)/recurring-bills/_components/bills-search-form";
+import { getRecurringBills } from "~/server/recurring-bill";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
@@ -60,18 +60,7 @@ const RecurringBillsPage = async ({
     })
     .parse(await searchParams);
 
-  const allRecurringBills = await db.recurringBill.findMany({
-    select: {
-      id: true,
-      amount: true,
-      avatar: true,
-      day: true,
-      name: true,
-    },
-    orderBy: {
-      day: "asc",
-    },
-  });
+  const allRecurringBills = await getRecurringBills();
 
   const total = sum(allRecurringBills, (b) => b.amount);
   const billByDueType = Object.groupBy(allRecurringBills, (bill) =>

@@ -1,6 +1,5 @@
 import { type Metadata } from "next";
 import Link from "next/link";
-import { db } from "~/server/db";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconPot from "~/app/_assets/icon-pot.svg";
 import { type ComponentPropsWithRef } from "react";
@@ -17,6 +16,8 @@ import {
 import { getBudgets } from "~/server/budget";
 import { getPots } from "~/server/pot";
 import { getTransactions, getTransactionsForMonth } from "~/server/transaction";
+import { getBalance } from "~/server/balance";
+import { getRecurringBills } from "~/server/recurring-bill";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -31,23 +32,14 @@ const OverviewPage = async () => {
     budgets,
     recurringBills,
   ] = await Promise.all([
-    db.balance.findFirstOrThrow({
-      select: {
-        current: true,
-      },
-    }),
+    getBalance(),
     getPots(),
     getTransactions({
       take: 5,
     }),
     getTransactionsForMonth(nowDate),
     getBudgets(),
-    db.recurringBill.findMany({
-      select: {
-        amount: true,
-        day: true,
-      },
-    }),
+    getRecurringBills(),
   ]);
 
   // Intro
