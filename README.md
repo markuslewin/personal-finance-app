@@ -2,6 +2,20 @@
 
 ![Design preview for the Personal finance app coding challenge](./preview.jpg)
 
+## Starting the project
+
+This project uses Docker for local development.
+
+The app service listens for file updates via a [bind mount](https://docs.docker.com/engine/storage/bind-mounts/). This seems to only work on Windows when using Docker with WSL 2.
+
+Data is persisted to the volume `postgres_data`.
+
+- `docker compose up`: Start Next and DB
+- `docker compose --profile seed up`: Start Next and DB, and seed DB
+- `docker compose down`: Stop services
+- `docker volume rm <VOLUME NAME>`: Clear database by removing volume
+- `docker volume ls`: List volumes
+
 ## Welcome! 👋
 
 Thanks for purchasing this premium Frontend Mentor coding challenge.
@@ -119,12 +133,12 @@ Remember, if you're looking for feedback on your solution, be sure to ask questi
 
 There are multiple places you can share your solution:
 
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community). 
+1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community).
 2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
 3. Share your solution on other social channels like LinkedIn.
 4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
+We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback.
 
 The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
 
