@@ -14,35 +14,54 @@ services:
       retries: 20
 
   db-migrate:
-    build: .
+    build:
+      context: .
+      target: deps
     command: sh -c "npm run db:migrate"
     # todo: Shouldn't be necessary
     env_file:
       - .env
-    working_dir: /app
     depends_on:
       db:
         condition: service_healthy
 
   app:
-    image: node:22
-    command: sh -c "npm i && npm run dev"
+    build:
+      context: .
+      target: deps
+      # target: seed
+    command: sh -c "npm run dev"
     ports:
       - 127.0.0.1:3000:3000
-    working_dir: /app
     volumes:
-      - ./:/app
+      # Add more source files as needed
+      # Don't bind mount root - build output (e.g. `node_modules`) from the local file system doesn't necessarily work inside of the container
+      - ./public:/app/public
+      - ./src:/app/src
+      - ./.env:/app/.env
+      - ./.eslintrc.cjs:/app/.eslintrc.cjs
+      # Tailwind uses `.gitignore` for class detection
+      - ./.gitignore:/app/.gitignore
+      - ./.svgrrc.cjs:/app/.svgrrc.cjs
+      - ./next.config.js:/app/next.config.js
+      - ./postcss.config.js:/app/postcss.config.js
+      - ./prettier.config.js:/app/prettier.config.js
+      - ./svgr.d.ts:/app/svgr.d.ts
+      - ./tsconfig.json:/app/tsconfig.json
     depends_on:
       db-migrate:
         condition: service_completed_successfully
 
   seed:
-    build: .
+    build:
+      context: .
+      # target: build
+      # todo: Test
+      target: seed
     command: sh -c "npm run db:seed"
     # todo: Shouldn't be necessary
     env_file:
       - .env
-    working_dir: /app
     depends_on:
       db-migrate:
         condition: service_completed_successfully

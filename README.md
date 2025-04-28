@@ -10,9 +10,9 @@ The app service listens for file updates via a [bind mount](https://docs.docker.
 
 Data is persisted to the volume `postgres_data`.
 
-- `docker compose up`: Start Next and DB
-- `docker compose --profile seed up`: Start Next and DB, and seed DB
-- `docker compose down`: Stop services
+- `docker compose -f compose.dev.yaml up`: Start Next and DB
+- `docker compose -f compose.dev.yaml --profile seed up`: Start Next and DB, and seed DB
+- `docker compose -f compose.dev.yaml down`: Stop services
 - `docker volume rm <VOLUME NAME>`: Clear database by removing volume
 - `docker volume ls`: List volumes
 
