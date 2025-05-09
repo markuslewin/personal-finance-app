@@ -8,20 +8,14 @@ COPY prisma ./prisma
 RUN npm ci
 
 FROM base AS seed
-# ARG DATABASE_URL
-# ARG SESSION_SECRET
-# ENV DATABASE_URL=postgresql://postgres:prisma@db/postgres?schema=public
-# ENV SESSION_SECRET=secret
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# RUN npm run db:seed
+CMD [ "npm", "run", "db:seed" ]
 
 FROM base AS build
-# ARG DATABASE_URL
-# ARG SESSION_SECRET
-ENV DATABASE_URL=postgresql://postgres:prisma@db/postgres?schema=public
-ENV SESSION_SECRET=secret
+# Skip validating runtime variables of app during build
+ENV SKIP_ENV_VALIDATION=true
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -35,3 +29,5 @@ COPY --from=build /app/.next/static ./.next/static
 ENV NODE_ENV=production
 RUN adduser --system nextjs
 USER nextjs
+EXPOSE 3000
+CMD [ "node", "server.js" ]

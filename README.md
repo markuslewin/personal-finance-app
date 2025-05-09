@@ -16,6 +16,8 @@ Data is persisted to the volume `postgres_data`.
 - `docker volume rm <VOLUME NAME>`: Clear database by removing volume
 - `docker volume ls`: List volumes
 
+The production build can similarly be run locally, but with `-f compose.prod.yaml`.
+
 ## Welcome! 👋
 
 Thanks for purchasing this premium Frontend Mentor coding challenge.

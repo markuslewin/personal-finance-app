@@ -16,13 +16,10 @@ services:
   db-migrate:
     build:
       context: .
-      dockerfile: prod.Dockerfile
       target: deps
     command: sh -c "npm run db:migrate"
-    # todo: Shouldn't be necessary
     env_file:
       - .env
-    working_dir: /app
     depends_on:
       db:
         condition: service_healthy
@@ -30,8 +27,6 @@ services:
   app:
     build:
       context: .
-      dockerfile: prod.Dockerfile
-    command: sh -c "node server.js"
     env_file:
       - .env
     ports:
@@ -41,12 +36,11 @@ services:
         condition: service_completed_successfully
 
   seed:
-    build: .
-    command: sh -c "npm run db:seed"
-    # todo: Shouldn't be necessary
+    build:
+      context: .
+      target: seed
     env_file:
       - .env
-    working_dir: /app
     depends_on:
       db-migrate:
         condition: service_completed_successfully
