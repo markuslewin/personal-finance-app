@@ -36,7 +36,8 @@ CREATE TABLE [dbo].[RecurringBill] (
     [day] INT NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [RecurringBill_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
-    CONSTRAINT [RecurringBill_pkey] PRIMARY KEY CLUSTERED ([id])
+    CONSTRAINT [RecurringBill_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [RecurringBill_name_key] UNIQUE NONCLUSTERED ([name])
 );
 
 -- CreateTable
@@ -71,7 +72,8 @@ CREATE TABLE [dbo].[Category] (
     [name] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Category_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
-    CONSTRAINT [Category_pkey] PRIMARY KEY CLUSTERED ([id])
+    CONSTRAINT [Category_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Category_name_key] UNIQUE NONCLUSTERED ([name])
 );
 
 -- CreateTable
@@ -81,7 +83,8 @@ CREATE TABLE [dbo].[Theme] (
     [color] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Theme_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
-    CONSTRAINT [Theme_pkey] PRIMARY KEY CLUSTERED ([id])
+    CONSTRAINT [Theme_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Theme_name_key] UNIQUE NONCLUSTERED ([name])
 );
 
 -- CreateTable

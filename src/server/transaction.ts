@@ -56,7 +56,6 @@ export const getPaginatedTransactions = async (options: {
   const where: Prisma.TransactionWhereInput = {
     name: {
       contains: options.name,
-      mode: "insensitive",
     },
     category: {
       name: options.category,

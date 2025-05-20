@@ -1,6 +1,5 @@
 import { db } from "../src/server/db";
 import data from "./data.json";
-import { type RecurringBill } from "@prisma/client";
 
 // All categories mentioned in the data
 const categories = [
@@ -12,28 +11,6 @@ const transactions = data.transactions.map((t) => ({
   ...t,
   avatar: t.avatar.replace(/^\./, ""),
 }));
-
-type RecurringBillData = Omit<RecurringBill, "id" | "createdAt" | "updatedAt">;
-
-// Derives recurring bill data from the last transaction of the recipient. Should probably be its own collection
-const recurringBills = Object.values(
-  transactions
-    .filter((t) => t.recurring)
-    .reduce(
-      (bills, transaction) => {
-        return {
-          ...bills,
-          [transaction.name]: {
-            amount: Math.abs(transaction.amount),
-            avatar: transaction.avatar,
-            name: transaction.name,
-            day: new Date(transaction.date).getUTCDate(),
-          } satisfies RecurringBillData,
-        };
-      },
-      {} as Record<RecurringBillData["name"], RecurringBillData>,
-    ),
-);
 
 const themes = [
   { name: "Green", color: "var(--color-green)" },
@@ -61,124 +38,110 @@ const themeNameByHex = new Map([
   ["#826CB0", "Purple"],
 ]);
 
+const getThemeNameByHex = (hex: string) => {
+  const name = themeNameByHex.get(hex);
+  if (typeof name !== "string") {
+    throw new Error(`No name found for theme with hex "${hex}"`);
+  }
+
+  return name;
+};
+
+// We sort on `createdAt` in the app, so we make sure entities in a collection have unique values for that field
+// Might want to introduce `order` field instead
 const createdAtBase = new Date();
 
 async function main() {
-  const persistedThemes = await db.theme.createManyAndReturn({
+  await db.theme.createMany({
     data: themes.map((theme, i) => {
       return { ...theme, createdAt: new Date(createdAtBase.getTime() + i) };
     }),
   });
-  const themeIdByName = new Map(persistedThemes.map((c) => [c.name, c.id]));
 
-  const persistedCategories = await db.category.createManyAndReturn({
+  await db.category.createMany({
     data: categories.map((name, i) => {
       return {
         name,
         createdAt: new Date(createdAtBase.getTime() + i),
       };
     }),
-    select: {
-      id: true,
-      name: true,
-    },
   });
-  const categoryIdByName = new Map(
-    persistedCategories.map((c) => [c.name, c.id]),
-  );
-
-  const persistedRecurringBills = await db.recurringBill.createManyAndReturn({
-    data: recurringBills,
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-  const recurringBillIdByName = new Map(
-    persistedRecurringBills.map((c) => [c.name, c.id]),
-  );
 
   await db.balance.create({
     data: data.balance,
   });
 
-  await db.transaction.createMany({
-    data: transactions.map((transaction) => {
-      const categoryId = categoryIdByName.get(transaction.category);
-      if (categoryId === undefined) {
-        throw new Error(
-          `Could not find category with name "${transaction.category}"`,
-        );
-      }
-
-      let recurringBillId = undefined;
-      if (transaction.recurring) {
-        recurringBillId = recurringBillIdByName.get(transaction.name);
-        if (recurringBillId === undefined) {
-          throw new Error(
-            `Could not find recurring bill with name "${transaction.name}"`,
-          );
-        }
-      }
-
-      return {
+  for (const transaction of transactions) {
+    await db.transaction.create({
+      data: {
         amount: transaction.amount,
         avatar: transaction.avatar,
         date: transaction.date,
         name: transaction.name,
-        categoryId,
-        recurringBillId,
-      };
-    }),
-  });
+        category: {
+          connect: {
+            name: transaction.category,
+          },
+        },
+        recurringBill: transaction.recurring
+          ? {
+              connectOrCreate: {
+                where: {
+                  name: transaction.name,
+                },
+                create: {
+                  amount: Math.abs(transaction.amount),
+                  avatar: transaction.avatar,
+                  day: new Date(transaction.date).getUTCDate(),
+                  name: transaction.name,
+                },
+              },
+            }
+          : undefined,
+      },
+    });
+  }
 
-  await db.budget.createMany({
-    data: data.budgets.map((budget, i) => {
-      const categoryId = categoryIdByName.get(budget.category);
-      if (categoryId === undefined) {
-        throw new Error(
-          `Could not find category with name "${budget.category}"`,
-        );
-      }
+  for (let i = 0; i < data.budgets.length; ++i) {
+    const budget = data.budgets[i]!;
+    const themeName = getThemeNameByHex(budget.theme);
 
-      const themeName = themeNameByHex.get(budget.theme);
-      if (themeName === undefined) {
-        throw new Error(`Could not find name with hex code "${budget.theme}"`);
-      }
-      const themeId = themeIdByName.get(themeName);
-      if (themeId === undefined) {
-        throw new Error(`Could not find theme with name "${themeName}"`);
-      }
-
-      return {
+    await db.budget.create({
+      data: {
         maximum: budget.maximum,
-        categoryId,
-        themeId,
         createdAt: new Date(createdAtBase.getTime() + i),
-      };
-    }),
-  });
+        category: {
+          connect: {
+            name: budget.category,
+          },
+        },
+        theme: {
+          connect: {
+            name: themeName,
+          },
+        },
+      },
+    });
+  }
 
-  await db.pot.createMany({
-    data: data.pots.map((pot, i) => {
-      const themeName = themeNameByHex.get(pot.theme);
-      if (themeName === undefined) {
-        throw new Error(`Could not find name with hex code "${pot.theme}"`);
-      }
-      const themeId = themeIdByName.get(themeName);
-      if (themeId === undefined) {
-        throw new Error(`Could not find theme with name "${themeName}"`);
-      }
+  for (let i = 0; i < data.pots.length; ++i) {
+    const pot = data.pots[i]!;
+    const themeName = getThemeNameByHex(pot.theme);
 
-      return {
+    await db.pot.create({
+      data: {
         name: pot.name,
         target: pot.target,
         total: pot.total,
-        themeId,
         createdAt: new Date(createdAtBase.getTime() + i),
-      };
-    }),
-  });
+        theme: {
+          connect: {
+            name: themeName,
+          },
+        },
+      },
+    });
+  }
 }
 
 main()
