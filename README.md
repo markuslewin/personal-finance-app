@@ -12,7 +12,7 @@ Data is persisted to the volume `mssql_data`.
 
 The connection string inside of `.env.example` points to the database server created by Docker Compose.
 
-1. Start the app and database: `docker compose -f compose.dev.yaml up`
+1. Start the app and database: `docker compose -f compose.dev.yaml up --build --watch`
 2. Apply database migrations: `npm run db:migrate`
 3. Seed with demo data (Optional): `npm run db:seed`
 

@@ -7,11 +7,11 @@ COPY package.json package-lock.json ./
 COPY prisma ./prisma
 RUN npm ci
 
-FROM base AS seed
+FROM base AS dev
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-CMD [ "npm", "run", "db:seed" ]
+CMD [ "npm", "run", "dev" ]
 
 FROM base AS build
 # Skip validating runtime variables of app during build

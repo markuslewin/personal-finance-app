@@ -1,9 +1,11 @@
+.github
+.next
+node_modules
+.dockerignore
 .env
 Dockerfile
 compose.*.yaml
-.dockerignore
-node_modules
-npm-debug.log
 README.md
-.next
 .git
+npm-debug.log
+tsconfig.tsbuildinfo
