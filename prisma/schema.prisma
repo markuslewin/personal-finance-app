@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-    provider  = "postgresql"
-    url       = env("DATABASE_URL")
-    directUrl = env("DATABASE_URL_UNPOOLED")
+    provider = "sqlserver"
+    url      = env("DATABASE_URL")
 }
 
 model Balance {
@@ -40,7 +39,9 @@ model Transaction {
 model RecurringBill {
     id     String @id @default(cuid())
     avatar String
-    name   String
+    // We use `@unique` for `name` to generate recurring bills from transactions
+    // Ideally, we'd separate these collections in `data.json`
+    name   String @unique
     amount Int
     day    Int
 
@@ -78,7 +79,7 @@ model Pot {
 
 model Category {
     id   String @id @default(cuid())
-    name String
+    name String @unique
 
     Transaction Transaction[]
     Budget      Budget?
@@ -89,7 +90,7 @@ model Category {
 
 model Theme {
     id    String @id @default(cuid())
-    name  String
+    name  String @unique
     color String
 
     Budget Budget?

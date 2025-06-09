@@ -4,19 +4,38 @@
 
 ## Starting the project
 
-This project uses Docker for local development.
+The web app fetches data from an MS SQL database. The project contains configurations for managing a local database using Docker.
 
-The app service listens for file updates via a [bind mount](https://docs.docker.com/engine/storage/bind-mounts/). This seems to only work on Windows when using Docker with WSL 2.
+Data is persisted to the volume `mssql_data`.
 
-Data is persisted to the volume `postgres_data`.
+The connection string inside of `.env.example` points to the database server created by Docker Compose.
 
-- `docker compose -f compose.dev.yaml up`: Start Next and DB
-- `docker compose -f compose.dev.yaml --profile seed up`: Start Next and DB, and seed DB
-- `docker compose -f compose.dev.yaml down`: Stop services
+1. Start the app and database: `docker compose -f compose.dev.yaml up --build --watch`
+2. Apply database migrations: `npm run db:migrate`
+3. Seed with demo data (Optional): `npm run db:seed`
+
+Use `docker compose -f compose.dev.yaml down` to stop containers.
+
+---
+
+The common flow for schema changes:
+
+1. Test things out: `npm run db:push`
+2. Generate new migration: `npm run db:generate`
+3. Commit migration to version control
+
+Use `npm run db:reset` to reset the database.
+
+---
+
+Useful commands for managing volumes:
+
 - `docker volume rm <VOLUME NAME>`: Clear database by removing volume
 - `docker volume ls`: List volumes
 
-The production build can similarly be run locally, but with `-f compose.prod.yaml`.
+---
+
+The production build can be run locally with `docker compose -f compose.prod.yaml`.
 
 ## Welcome! 👋
 

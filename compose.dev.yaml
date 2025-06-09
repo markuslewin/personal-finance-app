@@ -1,66 +1,29 @@
 services:
   db:
-    image: postgres:latest
+    image: mcr.microsoft.com/mssql/server:latest
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: prisma
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Password123
+    ports:
+      - 1433:1433
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
-      interval: 5s
-      timeout: 2s
-      retries: 20
-
-  db-migrate:
-    build:
-      context: .
-      target: deps
-    command: sh -c "npm run db:migrate"
-    env_file:
-      - .env
-    depends_on:
-      db:
-        condition: service_healthy
+      - mssql_data:/var/opt/mssql
 
   app:
     build:
       context: .
-      target: deps
-    command: sh -c "npm run dev"
+      target: dev
+    env_file: .env
+    # Use inter-container communication to reach `db`
+    environment:
+      - DATABASE_URL=sqlserver://db;database=postgres;user=sa;password=Password123;encrypt=true;TrustServerCertificate=true;
     ports:
-      - 127.0.0.1:3000:3000
-    volumes:
-      # Add more source files as needed
-      # Don't bind mount root - build output (e.g. `node_modules`) from the local file system doesn't necessarily work inside of the container
-      - ./public:/app/public
-      - ./src:/app/src
-      - ./.env:/app/.env
-      - ./.eslintrc.cjs:/app/.eslintrc.cjs
-      # Tailwind uses `.gitignore` for class detection
-      - ./.gitignore:/app/.gitignore
-      - ./.svgrrc.cjs:/app/.svgrrc.cjs
-      - ./next.config.js:/app/next.config.js
-      - ./postcss.config.js:/app/postcss.config.js
-      - ./prettier.config.js:/app/prettier.config.js
-      - ./svgr.d.ts:/app/svgr.d.ts
-      - ./tsconfig.json:/app/tsconfig.json
-    depends_on:
-      db-migrate:
-        condition: service_completed_successfully
-
-  seed:
-    build:
-      context: .
-      target: seed
-    env_file:
-      - .env
-    depends_on:
-      db-migrate:
-        condition: service_completed_successfully
-    profiles:
-      - seed
+      - 3000:3000
+    develop:
+      watch:
+        - path: .
+          target: /app
+          action: sync
 
 volumes:
-  postgres_data:
+  mssql_data:
