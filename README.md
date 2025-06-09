@@ -4,9 +4,7 @@
 
 ## Starting the project
 
-This project uses Docker for local development.
-
-The app service listens for file updates via a [bind mount](https://docs.docker.com/engine/storage/bind-mounts/). This seems to only work on Windows when using Docker with WSL 2.
+The web app fetches data from an MS SQL database. The project contains configurations for managing a local database using Docker.
 
 Data is persisted to the volume `mssql_data`.
 
@@ -30,10 +28,14 @@ Use `npm run db:reset` to reset the database.
 
 ---
 
+Useful commands for managing volumes:
+
 - `docker volume rm <VOLUME NAME>`: Clear database by removing volume
 - `docker volume ls`: List volumes
 
-The production build can similarly be run locally, but with `-f compose.prod.yaml`.
+---
+
+The production build can be run locally with `docker compose -f compose.prod.yaml`.
 
 ## Welcome! 👋
 
