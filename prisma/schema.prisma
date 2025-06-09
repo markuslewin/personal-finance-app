@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-    provider  = "sqlserver"
-    url       = env("DATABASE_URL")
-    directUrl = env("DATABASE_URL_UNPOOLED")
+    provider = "sqlserver"
+    url      = env("DATABASE_URL")
 }
 
 model Balance {

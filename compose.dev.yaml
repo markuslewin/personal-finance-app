@@ -17,7 +17,6 @@ services:
     # Use inter-container communication to reach `db`
     environment:
       - DATABASE_URL=sqlserver://db;database=postgres;user=sa;password=Password123;encrypt=true;TrustServerCertificate=true;
-      - DATABASE_URL_UNPOOLED=sqlserver://db;database=postgres;user=sa;password=Password123;encrypt=true;TrustServerCertificate=true;
     ports:
       - 3000:3000
     develop:
