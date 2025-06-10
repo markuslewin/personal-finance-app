@@ -16,7 +16,7 @@ services:
     env_file: .env
     # Use inter-container communication to reach `db`
     environment:
-      - DATABASE_URL=sqlserver://db;database=postgres;user=sa;password=Password123;encrypt=true;TrustServerCertificate=true;
+      - DATABASE_URL=sqlserver://db;database=personal-finance-app;user=sa;password=Password123;encrypt=true;trustServerCertificate=true;
     ports:
       - 3000:3000
     develop:
