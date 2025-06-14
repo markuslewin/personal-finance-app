@@ -1,51 +1,23 @@
 services:
   db:
-    image: postgres:latest
+    image: mcr.microsoft.com/mssql/server:latest
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: prisma
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Password123
+    ports:
+      - 1433:1433
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
-      interval: 5s
-      timeout: 2s
-      retries: 20
-
-  db-migrate:
-    build:
-      context: .
-      target: deps
-    command: sh -c "npm run db:migrate"
-    env_file:
-      - .env
-    depends_on:
-      db:
-        condition: service_healthy
+      - mssql_data:/var/opt/mssql
 
   app:
     build:
       context: .
-    env_file:
-      - .env
+    env_file: .env
+    # Use inter-container communication to reach `db`
+    environment:
+      - DATABASE_URL=sqlserver://db;database=personal-finance-app;user=sa;password=Password123;encrypt=true;trustServerCertificate=true;
     ports:
-      - 127.0.0.1:3000:3000
-    depends_on:
-      db-migrate:
-        condition: service_completed_successfully
-
-  seed:
-    build:
-      context: .
-      target: seed
-    env_file:
-      - .env
-    depends_on:
-      db-migrate:
-        condition: service_completed_successfully
-    profiles:
-      - seed
+      - 3000:3000
 
 volumes:
-  postgres_data:
+  mssql_data:
