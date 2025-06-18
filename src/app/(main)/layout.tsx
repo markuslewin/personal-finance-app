@@ -3,6 +3,8 @@ import { getIsSidebarOpen } from "~/app/_sidebar";
 import Sidebar from "~/app/_components/sidebar";
 import { type ReactNode } from "react";
 
+export const dynamic = "force-dynamic";
+
 type MainLayoutProps = {
   children: ReactNode;
   dialog: ReactNode;
