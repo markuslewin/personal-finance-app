@@ -2,7 +2,7 @@
 
 ![Design preview for the Personal finance app coding challenge](./preview.jpg)
 
-## Starting the project
+## Starting the dev server
 
 The web app fetches data from an MS SQL database. The project contains configurations for managing a local database using Docker.
 
@@ -12,11 +12,11 @@ The connection string inside of `.env.example` points to the database server cre
 
 1. Start the app and database: `docker compose -f compose.dev.yaml up --build --watch`
 2. Apply database migrations: `npm run db:migrate`
-3. Seed with demo data (Optional): `npm run db:seed`
+3. (Optional) Seed with demo data: `npm run db:seed`
 
 Use `docker compose -f compose.dev.yaml down` to stop containers.
 
----
+## Making changes to the database
 
 The common flow for schema changes:
 
@@ -26,7 +26,14 @@ The common flow for schema changes:
 
 Use `npm run db:reset` to reset the database.
 
----
+## Running the tests
+
+Start the dev server, then:
+
+- Headless: `npm run test`
+- UI Mode: `npm run test:dev`
+
+## Useful commands
 
 Useful commands for managing volumes:
 

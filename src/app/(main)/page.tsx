@@ -2,7 +2,7 @@ import { type Metadata } from "next";
 import Link from "next/link";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconPot from "~/app/_assets/icon-pot.svg";
-import { type ComponentPropsWithRef } from "react";
+import { useId, type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
 import Image from "next/image";
 import * as Donut from "~/app/_components/ui/donut";
@@ -106,47 +106,7 @@ const OverviewPage = async () => {
         </div>
       </div>
       <div className="mt-400 grid gap-200 tablet:gap-300 desktop:grid-cols-[608fr_428fr] desktop:grid-rows-[auto_1fr_auto]">
-        <Card>
-          <CardHeader>
-            <CardHeading>Pots</CardHeading>
-            <p>
-              <CardLink href={"/pots"}>See Details</CardLink>
-            </p>
-          </CardHeader>
-          <CardContent className="mt-250 flex flex-wrap gap-250">
-            <div className="grid grow basis-[15.4375rem] grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900 forced-colors:border-[0.0625rem]">
-              <div className="grid size-500 place-items-center text-green">
-                <IconPot className="h-[2.25rem]" />
-              </div>
-              <div>
-                <h3 className="text-grey-500">Total Saved</h3>
-                <p className="text-preset-1">
-                  {currency(totalSaved, {
-                    trailingZeroDisplay: "stripIfInteger",
-                  })}
-                </p>
-              </div>
-            </div>
-            <h3 className="sr-only">Per Pot</h3>
-            <ul
-              className="grid grow basis-[17.3125rem] grid-cols-2 gap-200 py-50"
-              role="list"
-            >
-              {pots.map((pot) => {
-                return (
-                  <LegendItem key={pot.id} color={pot.theme.color}>
-                    <LegendName>{pot.name}</LegendName>
-                    <LegendValue>
-                      {currency(pot.total, {
-                        trailingZeroDisplay: "stripIfInteger",
-                      })}
-                    </LegendValue>
-                  </LegendItem>
-                );
-              })}
-            </ul>
-          </CardContent>
-        </Card>
+        <PotsCard totalSaved={totalSaved} pots={pots} />
         <Card className="desktop:col-start-1 desktop:row-span-2 desktop:row-start-2">
           <CardHeader>
             <CardHeading>Transactions</CardHeading>
@@ -384,6 +344,65 @@ const LegendValue = ({ className, ...props }: LegendValueProps) => {
       {...props}
       className={cx(className, "text-preset-4-bold text-grey-900")}
     />
+  );
+};
+
+type PotsCardProps = {
+  totalSaved: number;
+  pots: {
+    id: string;
+    name: string;
+    total: number;
+    theme: { color: string };
+  }[];
+};
+
+const PotsCard = ({ totalSaved, pots }: PotsCardProps) => {
+  const headingId = useId();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardHeading id={headingId}>Pots</CardHeading>
+        <p>
+          <CardLink href={"/pots"}>See Details</CardLink>
+        </p>
+      </CardHeader>
+      <CardContent className="mt-250 flex flex-wrap gap-250">
+        <div className="grid grow basis-[15.4375rem] grid-cols-[auto_1fr] items-center gap-200 rounded-xl bg-beige-100 px-200 py-250 text-grey-900 forced-colors:border-[0.0625rem]">
+          <div className="grid size-500 place-items-center text-green">
+            <IconPot className="h-[2.25rem]" />
+          </div>
+          <div>
+            <h3 className="text-grey-500">Total Saved</h3>
+            <p className="text-preset-1">
+              {currency(totalSaved, {
+                trailingZeroDisplay: "stripIfInteger",
+              })}
+            </p>
+          </div>
+        </div>
+        <h3 className="sr-only">Per Pot</h3>
+        <ul
+          className="grid grow basis-[17.3125rem] grid-cols-2 gap-200 py-50"
+          role="list"
+          aria-labelledby={headingId}
+        >
+          {pots.map((pot) => {
+            return (
+              <LegendItem key={pot.id} color={pot.theme.color}>
+                <LegendName>{pot.name}</LegendName>
+                <LegendValue>
+                  {currency(pot.total, {
+                    trailingZeroDisplay: "stripIfInteger",
+                  })}
+                </LegendValue>
+              </LegendItem>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
   );
 };
 

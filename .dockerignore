@@ -9,3 +9,7 @@ README.md
 .git
 npm-debug.log
 tsconfig.tsbuildinfo
+test-results
+playwright-report
+blob-report
+playwright/.cache
