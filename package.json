@@ -48,6 +48,7 @@
     "zod": "^3.23.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.53.1",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.9",

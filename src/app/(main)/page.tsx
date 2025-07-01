@@ -69,6 +69,9 @@ const OverviewPage = async () => {
     },
     {} as Record<string, number>,
   );
+  const budgetsWithSpent = budgets.map((budget) => {
+    return { ...budget, spent: totalByBudgetId[budget.id] ?? 0 };
+  });
   const budgetsTotal = sum(Object.values(totalByBudgetId), (n) => n);
   const budgetsLimit = sum(budgets, (b) => b.maximum);
 
@@ -94,129 +97,31 @@ const OverviewPage = async () => {
       <div className="mt-400 the-grid-[15rem] gap-150 tablet:mt-[2.625rem] tablet:flex-row tablet:flex-wrap tablet:gap-300">
         <div className="rounded-xl bg-grey-900 p-250 text-white tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3>Current Balance</h3>
-          <p className="mt-150 text-preset-1">{currency(balance.current)}</p>
+          <p className="mt-150 text-preset-1" data-testid="current-balance">
+            {currency(balance.current)}
+          </p>
         </div>
         <div className="rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Income</h3>
-          <p className="mt-150 text-preset-1">{currency(income)}</p>
+          <p className="mt-150 text-preset-1" data-testid="income">
+            {currency(income)}
+          </p>
         </div>
         <div className="rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Expenses</h3>
-          <p className="mt-150 text-preset-1">{currency(Math.abs(expenses))}</p>
+          <p className="mt-150 text-preset-1" data-testid="expenses">
+            {currency(Math.abs(expenses))}
+          </p>
         </div>
       </div>
       <div className="mt-400 grid gap-200 tablet:gap-300 desktop:grid-cols-[608fr_428fr] desktop:grid-rows-[auto_1fr_auto]">
         <PotsCard totalSaved={totalSaved} pots={pots} />
-        <Card className="desktop:col-start-1 desktop:row-span-2 desktop:row-start-2">
-          <CardHeader>
-            <CardHeading>Transactions</CardHeading>
-            <p>
-              <CardLink href={"/transactions"}>View All</CardLink>
-            </p>
-          </CardHeader>
-          <CardContent>
-            <ul
-              className="mt-400 space-y-250 divide-y-[0.0625rem] divide-grey-100 add-space-y-250"
-              role="list"
-            >
-              {transactions.map((transaction) => {
-                return (
-                  <li
-                    className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
-                    key={transaction.id}
-                  >
-                    <Image
-                      className="size-400 rounded-full object-cover tablet:size-500"
-                      alt=""
-                      src={transaction.avatar}
-                      width={160}
-                      height={160}
-                    />
-                    <h3 className="text-preset-4-bold text-grey-900">
-                      {transaction.name}
-                    </h3>
-                    <div className="text-end">
-                      <p
-                        className={cx(
-                          "text-preset-4-bold",
-                          transaction.amount > 0
-                            ? "text-green"
-                            : "text-grey-900",
-                        )}
-                      >
-                        <span className="sr-only">Amount: </span>
-                        <strong>
-                          {currency(transaction.amount, {
-                            signDisplay: "always",
-                          })}
-                        </strong>
-                      </p>
-                      <p className="mt-100 text-preset-5">
-                        <span className="sr-only">Date: </span>
-                        {date(transaction.date)}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </CardContent>
-        </Card>
-        <Card className="desktop:row-span-2 desktop:row-start-1">
-          <CardHeader>
-            <CardHeading>Budgets</CardHeading>
-            <p>
-              <CardLink href={"/budgets"}>See Details</CardLink>
-            </p>
-          </CardHeader>
-          <CardContent className="mt-250 grid items-center">
-            <div className="flex flex-wrap items-center gap-200">
-              <h3 className="sr-only">Total</h3>
-              <div className="grow-[999]">
-                <Donut.Root
-                  data={budgets.map((budget) => {
-                    return {
-                      color: budget.theme.color,
-                      percent: clamp(
-                        0,
-                        1,
-                        (totalByBudgetId[budget.id] ?? 0) / budgetsTotal,
-                      ),
-                    };
-                  })}
-                >
-                  <Donut.Hole>
-                    <p>
-                      <strong className="block text-preset-1 text-grey-900">
-                        {currency(-1 * budgetsTotal, {
-                          trailingZeroDisplay: "stripIfInteger",
-                        })}
-                      </strong>{" "}
-                      of{" "}
-                      {currency(budgetsLimit, {
-                        trailingZeroDisplay: "stripIfInteger",
-                      })}{" "}
-                      limit
-                    </p>
-                  </Donut.Hole>
-                </Donut.Root>
-              </div>
-              <h3 className="sr-only">Per Budget</h3>
-              <ul className="the-grid-[7rem] grow gap-200" role="list">
-                {budgets.map((budget) => {
-                  const total = totalByBudgetId[budget.id] ?? 0;
-
-                  return (
-                    <LegendItem key={budget.id} color={budget.theme.color}>
-                      <LegendName>{budget.category.name}</LegendName>
-                      <LegendValue>{currency(-1 * total)}</LegendValue>
-                    </LegendItem>
-                  );
-                })}
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+        <TransactionsCard transactions={transactions} />
+        <BudgetsCard
+          total={budgetsTotal}
+          limit={budgetsLimit}
+          budgets={budgetsWithSpent}
+        />
         <Card>
           <CardHeader>
             <CardHeading>Recurring Bills</CardHeading>
@@ -227,19 +132,28 @@ const OverviewPage = async () => {
           <CardContent className="mt-400 grid gap-150">
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-green bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
               <h3>Paid Bills</h3>
-              <p className="text-preset-4-bold text-grey-900">
+              <p
+                className="text-preset-4-bold text-grey-900"
+                data-testid="paid-bills"
+              >
                 {currency(totalPaid)}
               </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
               <h3>Total Upcoming</h3>
-              <p className="text-preset-4-bold text-grey-900">
+              <p
+                className="text-preset-4-bold text-grey-900"
+                data-testid="total-upcoming"
+              >
                 {currency(totalUpcoming)}
               </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
               <h3>Due Soon</h3>
-              <p className="text-preset-4-bold text-grey-900">
+              <p
+                className="text-preset-4-bold text-grey-900"
+                data-testid="due-soon"
+              >
                 {currency(totalDueSoon)}
               </p>
             </div>
@@ -401,6 +315,152 @@ const PotsCard = ({ totalSaved, pots }: PotsCardProps) => {
             );
           })}
         </ul>
+      </CardContent>
+    </Card>
+  );
+};
+
+type TransactionsCardProps = {
+  transactions: {
+    id: string;
+    avatar: string;
+    name: string;
+    amount: number;
+    date: Date;
+  }[];
+};
+
+const TransactionsCard = ({ transactions }: TransactionsCardProps) => {
+  const headingId = useId();
+
+  return (
+    <Card className="desktop:col-start-1 desktop:row-span-2 desktop:row-start-2">
+      <CardHeader>
+        <CardHeading id={headingId}>Transactions</CardHeading>
+        <p>
+          <CardLink href={"/transactions"}>View All</CardLink>
+        </p>
+      </CardHeader>
+      <CardContent>
+        <ul
+          className="mt-400 space-y-250 divide-y-[0.0625rem] divide-grey-100 add-space-y-250"
+          role="list"
+          aria-labelledby={headingId}
+        >
+          {transactions.map((transaction) => {
+            return (
+              <li
+                className="grid grid-cols-[auto_1fr_auto] items-center gap-200"
+                key={transaction.id}
+              >
+                <Image
+                  className="size-400 rounded-full object-cover tablet:size-500"
+                  alt=""
+                  src={transaction.avatar}
+                  width={160}
+                  height={160}
+                />
+                <h3 className="text-preset-4-bold text-grey-900">
+                  {transaction.name}
+                </h3>
+                <div className="text-end">
+                  <p
+                    className={cx(
+                      "text-preset-4-bold",
+                      transaction.amount > 0 ? "text-green" : "text-grey-900",
+                    )}
+                  >
+                    <span className="sr-only">Amount: </span>
+                    <strong>
+                      {currency(transaction.amount, {
+                        signDisplay: "always",
+                      })}
+                    </strong>
+                  </p>
+                  <p className="mt-100 text-preset-5">
+                    <span className="sr-only">Date: </span>
+                    {date(transaction.date)}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+};
+
+type BudgetsCardProps = {
+  total: number;
+  limit: number;
+  budgets: {
+    id: string;
+    spent: number;
+    category: {
+      name: string;
+    };
+    theme: {
+      color: string;
+    };
+  }[];
+};
+
+const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
+  const headingId = useId();
+
+  return (
+    <Card className="desktop:row-span-2 desktop:row-start-1">
+      <CardHeader>
+        <CardHeading id={headingId}>Budgets</CardHeading>
+        <p>
+          <CardLink href={"/budgets"}>See Details</CardLink>
+        </p>
+      </CardHeader>
+      <CardContent className="mt-250 grid items-center">
+        <div className="flex flex-wrap items-center gap-200">
+          <h3 className="sr-only">Total</h3>
+          <div className="grow-[999]">
+            <Donut.Root
+              data={budgets.map((budget) => {
+                return {
+                  color: budget.theme.color,
+                  percent: clamp(0, 1, budget.spent / total),
+                };
+              })}
+            >
+              <Donut.Hole>
+                <p>
+                  <strong className="block text-preset-1 text-grey-900">
+                    {currency(-1 * total, {
+                      trailingZeroDisplay: "stripIfInteger",
+                    })}
+                  </strong>{" "}
+                  of{" "}
+                  {currency(limit, {
+                    trailingZeroDisplay: "stripIfInteger",
+                  })}{" "}
+                  limit
+                </p>
+              </Donut.Hole>
+            </Donut.Root>
+          </div>
+          <h3 className="sr-only">Per Budget</h3>
+          <ul
+            className="the-grid-[7rem] grow gap-200"
+            role="list"
+            aria-labelledby={headingId}
+          >
+            {budgets.map((budget) => {
+              return (
+                <LegendItem key={budget.id} color={budget.theme.color}>
+                  <LegendName>{budget.category.name}</LegendName>
+                  <LegendValue>{currency(-1 * budget.spent)}</LegendValue>
+                </LegendItem>
+              );
+            })}
+          </ul>
+        </div>
       </CardContent>
     </Card>
   );
