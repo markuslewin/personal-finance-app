@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
+import { violationFingerprints } from "tests/playwright-utils";
 
 test("overview has title", async ({ page }) => {
   await page.goto("/");
@@ -41,6 +42,55 @@ test("overview has data", async ({ page }) => {
 
 test("overview a11y", async ({ page }) => {
   await page.goto("/");
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+test("transactions a11y", async ({ page }) => {
+  await page.goto("/transactions");
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  // Disabled previous/next buttons have insufficient contrast
+  expect(violationFingerprints(results)).toMatchSnapshot();
+});
+
+test("budgets a11y", async ({ page }) => {
+  await page.goto("/budgets");
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+test("add budget a11y", async ({ page }) => {
+  await page.goto("/budgets/add");
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+test("pots a11y", async ({ page }) => {
+  await page.goto("/pots");
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+test("add pot a11y", async ({ page }) => {
+  await page.goto("/pots/add");
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  expect(results.violations).toEqual([]);
+});
+
+test("recurring bills a11y", async ({ page }) => {
+  await page.goto("/recurring-bills");
 
   const results = await new AxeBuilder({ page }).analyze();
 
