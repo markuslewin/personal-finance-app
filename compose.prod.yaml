@@ -3,7 +3,7 @@ services:
     image: mcr.microsoft.com/mssql/server:latest
     environment:
       ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: Password123
+      MSSQL_SA_PASSWORD: Passw0rd
     ports:
       - 1433:1433
     volumes:
@@ -12,10 +12,9 @@ services:
   app:
     build:
       context: .
-    env_file: .env
-    # Use inter-container communication to reach `db`
     environment:
-      - DATABASE_URL=sqlserver://db;database=personal-finance-app;user=sa;password=Password123;encrypt=true;trustServerCertificate=true;
+      DATABASE_URL: sqlserver://db;database=personal-finance-app;user=sa;password=Passw0rd;encrypt=true;trustServerCertificate=true;
+      SESSTION_SECRET: s3cret
     ports:
       - 3000:3000
 
