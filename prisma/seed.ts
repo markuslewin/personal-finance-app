@@ -1,5 +1,9 @@
-import { db } from "../src/server/db";
+import { PrismaClient } from "@prisma/client";
 import data from "./data.json";
+
+const db = new PrismaClient({
+  log: ["error"],
+});
 
 // All categories mentioned in the data
 const categories = [
