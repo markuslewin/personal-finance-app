@@ -5,7 +5,7 @@ const defaultOptions: Intl.NumberFormatOptions = {
   signDisplay: "negative",
 };
 
-type CurrencyOptions = {
+export type CurrencyOptions = {
   trailingZeroDisplay?: "stripIfInteger";
   signDisplay?: "always";
 };
@@ -20,6 +20,7 @@ export const currency = (value: number, options?: CurrencyOptions) => {
 export const percent = (value: number) => {
   return new Intl.NumberFormat(locales, {
     style: "percent",
+    minimumFractionDigits: 1,
     maximumFractionDigits: 2,
   }).format(value);
 };
