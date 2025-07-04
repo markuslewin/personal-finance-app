@@ -86,6 +86,10 @@ try {
   await execa({
     stdio: "inherit",
     env: {
+      DATABASE_URL: createJDBC({
+        ...DATABASE_CONNECTION_OPTIONS,
+        authority: `${db.getHost()}:${db.getPort()}`,
+      }),
       PORT: String(app.getMappedPort(APP_PORT)),
     },
   })`npm run test:e2e`;
