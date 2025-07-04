@@ -85,14 +85,15 @@ const AddBudgetPage = async () => {
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
+                    <Status className="sr-only">
+                      <Pending>Adding budget</Pending>
+                    </Status>
                     <Button type="submit">
-                      <Status>
-                        <Idle>Add Budget</Idle>
-                        <Pending>
-                          <Spinner />
-                          <span className="sr-only">Adding Budget</span>
-                        </Pending>
-                      </Status>
+                      <Idle>Add Budget</Idle>
+                      <Pending>
+                        <Spinner />
+                        <span className="sr-only">Adding Budget</span>
+                      </Pending>
                     </Button>
                   </AddBudgetForm>
                 </article>

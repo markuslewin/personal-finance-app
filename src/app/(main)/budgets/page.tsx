@@ -140,6 +140,7 @@ type BudgetProps = {
 
 const Budget = ({ budget, spent }: BudgetProps) => {
   const meterLabelId = useId();
+  const latestSpendingLabelId = useId();
 
   const free = Math.max(0, budget.maximum - spent);
 
@@ -149,6 +150,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
       style={{
         ["--theme-color" as string]: budget.theme.color,
       }}
+      data-testid="budget"
     >
       <header className="grid grid-cols-[auto_1fr_auto] items-center gap-200">
         <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
@@ -195,7 +197,10 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           <div className="w-50 rounded-full bg-[var(--theme-color)] forced-colors:bg-[CanvasText]" />
           <div className="grid gap-50">
             <h4>Spent</h4>
-            <p className="text-preset-4-bold text-grey-900">
+            <p
+              className="text-preset-4-bold text-grey-900"
+              data-testid="budget-spent"
+            >
               {currency(spent)}
             </p>
           </div>
@@ -204,13 +209,23 @@ const Budget = ({ budget, spent }: BudgetProps) => {
           <div className="w-50 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]" />
           <div className="grid gap-50">
             <h4>Free</h4>
-            <p className="text-preset-4-bold text-grey-900">{currency(free)}</p>
+            <p
+              className="text-preset-4-bold text-grey-900"
+              data-testid="budget-free"
+            >
+              {currency(free)}
+            </p>
           </div>
         </div>
       </div>
       <article className="mt-250 rounded-xl bg-beige-100 p-200 text-grey-500 tablet:p-250 forced-colors:border-[0.0625rem]">
         <header className="flex flex-wrap justify-between">
-          <h4 className="text-preset-3 text-grey-900">Latest Spending</h4>
+          <h4
+            className="text-preset-3 text-grey-900"
+            id={latestSpendingLabelId}
+          >
+            Latest Spending
+          </h4>
           <Link
             className="grid grid-cols-[1fr_auto] items-center gap-150 transition-colors hocus:text-grey-900"
             href={`/transactions?category=${encodeURIComponent(budget.category.name)}`}
@@ -224,6 +239,7 @@ const Budget = ({ budget, spent }: BudgetProps) => {
         <ol
           className="mt-250 space-y-150 divide-y-[0.0625rem] divide-grey-500/15 text-preset-5 add-space-y-150"
           role="list"
+          aria-labelledby={latestSpendingLabelId}
         >
           {budget.category.Transaction.map((transaction) => {
             return (
