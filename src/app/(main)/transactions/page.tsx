@@ -11,6 +11,7 @@ import { searchSchema } from "~/app/(main)/transactions/_search";
 import { z } from "zod";
 import { getPaginatedTransactions } from "~/server/transaction";
 import { getCategories } from "~/server/category";
+import { maxInt } from "~/app/_prisma";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -26,7 +27,7 @@ const TransactionsPage = async ({
       page: z
         .preprocess(
           (val) => (Array.isArray(val) ? val[0] : val),
-          z.coerce.number().int().positive(),
+          z.coerce.number().int().positive().lte(maxInt),
         )
         .catch(1),
     })

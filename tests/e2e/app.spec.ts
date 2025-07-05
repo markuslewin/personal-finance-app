@@ -3,6 +3,7 @@ import { AxeBuilder } from "@axe-core/playwright";
 import { violationFingerprints } from "tests/playwright-utils";
 import { faker } from "@faker-js/faker";
 import { execa } from "execa";
+import { maxInt } from "~/app/_prisma";
 
 // todo: Isolate tests with `login` fixture
 const test = baseTest.extend<{ resetDatabase: undefined }>({
@@ -71,12 +72,64 @@ test("transactions a11y", async ({ page }) => {
   expect(violationFingerprints(results)).toMatchSnapshot();
 });
 
-test.fixme("budget dialog", async ({ page }) => {
-  // dialog name, close
+test("add budget dialog", async ({ page }) => {
+  await page.goto("/budgets");
+  await page
+    .getByRole("link", {
+      name: /add new budget/i,
+    })
+    .click();
+
+  await expect(
+    page.getByRole("dialog", {
+      name: /add new budget/i,
+    }),
+  ).toBeVisible();
+
+  await page
+    .getByRole("button", {
+      name: /close/i,
+    })
+    .click();
+
+  await expect(
+    page.getByRole("dialog", {
+      name: /add new budget/i,
+    }),
+  ).not.toBeVisible();
 });
 
-test.fixme("budget maximum errors", async ({ page }) => {
-  // negative, floating points, too large, zero
+test("budget maximum errors", async ({ page }) => {
+  await page.goto("/budgets");
+  await page.getByRole("link", { name: /add new budget/i }).click();
+
+  const submitButton = page.getByRole("button", { name: /add budget/i });
+
+  await submitButton.click();
+
+  const input = page.getByLabel(/maximum/i);
+
+  await expect(input).toHaveAccessibleDescription(/required/i);
+
+  await input.fill("0");
+  await submitButton.click();
+
+  await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
+
+  await input.fill("12.3");
+  await submitButton.click();
+
+  await expect(input).toHaveAccessibleDescription(/expected integer/i);
+
+  await input.fill(String(maxInt + 1));
+  await submitButton.click();
+
+  await expect(input).toHaveAccessibleDescription(/must be less/i);
+
+  await input.fill("-100");
+  await submitButton.click();
+
+  await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
 });
 
 test.fixme("budget with negative spending", async ({ page }) => {
