@@ -1,7 +1,7 @@
-import { expect, test } from "vitest";
+import { expect, test } from "@jest/globals";
 import { inUTCMonth } from "~/app/_prisma";
 
-test.for([
+test.each([
   {
     date: new Date("2025-07-03T19:35Z"),
     expected: {

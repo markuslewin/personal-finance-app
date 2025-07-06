@@ -169,7 +169,7 @@ const config: Config = {
   //   "**/__tests__/**/*.?([mc])[jt]s?(x)",
   //   "**/?(*.)+(spec|test).?([mc])[jt]s?(x)"
   // ],
-  testMatch: ["**/budget.test.tsx"],
+  testMatch: ["**/src/**/?(*.)+(spec|test).?([mc])[jt]s?(x)"],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [

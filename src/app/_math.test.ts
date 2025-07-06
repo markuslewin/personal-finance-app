@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { test, expect } from "@jest/globals";
 import { clamp, sum } from "~/app/_math";
 
 test("sum nothing", () => {
@@ -17,7 +17,7 @@ test("sum objects", () => {
   expect(sum([{ value: 12 }, { value: 3 }], (i) => i.value)).toBe(15);
 });
 
-test.for([
+test.each([
   {
     min: 1,
     max: 100,

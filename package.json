@@ -21,6 +21,7 @@
     "db:reset": "prisma migrate reset",
     "test": "jest",
     "test:dev": "jest --watch",
+    "test:run": "jest --ci --runInBand",
     "test:e2e": "playwright test",
     "test:e2e:dev": "playwright test --ui",
     "test:e2e:install": "playwright install --with-deps chromium",
@@ -54,6 +55,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@faker-js/faker": "^9.9.0",
+    "@jest/globals": "^30.0.4",
     "@playwright/test": "^1.53.1",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.9",
@@ -84,10 +86,7 @@
     "testcontainers": "^11.0.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.5.3",
-    "vite": "^7.0.1",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4"
+    "typescript": "^5.5.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.38.1"
