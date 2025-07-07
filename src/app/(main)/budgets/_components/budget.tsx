@@ -46,7 +46,9 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
     >
       <header className="grid grid-cols-[auto_1fr_auto] items-center gap-200">
         <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
-        <h3 className="text-preset-2 text-grey-900">{budget.category.name}</h3>
+        <h3 className="text-preset-2 text-grey-900" data-testid="name">
+          {budget.category.name}
+        </h3>
         <Hydrated>
           <BudgetActions budget={budget} />
         </Hydrated>

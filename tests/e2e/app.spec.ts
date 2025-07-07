@@ -189,8 +189,91 @@ test("can edit budget", async ({ page, resetDatabase }) => {
   expect(getPathname(page.url())).toBe("/budgets");
 });
 
-test.fixme("can delete budget", async ({ page }) => {
-  //
+test("can delete budget", async ({ page, resetDatabase }) => {
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+
+  await page
+    .getByTestId("budget")
+    .filter({ hasText: /bills/i })
+    .getByRole("button", { name: "actions" })
+    .click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+
+  const dialog = page.getByRole("alertdialog", {
+    name: "delete",
+  });
+  await dialog.getByRole("button", { name: "confirm" }).click();
+
+  await expect(
+    page.getByRole("status").and(page.getByText(/deleting/i)),
+  ).toBeAttached();
+  await expect(dialog).not.toBeAttached();
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+});
+
+test.describe("javascript disabled", () => {
+  test.use({
+    javaScriptEnabled: false,
+  });
+
+  test("can delete budget", async ({ page, resetDatabase }) => {
+    await page.goto("/budgets");
+
+    await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+      /entertainment/i,
+      /bills/i,
+      /dining out/i,
+      /personal care/i,
+    ]);
+
+    await page
+      .getByTestId("budget")
+      .filter({ hasText: /dining out/i })
+      .getByRole("link", {
+        name: "edit",
+      })
+      .click();
+    await page.getByRole("button", { name: /delete/i }).click();
+
+    await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+      /entertainment/i,
+      /bills/i,
+      /personal care/i,
+    ]);
+  });
+});
+
+test("can cancel budget deletion", async ({ page }) => {
+  await page.goto("/budgets");
+  await page.getByRole("button", { name: "actions" }).first().click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+
+  const dialog = page.getByRole("alertdialog", { name: "delete" });
+  await expect(dialog).toBeVisible();
+
+  await dialog.getByRole("button", { name: "close" }).click();
+
+  await expect(dialog).not.toBeAttached();
+
+  await page.getByRole("button", { name: "actions" }).first().click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+
+  await expect(dialog).toBeVisible();
+
+  await dialog.getByRole("button", { name: "back" }).click();
+
+  await expect(dialog).not.toBeAttached();
 });
 
 test.fixme("budget links to its transactions", async ({ page }) => {

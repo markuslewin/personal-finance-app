@@ -56,14 +56,15 @@ export const Portal = ({ budget, ...props }: PortalProps) => {
                 </AlertDialog.Description>
                 <DeleteBudgetForm id={budget.id}>
                   <Form.HiddenField name="id" />
+                  <Status className="sr-only">
+                    <Pending>Deleting budget</Pending>
+                  </Status>
                   <Button type="submit" intent="destroy">
-                    <Status>
-                      <Idle>Yes, Confirm Deletion</Idle>
-                      <Pending>
-                        <Spinner />
-                        <span className="sr-only">Deleting Budget</span>
-                      </Pending>
-                    </Status>
+                    <Idle>Yes, Confirm Deletion</Idle>
+                    <Pending>
+                      <Spinner />
+                      <span className="sr-only">Deleting Budget</span>
+                    </Pending>
                   </Button>
                 </DeleteBudgetForm>
                 <AlertDialog.Cancel asChild>
