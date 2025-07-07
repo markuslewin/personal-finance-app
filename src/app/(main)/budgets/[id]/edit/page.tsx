@@ -71,14 +71,15 @@ const EditBudgetPage = async ({
               <Form.Message name="theme" />
             </Dialog.Group>
           </Dialog.Groups>
+          <Status className="sr-only">
+            <Pending>Saving changes</Pending>
+          </Status>
           <Button type="submit">
-            <Status>
-              <Idle>Save Changes</Idle>
-              <Pending>
-                <Spinner />
-                <span className="sr-only">Saving Changes</span>
-              </Pending>
-            </Status>
+            <Idle>Save Changes</Idle>
+            <Pending>
+              <Spinner />
+              <span className="sr-only">Saving Changes</span>
+            </Pending>
           </Button>
         </EditBudgetForm>
         <Hydrated>

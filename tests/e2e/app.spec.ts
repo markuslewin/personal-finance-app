@@ -138,6 +138,46 @@ test("budget maximum errors", async ({ page }) => {
   await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
 });
 
+test("can create budget", async ({ page, resetDatabase }) => {
+  const category = "Lifestyle";
+  const theme = "Blue";
+  const max = faker.number.int({
+    min: 1,
+    max: 1000,
+  });
+
+  await page.goto("/budgets");
+  await page
+    .getByRole("link", {
+      name: /add new budget/i,
+    })
+    .click();
+  await page.getByLabel(/category/i).click();
+  await page.getByLabel(category).click();
+  await page.getByLabel(/maximum/i).fill(String(max));
+  await page.getByLabel(/theme/i).click();
+  await page.getByLabel(theme).click();
+  await page
+    .getByRole("button", {
+      name: /add budget/i,
+    })
+    .click();
+
+  await expect(
+    page.getByRole("status").and(page.getByText(/adding budget/i)),
+  ).toBeAttached();
+
+  const lastBudget = page.getByTestId("budget").last();
+  // todo: Scroll
+  // await expect(lastBudget).toBeInViewport();
+  await expect(
+    lastBudget.getByRole("heading", { name: category }),
+  ).toBeVisible();
+  await expect(lastBudget.getByText(/maximum/i)).toHaveText(
+    new RegExp(String(max)),
+  );
+});
+
 test("can edit budget", async ({ page, resetDatabase }) => {
   const category = "Groceries";
   const theme = "Blue";
@@ -175,10 +215,10 @@ test("can edit budget", async ({ page, resetDatabase }) => {
       name: /save changes/i,
     })
     .click();
+
   await expect(
     page.getByRole("status").and(page.getByText(/saving changes/i)),
   ).toBeAttached();
-
   await expect(dialog).not.toBeAttached();
   await expect(
     firstBudget.getByRole("heading", {
@@ -225,6 +265,83 @@ test("can delete budget", async ({ page, resetDatabase }) => {
 test.describe("javascript disabled", () => {
   test.use({
     javaScriptEnabled: false,
+  });
+
+  test("can create budget", async ({ page, resetDatabase }) => {
+    await page.goto("/budgets");
+
+    await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+      /entertainment/i,
+      /bills/i,
+      /dining out/i,
+      /personal care/i,
+    ]);
+
+    await page
+      .getByRole("link", {
+        name: /add new budget/i,
+      })
+      .click();
+    await page.getByLabel(/category/i).selectOption({
+      label: "Transportation",
+    });
+    await page.getByLabel(/maximum/i).fill("2000");
+    await page.getByLabel(/theme/i).selectOption({
+      label: "Pink",
+    });
+    await page
+      .getByRole("button", {
+        name: /add budget/i,
+      })
+      .click();
+
+    await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+      /entertainment/i,
+      /bills/i,
+      /dining out/i,
+      /personal care/i,
+      /transportation/i,
+    ]);
+    // todo: Scroll
+    // await expect(lastBudget).toBeInViewport();
+    await expect(
+      page
+        .getByTestId("budget")
+        .last()
+        .getByText(/maximum/i),
+    ).toHaveText(/\$2,000.00/i);
+  });
+
+  test("can edit budget", async ({ page, resetDatabase }) => {
+    await page.goto("/budgets");
+
+    const firstBudget = page.getByTestId("budget").first();
+    await expect(
+      firstBudget.getByRole("heading", { name: /entertainment/i }),
+    ).toBeVisible();
+    await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
+
+    await firstBudget
+      .getByRole("link", {
+        name: /edit/i,
+      })
+      .click();
+
+    await page.getByLabel(/category/i).selectOption({ label: "General" });
+    await page.getByLabel(/maximum/i).fill("750");
+    await page.getByLabel(/theme/i).selectOption({ label: "Blue" });
+    await page
+      .getByRole("button", {
+        name: /save changes/i,
+      })
+      .click();
+
+    await expect(
+      firstBudget.getByRole("heading", {
+        name: "General",
+      }),
+    ).toBeVisible();
+    await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$750.00/i);
   });
 
   test("can delete budget", async ({ page, resetDatabase }) => {
@@ -309,46 +426,6 @@ test("shows budget information", async ({ page }) => {
     /-\$5.00/i,
     /-\$10.00/i,
   ]);
-});
-
-test("can create budget", async ({ page, resetDatabase }) => {
-  const category = "Lifestyle";
-  const theme = "Blue";
-  const max = faker.number.int({
-    min: 1,
-    max: 1000,
-  });
-
-  await page.goto("/budgets");
-  await page
-    .getByRole("link", {
-      name: /add new budget/i,
-    })
-    .click();
-  await page.getByLabel(/category/i).click();
-  await page.getByLabel(category).click();
-  await page.getByLabel(/maximum/i).fill(String(max));
-  await page.getByLabel(/theme/i).click();
-  await page.getByLabel(theme).click();
-  await page
-    .getByRole("button", {
-      name: /add budget/i,
-    })
-    .click();
-
-  await expect(
-    page.getByRole("status").and(page.getByText(/adding budget/i)),
-  ).toBeAttached();
-
-  const lastBudget = page.getByTestId("budget").last();
-  // todo: Scroll
-  // await expect(lastBudget).toBeInViewport();
-  await expect(
-    lastBudget.getByRole("heading", { name: category }),
-  ).toBeVisible();
-  await expect(lastBudget.getByText(/maximum/i)).toHaveText(
-    new RegExp(String(max)),
-  );
 });
 
 test("budgets a11y", async ({ page }) => {
