@@ -393,8 +393,24 @@ test("can cancel budget deletion", async ({ page }) => {
   await expect(dialog).not.toBeAttached();
 });
 
-test.fixme("budget links to its transactions", async ({ page }) => {
-  //
+test("budget links to its transactions", async ({ page }) => {
+  await page.goto("/budgets");
+  await page
+    .getByTestId("budget")
+    .getByRole("link", { name: "see all" })
+    .nth(1)
+    .click();
+
+  await expect(page.getByLabel(/category/i)).toHaveText(/bills/i);
+  await expect(page.getByTestId("category")).toHaveText([
+    /bills/i,
+    /bills/i,
+    /bills/i,
+    /bills/i,
+    /bills/i,
+    /bills/i,
+    /bills/i,
+  ]);
 });
 
 test("shows budget information", async ({ page }) => {

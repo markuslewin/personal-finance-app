@@ -148,7 +148,10 @@ const TransactionsPage = async ({
                         </p>
                       </div>
                     </td>
-                    <td className="py-200 text-preset-5 desktop:px-200">
+                    <td
+                      className="py-200 text-preset-5 desktop:px-200"
+                      data-testid="category"
+                    >
                       {transaction.category.name}
                     </td>
                     <td className="py-200 text-preset-5 desktop:px-200">
