@@ -74,3 +74,5 @@ test("budget", () => {
   expect(screen.getByTestId("budget-spent")).toHaveTextContent(/\$75.00/i);
   expect(screen.getByTestId("budget-free")).toHaveTextContent(/\$25.00/i);
 });
+
+test.todo("budget with negative spending");

@@ -17,6 +17,10 @@ const test = baseTest.extend<{ resetDatabase: undefined }>({
   },
 });
 
+const getPathname = (url: string) => {
+  return new URL(url).pathname;
+};
+
 test("overview has title", async ({ page }) => {
   await page.goto("/");
 
@@ -85,6 +89,7 @@ test("add budget dialog", async ({ page }) => {
       name: /add new budget/i,
     }),
   ).toBeVisible();
+  expect(getPathname(page.url())).toBe("/budgets/add");
 
   await page
     .getByRole("button", {
@@ -97,6 +102,7 @@ test("add budget dialog", async ({ page }) => {
       name: /add new budget/i,
     }),
   ).not.toBeVisible();
+  expect(getPathname(page.url())).toBe("/budgets");
 });
 
 test("budget maximum errors", async ({ page }) => {
@@ -132,12 +138,55 @@ test("budget maximum errors", async ({ page }) => {
   await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
 });
 
-test.fixme("budget with negative spending", async ({ page }) => {
-  // check general, unit/integration test?
-});
+test("can edit budget", async ({ page, resetDatabase }) => {
+  const category = "Groceries";
+  const theme = "Blue";
 
-test.fixme("can edit budget", async ({ page }) => {
-  //
+  await page.goto("/budgets");
+
+  const firstBudget = page.getByTestId("budget").first();
+  await expect(
+    firstBudget.getByRole("heading", { name: /entertainment/i }),
+  ).toBeVisible();
+  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
+
+  await firstBudget
+    .getByRole("button", {
+      name: /actions/i,
+    })
+    .click();
+  await page
+    .getByRole("menuitem", {
+      name: /edit/i,
+    })
+    .click();
+
+  const dialog = page.getByRole("dialog", { name: /edit budget/i });
+  await expect(dialog).toBeVisible();
+  expect(getPathname(page.url())).toMatch(/^\/budgets\/.*\/edit$/i);
+
+  await dialog.getByLabel(/category/i).click();
+  await page.getByLabel(category).click();
+  await dialog.getByLabel(/maximum/i).fill("100");
+  await dialog.getByLabel(/theme/i).click();
+  await page.getByLabel(theme).click();
+  await dialog
+    .getByRole("button", {
+      name: /save changes/i,
+    })
+    .click();
+  await expect(
+    page.getByRole("status").and(page.getByText(/saving changes/i)),
+  ).toBeAttached();
+
+  await expect(dialog).not.toBeAttached();
+  await expect(
+    firstBudget.getByRole("heading", {
+      name: category,
+    }),
+  ).toBeVisible();
+  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$100.00/i);
+  expect(getPathname(page.url())).toBe("/budgets");
 });
 
 test.fixme("can delete budget", async ({ page }) => {
