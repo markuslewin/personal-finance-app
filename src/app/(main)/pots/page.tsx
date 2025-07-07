@@ -57,10 +57,14 @@ const Pot = ({ pot }: PotProps) => {
       style={{
         ["--theme-color" as string]: pot.theme.color,
       }}
+      data-testid="pot"
     >
       <header className="grid grid-cols-[auto_1fr_auto] items-center gap-200">
         <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
-        <h2 className="text-preset-2 [overflow-wrap:anywhere] text-grey-900">
+        <h2
+          className="text-preset-2 [overflow-wrap:anywhere] text-grey-900"
+          data-testid="name"
+        >
           {pot.name}
         </h2>
         <Hydrated>

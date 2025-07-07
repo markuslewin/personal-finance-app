@@ -79,14 +79,15 @@ const AddPotPage = async () => {
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
+                    <Status className="sr-only">
+                      <Pending>Adding pot</Pending>
+                    </Status>
                     <Button type="submit">
-                      <Status>
-                        <Idle>Add Pot</Idle>
-                        <Pending>
-                          <Spinner />
-                          <span className="sr-only">Adding Pot</span>
-                        </Pending>
-                      </Status>
+                      <Idle>Add Pot</Idle>
+                      <Pending>
+                        <Spinner />
+                        <span className="sr-only">Adding Pot</span>
+                      </Pending>
                     </Button>
                   </AddPotForm>
                 </article>
