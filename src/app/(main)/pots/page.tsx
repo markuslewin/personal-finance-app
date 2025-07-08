@@ -84,7 +84,7 @@ const Pot = ({ pot }: PotProps) => {
       </header>
       <div className="mt-500 flex flex-wrap items-center justify-between">
         <h3 id={meterLabelId}>Total Saved</h3>
-        <p className="text-preset-1 text-grey-900">
+        <p className="text-preset-1 text-grey-900" data-testid="total">
           <strong>{currency(pot.total)}</strong>
         </p>
       </div>

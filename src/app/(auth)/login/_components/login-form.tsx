@@ -49,21 +49,26 @@ const LoginForm = () => {
         <Form.Message name="password" />
       </div>
       <p>
+        <Status className="sr-only">
+          <FormStatus>
+            {(status) => {
+              return status.pending ? <>Logging in</> : null;
+            }}
+          </FormStatus>
+        </Status>
         <Button className="w-full" type="submit">
-          <Status>
-            <FormStatus>
-              {(status) => {
-                return status.pending ? (
-                  <>
-                    <Spinner />
-                    <span className="sr-only">Logging In</span>
-                  </>
-                ) : (
-                  <>Log In</>
-                );
-              }}
-            </FormStatus>
-          </Status>
+          <FormStatus>
+            {(status) => {
+              return status.pending ? (
+                <>
+                  <Spinner />
+                  <span className="sr-only">Logging In</span>
+                </>
+              ) : (
+                <>Log In</>
+              );
+            }}
+          </FormStatus>
         </Button>
       </p>
     </Form.Root>

@@ -88,14 +88,15 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                         <Form.Message name="theme" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
+                    <Status className="sr-only">
+                      <Pending>Saving changes</Pending>
+                    </Status>
                     <Button type="submit">
-                      <Status>
-                        <Idle>Save Changes</Idle>
-                        <Pending>
-                          <Spinner />
-                          <span className="sr-only">Saving Changes</span>
-                        </Pending>
-                      </Status>
+                      <Idle>Save Changes</Idle>
+                      <Pending>
+                        <Spinner />
+                        <span className="sr-only">Saving Changes</span>
+                      </Pending>
                     </Button>
                   </EditPotForm>
                 </article>

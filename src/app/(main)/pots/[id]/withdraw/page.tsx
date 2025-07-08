@@ -54,14 +54,15 @@ const WithdrawFromPotPage = async ({
               <Form.Message name="amount" />
             </Dialog.Group>
           </Dialog.Groups>
+          <Status className="sr-only">
+            <Pending>Withdrawing money</Pending>
+          </Status>
           <Button type="submit">
-            <Status>
-              <Idle>Confirm Withdrawal</Idle>
-              <Pending>
-                <Spinner />
-                <span className="sr-only">Withdrawing Money</span>
-              </Pending>
-            </Status>
+            <Idle>Confirm Withdrawal</Idle>
+            <Pending>
+              <Spinner />
+              <span className="sr-only">Withdrawing Money</span>
+            </Pending>
           </Button>
         </WithdrawForm>
       </Dialog.Content>

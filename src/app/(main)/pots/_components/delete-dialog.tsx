@@ -54,14 +54,15 @@ export const Portal = ({ pot, ...props }: PortalProps) => {
                 </AlertDialog.Description>
                 <DeletePotForm id={pot.id}>
                   <Form.HiddenField name="id" />
+                  <Status className="sr-only">
+                    <Pending>Deleting pot</Pending>
+                  </Status>
                   <Button type="submit" intent="destroy">
-                    <Status>
-                      <Idle>Yes, Confirm Deletion</Idle>
-                      <Pending>
-                        <Spinner />
-                        <span className="sr-only">Deleting Pot</span>
-                      </Pending>
-                    </Status>
+                    <Idle>Yes, Confirm Deletion</Idle>
+                    <Pending>
+                      <Spinner />
+                      <span className="sr-only">Deleting Pot</span>
+                    </Pending>
                   </Button>
                 </DeletePotForm>
                 <AlertDialog.Cancel asChild>

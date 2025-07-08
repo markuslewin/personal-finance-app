@@ -62,14 +62,15 @@ const AddMoneyToPotPage = async ({
                         <Form.Message name="amount" />
                       </DialogUI.Group>
                     </DialogUI.Groups>
+                    <Status className="sr-only">
+                      <Pending>Withdrawing money</Pending>
+                    </Status>
                     <Button type="submit">
-                      <Status>
-                        <Idle>Confirm Withdrawal</Idle>
-                        <Pending>
-                          <Spinner />
-                          <span className="sr-only">Withdrawing Money</span>
-                        </Pending>
-                      </Status>
+                      <Idle>Confirm Withdrawal</Idle>
+                      <Pending>
+                        <Spinner />
+                        <span className="sr-only">Withdrawing Money</span>
+                      </Pending>
                     </Button>
                   </WithdrawForm>
                 </article>

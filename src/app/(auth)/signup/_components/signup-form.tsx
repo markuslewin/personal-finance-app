@@ -54,21 +54,26 @@ const SignupForm = () => {
         <Form.Message name="create-password" />
       </div>
       <p>
+        <Status className="sr-only">
+          <FormStatus>
+            {(status) => {
+              return status.pending ? <>Signing in</> : null;
+            }}
+          </FormStatus>
+        </Status>
         <Button className="w-full" type="submit">
-          <Status>
-            <FormStatus>
-              {(status) => {
-                return status.pending ? (
-                  <>
-                    <Spinner />
-                    <span className="sr-only">Signing In</span>
-                  </>
-                ) : (
-                  <>Sign In</>
-                );
-              }}
-            </FormStatus>
-          </Status>
+          <FormStatus>
+            {(status) => {
+              return status.pending ? (
+                <>
+                  <Spinner />
+                  <span className="sr-only">Signing In</span>
+                </>
+              ) : (
+                <>Sign In</>
+              );
+            }}
+          </FormStatus>
         </Button>
       </p>
     </Form.Root>
