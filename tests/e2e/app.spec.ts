@@ -742,7 +742,12 @@ test("budget links to its transactions", async ({ page }) => {
     .click();
 
   await expect(page.getByLabel(/category/i)).toHaveText(/bills/i);
-  await expect(page.getByTestId("category")).toHaveText([
+  await expect(
+    page
+      .getByTestId("transaction")
+      .getByTestId("category")
+      .filter({ visible: true }),
+  ).toHaveText([
     /bills/i,
     /bills/i,
     /bills/i,
