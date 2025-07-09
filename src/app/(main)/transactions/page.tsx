@@ -209,41 +209,18 @@ const TransactionsPage = async ({
                   "sr-only text-grey-900 transition-colors tablet:not-sr-only",
                   !isFirstPage ? "group-hocus:text-white" : "",
                 )}
+                aria-hidden="true"
               >
                 Prev
               </span>
+              <span className="sr-only">Previous</span>
             </Link>
           </p>
-          <ol className="flex flex-wrap justify-center gap-100" role="list">
-            {/* todo: Ellipsis */}
-            {new Array(totalPages).fill(null).map((_, i) => {
-              const p = i + 1;
-              const isCurrent = p === page;
-              return (
-                <li className="grid" key={p}>
-                  {typeof p === "number" ? (
-                    <Link
-                      className={cx(
-                        "grid size-500 place-items-center rounded-lg border-[0.0625rem] transition-colors",
-                        isCurrent
-                          ? "border-grey-900 bg-grey-900 text-white"
-                          : "border-beige-500 hocus:bg-beige-500 hocus:text-white",
-                      )}
-                      href={`/transactions?${createSearchParams(p)}`}
-                      scroll={false}
-                      aria-current={isCurrent ? "page" : undefined}
-                    >
-                      {p}
-                    </Link>
-                  ) : (
-                    <p className="grid size-500 place-items-center rounded-lg border-[0.0625rem] border-beige-500">
-                      {p}
-                    </p>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
+          <Pages
+            page={page}
+            totalPages={totalPages}
+            createSearchParams={createSearchParams}
+          />
           <p className="grid grow justify-end">
             <Link
               className={cx(
@@ -291,6 +268,58 @@ const SearchResultsSection = ({
       </h2>
       {children}
     </section>
+  );
+};
+
+type PagesProps = {
+  page: number;
+  totalPages: number;
+  createSearchParams: (page: number) => URLSearchParams;
+};
+
+const Pages = ({ page, totalPages, createSearchParams }: PagesProps) => {
+  const pagesId = useId();
+
+  return (
+    <>
+      <p className="sr-only">
+        <span id={pagesId}>Pages</span>:
+      </p>
+      <ol
+        className="flex flex-wrap justify-center gap-100"
+        role="list"
+        aria-labelledby={pagesId}
+      >
+        {/* todo: Ellipsis */}
+        {new Array(totalPages).fill(null).map((_, i) => {
+          const p = i + 1;
+          const isCurrent = p === page;
+          return (
+            <li className="grid" key={p}>
+              {typeof p === "number" ? (
+                <Link
+                  className={cx(
+                    "grid size-500 place-items-center rounded-lg border-[0.0625rem] transition-colors",
+                    isCurrent
+                      ? "border-grey-900 bg-grey-900 text-white"
+                      : "border-beige-500 hocus:bg-beige-500 hocus:text-white",
+                  )}
+                  href={`/transactions?${createSearchParams(p)}`}
+                  scroll={false}
+                  aria-current={isCurrent ? "page" : undefined}
+                >
+                  {p}
+                </Link>
+              ) : (
+                <p className="grid size-500 place-items-center rounded-lg border-[0.0625rem] border-beige-500">
+                  {p}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </>
   );
 };
 

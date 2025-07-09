@@ -217,8 +217,38 @@ test("can sort transactions", async ({ page }) => {
   ]);
 });
 
-test.fixme("transactions pagination", async ({ page }) => {
-  //
+test("transactions pagination", async ({ page }) => {
+  await page.goto("/transactions");
+
+  const pages = page.getByRole("list", { name: "pages" }).getByRole("link");
+
+  await expect(
+    page.getByTestId("transaction").filter({ visible: true }),
+  ).toHaveCount(10);
+  await expect(page.getByRole("link", { name: "previous" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+  await expect(pages.first()).toHaveAttribute("aria-current", "page");
+  await expect(pages.last()).not.toHaveAttribute("aria-current");
+  await expect(page.getByRole("link", { name: "next" })).not.toHaveAttribute(
+    "aria-current",
+  );
+
+  await pages.last().click();
+
+  await expect(
+    page.getByTestId("transaction").filter({ visible: true }),
+  ).toHaveCount(9);
+  await expect(
+    page.getByRole("link", { name: "previous" }),
+  ).not.toHaveAttribute("aria-current");
+  await expect(pages.first()).not.toHaveAttribute("aria-current");
+  await expect(pages.last()).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("link", { name: "next" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
 });
 
 test.describe("on mobile", () => {
