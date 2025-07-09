@@ -75,6 +75,7 @@ const TransactionsPage = async ({
                 <li
                   className="grid grid-cols-[auto_1fr_auto] items-center gap-150"
                   key={transaction.id}
+                  data-testid="transaction"
                 >
                   <Image
                     className="size-400 rounded-full object-cover"
@@ -84,12 +85,17 @@ const TransactionsPage = async ({
                     height={160}
                   />
                   <div className="grid gap-50">
-                    <h3 className="text-preset-4-bold text-grey-900">
+                    <h3
+                      className="text-preset-4-bold text-grey-900"
+                      data-testid="name"
+                    >
                       {transaction.name}
                     </h3>
                     <p className="text-preset-5">
                       <span className="sr-only">Category: </span>
-                      {transaction.category.name}
+                      <span data-testid="category">
+                        {transaction.category.name}
+                      </span>
                     </p>
                   </div>
                   <div className="grid gap-50 text-end">
@@ -100,13 +106,15 @@ const TransactionsPage = async ({
                       )}
                     >
                       <span className="sr-only">Amount: </span>
-                      {currency(transaction.amount, {
-                        signDisplay: "always",
-                      })}
+                      <span data-testid="amount">
+                        {currency(transaction.amount, {
+                          signDisplay: "always",
+                        })}
+                      </span>
                     </p>
                     <p className="text-preset-5">
                       <span className="sr-only">Date: </span>
-                      {date(transaction.date)}
+                      <span data-testid="date">{date(transaction.date)}</span>
                     </p>
                   </div>
                 </li>
@@ -133,7 +141,7 @@ const TransactionsPage = async ({
             <tbody className="mt-100 divide-y-[0.0625rem] divide-grey-100">
               {transactions.map((transaction) => {
                 return (
-                  <tr key={transaction.id}>
+                  <tr key={transaction.id} data-testid="transaction">
                     <td className="py-200 desktop:px-200">
                       <div className="grid grid-cols-[auto_1fr] items-center gap-200">
                         <Image
@@ -143,7 +151,10 @@ const TransactionsPage = async ({
                           width={160}
                           height={160}
                         />
-                        <p className="text-preset-4-bold text-grey-900">
+                        <p
+                          className="text-preset-4-bold text-grey-900"
+                          data-testid="name"
+                        >
                           {transaction.name}
                         </p>
                       </div>
@@ -154,7 +165,10 @@ const TransactionsPage = async ({
                     >
                       {transaction.category.name}
                     </td>
-                    <td className="py-200 text-preset-5 desktop:px-200">
+                    <td
+                      className="py-200 text-preset-5 desktop:px-200"
+                      data-testid="date"
+                    >
                       {date(transaction.date)}
                     </td>
                     <td
@@ -162,6 +176,7 @@ const TransactionsPage = async ({
                         "py-200 text-end text-preset-4-bold desktop:px-200",
                         transaction.amount > 0 ? "text-green" : "text-grey-900",
                       )}
+                      data-testid="amount"
                     >
                       {currency(transaction.amount, {
                         signDisplay: "always",
