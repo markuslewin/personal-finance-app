@@ -56,7 +56,7 @@
     "@axe-core/playwright": "^4.10.2",
     "@faker-js/faker": "^9.9.0",
     "@jest/globals": "^30.0.4",
-    "@playwright/test": "^1.53.1",
+    "@playwright/test": "^1.53.2",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@testcontainers/mssqlserver": "^11.0.3",
