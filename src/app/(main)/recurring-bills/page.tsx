@@ -137,7 +137,7 @@ const RecurringBillsPage = async ({
                 const isDueSoon = getIsDueSoon(date, bill);
 
                 return (
-                  <li className="grid gap-100" key={bill.id}>
+                  <li className="grid gap-100" key={bill.id} data-testid="bill">
                     <div className="grid grid-cols-[auto_1fr] items-center gap-200">
                       <Image
                         className="size-400 rounded-full object-cover"
@@ -146,7 +146,10 @@ const RecurringBillsPage = async ({
                         width={160}
                         height={160}
                       />
-                      <h4 className="text-preset-4-bold text-grey-900">
+                      <h4
+                        className="text-preset-4-bold text-grey-900"
+                        data-testid="name"
+                      >
                         {bill.name}
                       </h4>
                     </div>
@@ -178,7 +181,9 @@ const RecurringBillsPage = async ({
                         )}
                       >
                         <span className="sr-only">Amount: </span>
-                        {currency(bill.amount)}
+                        <span data-testid="amount">
+                          {currency(bill.amount)}
+                        </span>
                       </p>
                     </div>
                   </li>
@@ -205,7 +210,7 @@ const RecurringBillsPage = async ({
                   const isDueSoon = getIsDueSoon(date, bill);
 
                   return (
-                    <tr key={bill.id}>
+                    <tr key={bill.id} data-testid="bill">
                       <td className="py-250 desktop:px-200">
                         <div className="grid grid-cols-[auto_1fr] items-center gap-200">
                           <Image
@@ -215,7 +220,10 @@ const RecurringBillsPage = async ({
                             width={160}
                             height={160}
                           />
-                          <p className="text-preset-4-bold text-grey-900">
+                          <p
+                            className="text-preset-4-bold text-grey-900"
+                            data-testid="name"
+                          >
                             {bill.name}
                           </p>
                         </div>
@@ -246,6 +254,7 @@ const RecurringBillsPage = async ({
                           "py-200 text-end text-preset-4-bold text-grey-900 desktop:px-200",
                           isDueSoon ? "text-red" : null,
                         )}
+                        data-testid="amount"
                       >
                         {currency(bill.amount)}
                       </td>

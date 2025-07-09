@@ -3,7 +3,7 @@
     "rule": "color-contrast",
     "targets": [
       [
-        ".tablet\\:grid-cols-\\[auto_1fr\\] > .tablet\\:not-sr-only.transition-colors.text-grey-900"
+        ".tablet\\:not-sr-only.transition-colors[aria-hidden=\"true\"]"
       ]
     ]
   }
