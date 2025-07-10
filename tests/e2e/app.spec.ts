@@ -1,4 +1,4 @@
-import { test as baseTest, expect } from "@playwright/test";
+import { test as baseTest, expect, Page } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
 import { violationFingerprints } from "tests/playwright-utils";
 import { faker } from "@faker-js/faker";
@@ -16,6 +16,12 @@ const test = baseTest.extend<{ resetDatabase: undefined }>({
     })`prisma migrate reset --force --skip-generate`;
   },
 });
+
+const waitForHydration = (page: Page) => {
+  return page.waitForSelector('html[data-hydrated="true"]', {
+    state: "attached",
+  });
+};
 
 test("menu highlights current page", async ({ page }) => {
   await page.goto("/");
@@ -162,6 +168,7 @@ test("can filter transactions by category", async ({ page }) => {
 
 test("can sort transactions", async ({ page }) => {
   await page.goto("/transactions");
+  await waitForHydration(page);
   await page.getByLabel("sort by").click();
   await page.getByRole("option", { name: "a to z" }).click();
 
@@ -279,8 +286,7 @@ test.describe("on mobile", () => {
 
   test("can filter transactions by category", async ({ page }) => {
     await page.goto("/transactions");
-    // todo: Waiting for JS..?
-    await page.waitForFunction(() => true);
+    await waitForHydration(page);
     await page.getByLabel("category").click();
     await page.getByRole("option", { name: "groceries" }).click();
 
@@ -300,8 +306,7 @@ test.describe("on mobile", () => {
 
   test("can sort transactions", async ({ page }) => {
     await page.goto("/transactions");
-    // todo: Waiting for JS..?
-    await page.waitForFunction(() => true);
+    await waitForHydration(page);
     await page.getByRole("combobox", { name: "sort by" }).click();
     await page.getByRole("option", { name: "highest" }).click();
 
@@ -1203,6 +1208,7 @@ test("can search recurring bills", async ({ page }) => {
 
 test("can sort recurring bills", async ({ page }) => {
   await page.goto("/recurring-bills");
+  await waitForHydration(page);
   await page.getByRole("combobox", { name: "sort by" }).click();
   await page.getByRole("option", { name: "a to z" }).click();
 
@@ -1251,7 +1257,7 @@ test.describe("on mobile", () => {
 
   test("can sort recurring bills", async ({ page }) => {
     await page.goto("/recurring-bills");
-    await page.waitForFunction(() => true);
+    await waitForHydration(page);
     await page.getByRole("combobox", { name: "sort by" }).click();
     await page.getByRole("option", { name: "Highest" }).click();
 
@@ -1294,8 +1300,6 @@ test.describe("javascript disabled", () => {
   });
 
   test("can sort recurring bills", async ({ page }) => {
-    test.setTimeout(5000);
-
     await page.goto("/recurring-bills");
     await page
       .getByRole("combobox", { name: "sort by" })

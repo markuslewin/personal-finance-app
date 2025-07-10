@@ -7,7 +7,7 @@ import { type ReactNode, useSyncExternalStore } from "react";
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const subscribe = () => () => {};
 
-const useHydrated = () => {
+export const useHydrated = () => {
   return useSyncExternalStore(
     subscribe,
     () => true,

@@ -8,6 +8,7 @@ import { publicSans } from "~/app/_fonts";
 // import { getSession } from "~/app/_auth";
 
 import { type ReactNode } from "react";
+import { Html } from "~/app/_components/html";
 
 export const metadata: Metadata = {
   title: {
@@ -43,10 +44,10 @@ export default async function RootLayout({
   // }
 
   return (
-    <html lang="en" className={`${publicSans.variable}`}>
+    <Html lang="en" className={`${publicSans.variable}`}>
       <body className="bg-grey-900 font-public-sans text-preset-4 text-white">
         {children}
       </body>
-    </html>
+    </Html>
   );
 }
