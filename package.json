@@ -74,7 +74,7 @@
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^15.0.1",
+    "eslint-config-next": "^15.3.5",
     "execa": "^9.6.0",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
