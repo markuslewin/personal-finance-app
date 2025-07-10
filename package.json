@@ -58,7 +58,7 @@
     "@jest/globals": "^30.0.4",
     "@playwright/test": "^1.53.1",
     "@svgr/webpack": "^8.1.0",
-    "@tailwindcss/postcss": "^4.0.9",
+    "@tailwindcss/postcss": "^4.1.11",
     "@testcontainers/mssqlserver": "^11.0.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
