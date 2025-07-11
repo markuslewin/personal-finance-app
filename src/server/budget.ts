@@ -1,8 +1,10 @@
 import "server-only";
 import { Prisma } from "@prisma/client";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
 
 export const getBudget = async (id: string) => {
+  const user = await getUser();
   return db.budget.findUnique({
     select: {
       id: true,
@@ -21,11 +23,13 @@ export const getBudget = async (id: string) => {
     },
     where: {
       id,
+      userId: user.id,
     },
   });
 };
 
-export const getBudgets = () => {
+export const getBudgets = async () => {
+  const user = await getUser();
   return db.budget.findMany({
     select: {
       id: true,
@@ -41,13 +45,17 @@ export const getBudgets = () => {
         },
       },
     },
+    where: {
+      userId: user.id,
+    },
     orderBy: {
       createdAt: "asc",
     },
   });
 };
 
-export const getBudgetsWithTransactions = () => {
+export const getBudgetsWithTransactions = async () => {
+  const user = await getUser();
   return db.budget.findMany({
     select: {
       id: true,
@@ -76,6 +84,9 @@ export const getBudgetsWithTransactions = () => {
           color: true,
         },
       },
+    },
+    where: {
+      userId: user.id,
     },
     orderBy: {
       createdAt: "asc",

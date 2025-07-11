@@ -1,7 +1,35 @@
 import "server-only";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
-import { createSession } from "~/app/_auth";
+import { createSession, verifySession } from "~/app/_auth";
+import { userSeed } from "~/data/data";
+
+export const getUser = async () => {
+  const session = await verifySession();
+  if (session) {
+    const user = await db.user.findUnique({
+      select: {
+        id: true,
+        demo: true,
+      },
+      where: {
+        id: session.userId,
+      },
+    });
+    if (user) {
+      return user;
+    }
+  }
+  return db.user.findFirstOrThrow({
+    select: {
+      id: true,
+      demo: true,
+    },
+    where: {
+      demo: true,
+    },
+  });
+};
 
 export const logIn = async ({
   email,
@@ -71,11 +99,12 @@ export const signUp = async ({
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  // todo: Seed tables of mutable data with `user.id`
   const user = await db.user.create({
     data: {
+      ...userSeed,
       email,
       name,
+      demo: false,
       password: {
         create: {
           hash: hashedPassword,

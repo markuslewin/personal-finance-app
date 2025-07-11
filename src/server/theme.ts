@@ -1,7 +1,9 @@
 import "server-only";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
 
-export const getThemesWithBudget = () => {
+export const getThemesWithBudget = async () => {
+  const user = await getUser();
   return db.theme.findMany({
     select: {
       id: true,
@@ -11,6 +13,9 @@ export const getThemesWithBudget = () => {
         select: {
           id: true,
         },
+        where: {
+          userId: user.id,
+        },
       },
     },
     orderBy: {
@@ -19,7 +24,8 @@ export const getThemesWithBudget = () => {
   });
 };
 
-export const getThemesWithPot = () => {
+export const getThemesWithPot = async () => {
+  const user = await getUser();
   return db.theme.findMany({
     select: {
       id: true,
@@ -28,6 +34,9 @@ export const getThemesWithPot = () => {
       Pot: {
         select: {
           id: true,
+        },
+        where: {
+          userId: user.id,
         },
       },
     },

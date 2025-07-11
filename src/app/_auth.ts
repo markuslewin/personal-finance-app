@@ -18,7 +18,7 @@ export const createSession = async (userId: string) => {
   });
 };
 
-export const getSession = async () => {
+export const verifySession = async () => {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(name);
   if (!cookie) {
@@ -27,7 +27,7 @@ export const getSession = async () => {
   for (const secret of env.SESSION_SECRET) {
     const unsigned = unsign(cookie.value, secret);
     if (unsigned !== false) {
-      return unsigned;
+      return { userId: unsigned };
     }
   }
   return null;

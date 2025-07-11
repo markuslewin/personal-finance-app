@@ -1,21 +1,8 @@
-import { test as baseTest, expect, Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
-import { violationFingerprints } from "tests/playwright-utils";
+import { test, violationFingerprints } from "tests/playwright-utils";
 import { faker } from "@faker-js/faker";
-import { execa } from "execa";
 import { maxInt } from "~/app/_prisma";
-
-// todo: Isolate tests with `login` fixture
-const test = baseTest.extend<{ resetDatabase: undefined }>({
-  resetDatabase: async ({}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await use(undefined);
-
-    await execa({
-      stdio: "inherit",
-    })`prisma migrate reset --force --skip-generate`;
-  },
-});
 
 const waitForHydration = (page: Page) => {
   return page.waitForSelector('html[data-hydrated="true"]', {
@@ -89,7 +76,8 @@ test("overview has title", async ({ page }) => {
   await expect(page).toHaveTitle(/overview/i);
 });
 
-test("overview has data", async ({ page }) => {
+test("overview has data", async ({ page, login }) => {
+  await login();
   await page.goto("/");
 
   await expect(page.getByTestId("current-balance")).not.toHaveText(/\$0/i);
@@ -480,6 +468,14 @@ test("add budget dialog", async ({ page }) => {
   await expect(page).toHaveURL(/\/budgets$/i);
 });
 
+test.fixme("user only sees its own budgets/pots", async ({}) => {
+  //
+});
+
+test.fixme("user sees available categories/themes", async ({}) => {
+  //
+});
+
 test("budget maximum errors", async ({ page }) => {
   await page.goto("/budgets");
   await page.getByRole("link", { name: /add new budget/i }).click();
@@ -513,7 +509,7 @@ test("budget maximum errors", async ({ page }) => {
   await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
 });
 
-test("can create budget", async ({ page, resetDatabase }) => {
+test("can create budget", async ({ page, login }) => {
   const category = "Lifestyle";
   const theme = "Blue";
   const max = faker.number.int({
@@ -521,6 +517,7 @@ test("can create budget", async ({ page, resetDatabase }) => {
     max: 1000,
   });
 
+  await login();
   await page.goto("/budgets");
   await page
     .getByRole("link", {
@@ -553,10 +550,11 @@ test("can create budget", async ({ page, resetDatabase }) => {
   );
 });
 
-test("can edit budget", async ({ page, resetDatabase }) => {
+test("can edit budget", async ({ page, login }) => {
   const category = "Groceries";
   const theme = "Blue";
 
+  await login();
   await page.goto("/budgets");
 
   const firstBudget = page.getByTestId("budget").first();
@@ -604,7 +602,8 @@ test("can edit budget", async ({ page, resetDatabase }) => {
   await expect(page).toHaveURL(/\/budgets$/i);
 });
 
-test("can delete budget", async ({ page, resetDatabase }) => {
+test("can delete budget", async ({ page, login }) => {
+  await login();
   await page.goto("/budgets");
 
   await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
@@ -642,7 +641,8 @@ test.describe("javascript disabled", () => {
     javaScriptEnabled: false,
   });
 
-  test("can create budget", async ({ page, resetDatabase }) => {
+  test("can create budget", async ({ page, login }) => {
+    await login();
     await page.goto("/budgets");
 
     await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
@@ -687,7 +687,8 @@ test.describe("javascript disabled", () => {
     ).toHaveText(/\$2,000.00/i);
   });
 
-  test("can edit budget", async ({ page, resetDatabase }) => {
+  test("can edit budget", async ({ page, login }) => {
+    await login();
     await page.goto("/budgets");
 
     const firstBudget = page.getByTestId("budget").first();
@@ -719,7 +720,8 @@ test.describe("javascript disabled", () => {
     await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$750.00/i);
   });
 
-  test("can delete budget", async ({ page, resetDatabase }) => {
+  test("can delete budget", async ({ page, login }) => {
+    await login();
     await page.goto("/budgets");
 
     await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
@@ -848,7 +850,8 @@ test("pots title", async ({ page }) => {
   await expect(page).toHaveTitle(/pots/i);
 });
 
-test("can create pot", async ({ page, resetDatabase }) => {
+test("can create pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -888,7 +891,8 @@ test("can create pot", async ({ page, resetDatabase }) => {
   ]);
 });
 
-test("can edit pot", async ({ page, resetDatabase }) => {
+test("can edit pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -925,7 +929,8 @@ test("can edit pot", async ({ page, resetDatabase }) => {
   ]);
 });
 
-test("can delete pot", async ({ page, resetDatabase }) => {
+test("can delete pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -957,7 +962,8 @@ test("can delete pot", async ({ page, resetDatabase }) => {
   ]);
 });
 
-test("can add money to pot", async ({ page, resetDatabase }) => {
+test("can add money to pot", async ({ page, login }) => {
+  await login();
   await page.goto("/");
 
   const balance = page.getByTestId("current-balance");
@@ -988,7 +994,8 @@ test("can add money to pot", async ({ page, resetDatabase }) => {
   await expect(balance).toHaveText(/\$4,500.00/i);
 });
 
-test("can withdraw money from pot", async ({ page, resetDatabase }) => {
+test("can withdraw money from pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   const thirdPot = page.getByTestId("pot").nth(2);
@@ -1048,7 +1055,8 @@ test.describe("javascript disabled", () => {
     javaScriptEnabled: false,
   });
 
-  test("can create pot", async ({ page, resetDatabase }) => {
+  test("can create pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -1079,7 +1087,8 @@ test.describe("javascript disabled", () => {
     ]);
   });
 
-  test("can edit pot", async ({ page, resetDatabase }) => {
+  test("can edit pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -1110,7 +1119,8 @@ test.describe("javascript disabled", () => {
     ]);
   });
 
-  test("can delete pot", async ({ page, resetDatabase }) => {
+  test("can delete pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -1134,7 +1144,8 @@ test.describe("javascript disabled", () => {
     ]);
   });
 
-  test("can add money to pot", async ({ page, resetDatabase }) => {
+  test("can add money to pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     const lastPot = page.getByTestId("pot").last();
@@ -1155,7 +1166,8 @@ test.describe("javascript disabled", () => {
     await expect(page.getByTestId("current-balance")).toHaveText(/\$4,767.00/i);
   });
 
-  test("can withdraw money from pot", async ({ page, resetDatabase }) => {
+  test("can withdraw money from pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     const lastPot = page.getByTestId("pot").last();

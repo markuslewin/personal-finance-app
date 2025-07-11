@@ -14,6 +14,7 @@ import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
 import { getThemesWithPot } from "~/server/theme";
+import { isUnavailable } from "~/app/(main)/@dialog/(.)pots/[id]/edit/_utils";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -82,7 +83,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                           name="theme"
                           themes={themes.map((t) => ({
                             ...t,
-                            unavailable: t.Pot !== null && t.Pot.id !== pot.id,
+                            unavailable: isUnavailable(t.Pot, pot.id),
                           }))}
                         />
                         <Form.Message name="theme" />

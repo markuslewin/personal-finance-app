@@ -1,8 +1,10 @@
 import { Prisma } from "@prisma/client";
 import "server-only";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
 
-export const getPot = (id: string) => {
+export const getPot = async (id: string) => {
+  const user = await getUser();
   return db.pot.findUnique({
     select: {
       id: true,
@@ -17,11 +19,13 @@ export const getPot = (id: string) => {
     },
     where: {
       id,
+      userId: user.id,
     },
   });
 };
 
-export const getPots = () => {
+export const getPots = async () => {
+  const user = await getUser();
   return db.pot.findMany({
     select: {
       id: true,
@@ -33,6 +37,9 @@ export const getPots = () => {
         },
       },
       total: true,
+    },
+    where: {
+      userId: user.id,
     },
     orderBy: {
       createdAt: "asc",
