@@ -48,6 +48,8 @@ export const test = baseTest.extend<{
       await page.getByRole("textbox", { name: "name" }).fill(user.name);
       await page.getByRole("textbox", { name: "email" }).fill(user.email);
       await page.getByRole("textbox", { name: "password" }).fill(user.password);
+      await page.getByRole("button", { name: "create account" }).click();
+      await page.waitForURL("/");
 
       return {
         user,

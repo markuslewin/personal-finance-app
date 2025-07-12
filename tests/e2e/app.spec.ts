@@ -850,6 +850,10 @@ test("pots title", async ({ page }) => {
   await expect(page).toHaveTitle(/pots/i);
 });
 
+test.fixme("demo user can't create/update/delete pot/budget", async ({}) => {
+  //
+});
+
 test("can create pot", async ({ page, login }) => {
   await login();
   await page.goto("/pots");

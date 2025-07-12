@@ -17,7 +17,7 @@ model Balance {
     expenses Int
 
     userId String @unique
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -58,17 +58,18 @@ model Budget {
     id      String @id @default(cuid())
     maximum Int
 
-    categoryId String   @unique
+    categoryId String
     category   Category @relation(fields: [categoryId], references: [id])
-    themeId    String   @unique
+    themeId    String
     theme      Theme    @relation(fields: [themeId], references: [id])
     userId     String
-    user       User     @relation(fields: [userId], references: [id])
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([themeId, userId])
+    @@unique([categoryId, userId])
 }
 
 model Pot {
@@ -77,10 +78,10 @@ model Pot {
     target Int
     total  Int
 
-    themeId String @unique
+    themeId String
     theme   Theme  @relation(fields: [themeId], references: [id])
     userId  String
-    user    User   @relation(fields: [userId], references: [id])
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

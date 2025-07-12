@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { env } from "~/env";
 import { sign, unsign } from "cookie-signature";
+import { getUser } from "~/server/user";
+import { redirect } from "next/navigation";
 
 const name = "userId";
 
@@ -36,4 +38,15 @@ export const verifySession = async () => {
 export const deleteSession = async () => {
   const cookieStore = await cookies();
   cookieStore.delete(name);
+};
+
+export const requireRealUser = async () => {
+  const user = await getUser();
+  if (user.demo) {
+    redirect("/login");
+  }
+  return {
+    ...user,
+    demo: user.demo,
+  };
 };

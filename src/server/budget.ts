@@ -2,6 +2,7 @@ import "server-only";
 import { Prisma } from "@prisma/client";
 import { db } from "~/server/db";
 import { getUser } from "~/server/user";
+import { requireRealUser } from "~/app/_auth";
 
 export const getBudget = async (id: string) => {
   const user = await getUser();
@@ -100,6 +101,7 @@ export const createBudget = async (data: {
   themeId: string;
 }) => {
   try {
+    const user = await requireRealUser();
     return await db.budget.create({
       data: {
         maximum: data.maximum,
@@ -111,6 +113,11 @@ export const createBudget = async (data: {
         theme: {
           connect: {
             id: data.themeId,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
           },
         },
       },

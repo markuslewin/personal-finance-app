@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import "server-only";
+import { requireRealUser } from "~/app/_auth";
 import { db } from "~/server/db";
 import { getUser } from "~/server/user";
 
@@ -53,6 +54,7 @@ export const createPot = async (data: {
   themeId: string;
 }) => {
   try {
+    const user = await requireRealUser();
     return await db.pot.create({
       data: {
         name: data.name,
@@ -61,6 +63,11 @@ export const createPot = async (data: {
         theme: {
           connect: {
             id: data.themeId,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
           },
         },
       },
