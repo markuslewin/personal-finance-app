@@ -1,4 +1,5 @@
 import data from "~/data/data.json";
+import { Balance, Prisma, User } from "@prisma/client";
 
 export const categories = [
   ...new Set([...data.budgets, ...data.transactions].map((d) => d.category)),
@@ -45,45 +46,51 @@ const getThemeNameByHex = (hex: string) => {
   return name;
 };
 
-export const userSeed = {
-  balance: {
-    create: {
-      current: data.balance.current,
-      expenses: data.balance.expenses,
-      income: data.balance.income,
+export const userSeed = (createdAt: Date) => {
+  return {
+    balance: {
+      create: {
+        current: data.balance.current,
+        expenses: data.balance.expenses,
+        income: data.balance.income,
+      },
     },
-  },
-  budgets: {
-    create: data.budgets.map((budget) => {
-      return {
-        maximum: budget.maximum,
-        category: {
-          connect: {
-            name: budget.category,
+    budgets: {
+      create: data.budgets.map((budget, i) => {
+        return {
+          maximum: budget.maximum,
+          category: {
+            connect: {
+              name: budget.category,
+            },
           },
-        },
-        theme: {
-          // todo: or create?
-          connect: {
-            name: getThemeNameByHex(budget.theme),
+          theme: {
+            // todo: or create?
+            connect: {
+              name: getThemeNameByHex(budget.theme),
+            },
           },
-        },
-      };
-    }),
-  },
-  pots: {
-    create: data.pots.map((pot) => {
-      return {
-        name: pot.name,
-        target: pot.target,
-        total: pot.total,
-        theme: {
-          // todo: or create?
-          connect: {
-            name: getThemeNameByHex(pot.theme),
+          // Guarantee order for sorted reads
+          createdAt: new Date(createdAt.getTime() + i),
+        };
+      }),
+    },
+    pots: {
+      create: data.pots.map((pot, i) => {
+        return {
+          name: pot.name,
+          target: pot.target,
+          total: pot.total,
+          theme: {
+            // todo: or create?
+            connect: {
+              name: getThemeNameByHex(pot.theme),
+            },
           },
-        },
-      };
-    }),
-  },
+          // Guarantee order for sorted reads
+          createdAt: new Date(createdAt.getTime() + i),
+        };
+      }),
+    },
+  };
 };

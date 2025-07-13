@@ -59,7 +59,7 @@ async function main() {
 
   await db.user.create({
     data: {
-      ...userSeed,
+      ...userSeed(createdAtBase),
       name: "Demo",
       email: faker.internet.email(),
       demo: true,

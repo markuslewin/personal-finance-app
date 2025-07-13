@@ -101,7 +101,7 @@ export const signUp = async ({
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await db.user.create({
     data: {
-      ...userSeed,
+      ...userSeed(new Date()),
       email,
       name,
       demo: false,
