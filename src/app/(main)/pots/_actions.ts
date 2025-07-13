@@ -12,9 +12,11 @@ import {
   type AddMoneySchema,
   withdrawSchema,
   type PotSchema,
+  type EditPotSchema,
 } from "~/app/(main)/pots/_schemas";
 import { db } from "~/server/db";
 import {
+  addMoneyToPot,
   createPot,
   deletePot,
   getPot,
@@ -34,12 +36,15 @@ export const add = async (prevState: unknown, formData: FormData) => {
         });
       } catch (error) {
         if (error instanceof PotError) {
-          ctx.addIssue({
-            path: [error.cause.field] satisfies [keyof PotSchema],
-            code: z.ZodIssueCode.custom,
-            message: error.message,
-          });
-          return z.NEVER;
+          const result = potSchema.keyof().safeParse(error.cause.field);
+          if (result.success) {
+            ctx.addIssue({
+              path: [result.data] satisfies [keyof PotSchema],
+              code: z.ZodIssueCode.custom,
+              message: error.message,
+            });
+            return z.NEVER;
+          }
         }
         throw error;
       }
@@ -67,11 +72,14 @@ export const edit = async (prevState: unknown, formData: FormData) => {
         return true;
       } catch (error) {
         if (error instanceof PotError) {
-          ctx.addIssue({
-            path: [error.cause.field] satisfies [keyof PotSchema],
-            code: z.ZodIssueCode.custom,
-            message: error.message,
-          });
+          const result = editPotSchema.keyof().safeParse(error.cause.field);
+          if (result.success) {
+            ctx.addIssue({
+              path: [result.data] satisfies [keyof EditPotSchema],
+              code: z.ZodIssueCode.custom,
+              message: error.message,
+            });
+          }
           return z.NEVER;
         }
         throw error;
@@ -106,43 +114,23 @@ export const addMoney = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: addMoneySchema.transform(async (val, ctx) => {
-      // todo: Transaction
-      // todo: Lock
-      const balance = await db.balance.findFirstOrThrow({
-        select: {
-          id: true,
-          current: true,
-        },
-      });
-      if (balance.current < val.amount) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["amount"] satisfies [keyof AddMoneySchema],
-          message: "Insufficient funds",
-        });
-        return z.NEVER;
+      try {
+        await addMoneyToPot(val);
+        return true;
+      } catch (error) {
+        if (error instanceof PotError) {
+          const result = addMoneySchema.keyof().safeParse(error.cause.field);
+          if (result.success) {
+            ctx.addIssue({
+              path: [result.data] satisfies [keyof AddMoneySchema],
+              code: z.ZodIssueCode.custom,
+              message: error.message,
+            });
+            return z.NEVER;
+          }
+        }
+        throw error;
       }
-
-      await db.balance.update({
-        data: {
-          current: balance.current - val.amount,
-        },
-        where: {
-          id: balance.id,
-        },
-      });
-
-      const pot = await getPot(val.id);
-      if (!pot) {
-        throw new Error("Pot not found");
-      }
-
-      await updatePot({
-        id: pot.id,
-        total: pot.total + val.amount,
-      });
-
-      return true;
     }),
   });
   if (submission.status !== "success") {
