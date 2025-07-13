@@ -156,6 +156,8 @@ export const updatePot = async (data: {
 };
 
 export const deletePot = async (id: string) => {
+  const user = await requireRealUser();
+
   // todo: Transaction
   const pot = await db.pot.delete({
     select: {
@@ -163,6 +165,7 @@ export const deletePot = async (id: string) => {
     },
     where: {
       id,
+      userId: user.id,
     },
   });
 
@@ -173,6 +176,7 @@ export const deletePot = async (id: string) => {
     },
     where: {
       id: balance.id,
+      userId: user.id,
     },
   });
 };

@@ -636,6 +636,40 @@ test("can delete budget", async ({ page, login }) => {
   ]);
 });
 
+test("demo user can't delete budget", async ({ page }) => {
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+
+  await page
+    .getByTestId("budget")
+    .filter({ hasText: /bills/i })
+    .getByRole("button", { name: "actions" })
+    .click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+
+  const dialog = page.getByRole("alertdialog", {
+    name: "delete",
+  });
+  await dialog.getByRole("button", { name: "confirm" }).click();
+
+  await expect(page).toHaveURL(/\/login/i);
+
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+});
+
 test.describe("javascript disabled", () => {
   test.use({
     javaScriptEnabled: false,
@@ -961,6 +995,38 @@ test("can delete pot", async ({ page, login }) => {
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
     /savings/i,
     /concert ticket/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+});
+
+test("demo user can't delete pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+
+  const thirdPot = page.getByTestId("pot").nth(2);
+  await thirdPot.getByRole("button", { name: "actions" }).click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+  await page
+    .getByRole("alertdialog", { name: "delete" })
+    .getByRole("button", { name: "confirm" })
+    .click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
     /new laptop/i,
     /holiday/i,
   ]);

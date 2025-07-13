@@ -165,9 +165,11 @@ export const updateBudget = async (data: {
 };
 
 export const deleteBudget = async (id: string) => {
+  const user = await requireRealUser();
   await db.budget.delete({
     where: {
       id,
+      userId: user.id,
     },
   });
 };
