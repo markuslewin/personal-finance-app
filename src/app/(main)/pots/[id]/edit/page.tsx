@@ -15,8 +15,11 @@ import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
 import { getThemesWithPot } from "~/server/theme";
+import { requireRealUser } from "~/app/_auth";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  await requireRealUser();
+
   const id = (await params).id;
   const [pot, themes] = await Promise.all([getPot(id), getThemesWithPot()]);
   if (!pot) {

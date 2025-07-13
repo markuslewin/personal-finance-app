@@ -66,15 +66,6 @@ test("demo user can't create pot", async ({ page }) => {
     })
     .click();
 
-  await expect(page).toHaveURL(/\/pots\/add$/i);
-
-  const dialog = page.getByRole("dialog", { name: "add new pot" });
-  await dialog.getByLabel("name").fill("A new pot");
-  await dialog.getByLabel("target").fill("2000");
-  await dialog.getByLabel("theme").click();
-  await page.getByLabel("Magenta").click();
-  await dialog.getByRole("button", { name: "add pot" }).click();
-
   await expect(page).toHaveURL(/\/login$/i);
 
   await page.goto("/pots");
@@ -140,16 +131,6 @@ test("demo user can't edit pot", async ({ page }) => {
   const firstPot = page.getByTestId("pot").first();
   await firstPot.getByRole("button", { name: "actions" }).click();
   await page.getByRole("menuitem", { name: "edit" }).click();
-
-  await expect(page).toHaveURL(/\/pots\/.*\/edit$/i);
-
-  // todo: Redirect to `/login` before this
-  const dialog = page.getByRole("dialog", { name: "edit pot" });
-  await dialog.getByLabel("name").fill("An edited pot");
-  await dialog.getByLabel("target").fill("3000");
-  await dialog.getByLabel("theme").click();
-  await page.getByLabel("Blue").click();
-  await dialog.getByRole("button", { name: "save" }).click();
 
   await expect(page).toHaveURL(/\/login$/i);
 
@@ -262,34 +243,20 @@ test("can add money to pot", async ({ page, login }) => {
 });
 
 test("demo user can't add money to pot", async ({ page }) => {
-  await page.goto("/");
-
-  const balance = page.getByTestId("current-balance");
-  await expect(balance).toHaveText(/\$4,836.00/i);
-
   await page.goto("/pots");
 
   const firstPot = page.getByTestId("pot").first();
-  const total = firstPot.getByTestId("total");
-  await expect(total).toHaveText(/\$159.00/i);
-
   await firstPot.getByRole("link", { name: "add" }).click();
-
-  await expect(page).toHaveURL(/\/pots\/.*\/add-money/i);
-
-  const dialog = page.getByRole("dialog", { name: "add to" });
-  await dialog.getByLabel("amount to add").fill("336");
-  await dialog.getByRole("button", { name: "confirm" }).click();
 
   await expect(page).toHaveURL(/\/login$/i);
 
   await page.goto("/");
 
-  await expect(balance).toHaveText(/\$4,836.00/i);
+  await expect(page.getByTestId("current-balance")).toHaveText(/\$4,836.00/i);
 
   await page.goto("/pots");
 
-  await expect(total).toHaveText(/\$159.00/i);
+  await expect(firstPot.getByTestId("total")).toHaveText(/\$159.00/i);
 });
 
 test("can withdraw money from pot", async ({ page, login }) => {
@@ -321,12 +288,6 @@ test("demo user can't withdraw money from pot", async ({ page }) => {
 
   const thirdPot = page.getByTestId("pot").nth(2);
   await thirdPot.getByRole("link", { name: "withdraw" }).click();
-
-  await expect(page).toHaveURL(/\/pots\/.*\/withdraw$/i);
-
-  const dialog = page.getByRole("dialog", { name: "withdraw" });
-  await dialog.getByLabel("amount to withdraw").fill("10");
-  await dialog.getByRole("button", { name: "confirm" }).click();
 
   await expect(page).toHaveURL(/\/login$/i);
 
@@ -519,7 +480,8 @@ test("pots a11y", async ({ page }) => {
   expect(results.violations).toEqual([]);
 });
 
-test("add pot a11y", async ({ page }) => {
+test("add pot a11y", async ({ page, login }) => {
+  await login();
   await page.goto("/pots/add");
 
   const results = await new AxeBuilder({ page }).analyze();

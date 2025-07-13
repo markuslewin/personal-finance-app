@@ -10,8 +10,11 @@ import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getThemesWithPot } from "~/server/theme";
+import { requireRealUser } from "~/app/_auth";
 
 const AddPotPage = async () => {
+  await requireRealUser();
+
   const themes = await getThemesWithPot();
 
   // todo: Disable "Add New Pot"

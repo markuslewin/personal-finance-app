@@ -11,12 +11,15 @@ import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
+import { requireRealUser } from "~/app/_auth";
 
 const WithdrawFromPotPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) => {
+  await requireRealUser();
+
   const id = (await params).id;
   const pot = await getPot(id);
   if (!pot) {
