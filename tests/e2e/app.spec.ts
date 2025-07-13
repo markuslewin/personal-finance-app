@@ -602,6 +602,56 @@ test("can edit budget", async ({ page, login }) => {
   await expect(page).toHaveURL(/\/budgets$/i);
 });
 
+test("demo user can't edit budget", async ({ page }) => {
+  const category = "Groceries";
+  const theme = "Blue";
+
+  await page.goto("/budgets");
+
+  const firstBudget = page.getByTestId("budget").first();
+  await expect(
+    firstBudget.getByRole("heading", { name: /entertainment/i }),
+  ).toBeVisible();
+  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
+
+  await firstBudget
+    .getByRole("button", {
+      name: /actions/i,
+    })
+    .click();
+  await page
+    .getByRole("menuitem", {
+      name: /edit/i,
+    })
+    .click();
+
+  const dialog = page.getByRole("dialog", { name: /edit budget/i });
+  await expect(dialog).toBeVisible();
+  await expect(page).toHaveURL(/\/budgets\/.*\/edit$/i);
+
+  await dialog.getByLabel(/category/i).click();
+  await page.getByLabel(category).click();
+  await dialog.getByLabel(/maximum/i).fill("100");
+  await dialog.getByLabel(/theme/i).click();
+  await page.getByLabel(theme).click();
+  await dialog
+    .getByRole("button", {
+      name: /save changes/i,
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/login$/);
+
+  await page.goto("/budgets");
+
+  await expect(
+    firstBudget.getByRole("heading", {
+      name: "entertainment",
+    }),
+  ).toBeVisible();
+  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
+});
+
 test("can delete budget", async ({ page, login }) => {
   await login();
   await page.goto("/budgets");
@@ -960,6 +1010,44 @@ test("can edit pot", async ({ page, login }) => {
   await expect(page).toHaveURL(/\/pots$/i);
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
     /an edited pot/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+});
+
+test("demo user can't edit pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+
+  const firstPot = page.getByTestId("pot").first();
+  await firstPot.getByRole("button", { name: "actions" }).click();
+  await page.getByRole("menuitem", { name: "edit" }).click();
+
+  await expect(page).toHaveURL(/\/pots\/.*\/edit$/i);
+
+  // todo: Redirect to `/login` before this
+  const dialog = page.getByRole("dialog", { name: "edit pot" });
+  await dialog.getByLabel("name").fill("An edited pot");
+  await dialog.getByLabel("target").fill("3000");
+  await dialog.getByLabel("theme").click();
+  await page.getByLabel("Blue").click();
+  await dialog.getByRole("button", { name: "save" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
     /concert ticket/i,
     /gift/i,
     /new laptop/i,

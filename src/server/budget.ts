@@ -144,6 +144,7 @@ export const updateBudget = async (data: {
   categoryId: string;
   themeId: string;
 }) => {
+  const user = await requireRealUser();
   await db.budget.update({
     data: {
       maximum: data.maximum,
@@ -160,6 +161,7 @@ export const updateBudget = async (data: {
     },
     where: {
       id: data.id,
+      userId: user.id,
     },
   });
 };

@@ -108,6 +108,7 @@ export const updatePot = async (data: {
   themeId?: string;
 }) => {
   try {
+    const user = await requireRealUser();
     await db.pot.update({
       select: {
         id: true,
@@ -128,6 +129,7 @@ export const updatePot = async (data: {
       },
       where: {
         id: data.id,
+        userId: user.id,
       },
     });
   } catch (error) {
