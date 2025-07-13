@@ -1,11 +1,10 @@
 "use client";
 
-import * as Meter from "~/app/_components/meter";
 import { useField } from "@conform-to/react";
-import { currency, percent } from "~/app/_format";
-import { cx } from "class-variance-authority";
-import { amount as amountSchema } from "~/app/(main)/pots/_schemas";
 import { useId } from "react";
+import { amount as amountSchema } from "~/app/(main)/pots/_schemas";
+import * as Meter from "~/app/_components/meter";
+import { currency, percent } from "~/app/_format";
 
 type MeterSectionProps = {
   name: string;

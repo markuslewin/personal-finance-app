@@ -1,5 +1,4 @@
 import data from "~/data/data.json";
-import { Balance, Prisma, User } from "@prisma/client";
 
 export const categories = [
   ...new Set([...data.budgets, ...data.transactions].map((d) => d.category)),

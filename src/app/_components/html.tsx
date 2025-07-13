@@ -1,7 +1,7 @@
 "use client";
 
 import { cx } from "class-variance-authority";
-import { ComponentPropsWithRef, useSyncExternalStore } from "react";
+import { type ComponentPropsWithRef } from "react";
 import { useHydrated } from "~/app/_components/hydration";
 
 type HtmlProps = ComponentPropsWithRef<"html">;
