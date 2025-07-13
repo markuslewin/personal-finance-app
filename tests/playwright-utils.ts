@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
-import { test as baseTest } from "@playwright/test";
+import { test as baseTest, type Page } from "@playwright/test";
 import { PrismaClient } from "@prisma/client";
 
 type AxeResults = Awaited<
@@ -20,6 +20,12 @@ export const violationFingerprints = (accessibilityScanResults: AxeResults) => {
   );
 
   return JSON.stringify(violationFingerprints, null, 2);
+};
+
+export const waitForHydration = (page: Page) => {
+  return page.waitForSelector('html[data-hydrated="true"]', {
+    state: "attached",
+  });
 };
 
 const db = new PrismaClient({
