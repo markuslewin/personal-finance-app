@@ -8,9 +8,11 @@ CREATE TABLE [dbo].[Balance] (
     [current] INT NOT NULL,
     [income] INT NOT NULL,
     [expenses] INT NOT NULL,
+    [userId] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Balance_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
-    CONSTRAINT [Balance_pkey] PRIMARY KEY CLUSTERED ([id])
+    CONSTRAINT [Balance_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Balance_userId_key] UNIQUE NONCLUSTERED ([userId])
 );
 
 -- CreateTable
@@ -46,11 +48,12 @@ CREATE TABLE [dbo].[Budget] (
     [maximum] INT NOT NULL,
     [categoryId] NVARCHAR(1000) NOT NULL,
     [themeId] NVARCHAR(1000) NOT NULL,
+    [userId] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Budget_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     CONSTRAINT [Budget_pkey] PRIMARY KEY CLUSTERED ([id]),
-    CONSTRAINT [Budget_categoryId_key] UNIQUE NONCLUSTERED ([categoryId]),
-    CONSTRAINT [Budget_themeId_key] UNIQUE NONCLUSTERED ([themeId])
+    CONSTRAINT [Budget_themeId_userId_key] UNIQUE NONCLUSTERED ([themeId],[userId]),
+    CONSTRAINT [Budget_categoryId_userId_key] UNIQUE NONCLUSTERED ([categoryId],[userId])
 );
 
 -- CreateTable
@@ -60,10 +63,11 @@ CREATE TABLE [dbo].[Pot] (
     [target] INT NOT NULL,
     [total] INT NOT NULL,
     [themeId] NVARCHAR(1000) NOT NULL,
+    [userId] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Pot_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     CONSTRAINT [Pot_pkey] PRIMARY KEY CLUSTERED ([id]),
-    CONSTRAINT [Pot_themeId_key] UNIQUE NONCLUSTERED ([themeId])
+    CONSTRAINT [Pot_themeId_userId_key] UNIQUE NONCLUSTERED ([themeId],[userId])
 );
 
 -- CreateTable
@@ -92,6 +96,7 @@ CREATE TABLE [dbo].[User] (
     [id] NVARCHAR(1000) NOT NULL,
     [email] NVARCHAR(1000) NOT NULL,
     [name] NVARCHAR(1000) NOT NULL,
+    [demo] BIT NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [User_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     CONSTRAINT [User_pkey] PRIMARY KEY CLUSTERED ([id]),
@@ -110,6 +115,9 @@ CREATE TABLE [dbo].[Password] (
 );
 
 -- AddForeignKey
+ALTER TABLE [dbo].[Balance] ADD CONSTRAINT [Balance_userId_fkey] FOREIGN KEY ([userId]) REFERENCES [dbo].[User]([id]) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE [dbo].[Transaction] ADD CONSTRAINT [Transaction_categoryId_fkey] FOREIGN KEY ([categoryId]) REFERENCES [dbo].[Category]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -122,7 +130,13 @@ ALTER TABLE [dbo].[Budget] ADD CONSTRAINT [Budget_categoryId_fkey] FOREIGN KEY (
 ALTER TABLE [dbo].[Budget] ADD CONSTRAINT [Budget_themeId_fkey] FOREIGN KEY ([themeId]) REFERENCES [dbo].[Theme]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE [dbo].[Budget] ADD CONSTRAINT [Budget_userId_fkey] FOREIGN KEY ([userId]) REFERENCES [dbo].[User]([id]) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE [dbo].[Pot] ADD CONSTRAINT [Pot_themeId_fkey] FOREIGN KEY ([themeId]) REFERENCES [dbo].[Theme]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[Pot] ADD CONSTRAINT [Pot_userId_fkey] FOREIGN KEY ([userId]) REFERENCES [dbo].[User]([id]) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE [dbo].[Password] ADD CONSTRAINT [Password_userId_fkey] FOREIGN KEY ([userId]) REFERENCES [dbo].[User]([id]) ON DELETE CASCADE ON UPDATE CASCADE;
