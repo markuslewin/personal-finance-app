@@ -1,4 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import type AxeBuilder from "@axe-core/playwright";
+import { faker } from "@faker-js/faker";
+import { test as baseTest } from "@playwright/test";
+import { PrismaClient } from "@prisma/client";
 
 type AxeResults = Awaited<
   ReturnType<InstanceType<typeof AxeBuilder>["analyze"]>
@@ -17,3 +21,45 @@ export const violationFingerprints = (accessibilityScanResults: AxeResults) => {
 
   return JSON.stringify(violationFingerprints, null, 2);
 };
+
+const db = new PrismaClient({
+  log: ["error"],
+});
+
+type User = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export const test = baseTest.extend<{
+  login: () => Promise<{ user: User }>;
+}>({
+  login: async ({ page }, use) => {
+    const user = {
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    };
+
+    await use(async () => {
+      // todo: Would be more efficient to run `signUp` here
+      await page.goto("/signup");
+      await page.getByRole("textbox", { name: "name" }).fill(user.name);
+      await page.getByRole("textbox", { name: "email" }).fill(user.email);
+      await page.getByRole("textbox", { name: "password" }).fill(user.password);
+      await page.getByRole("button", { name: "create account" }).click();
+      await page.waitForURL("/");
+
+      return {
+        user,
+      };
+    });
+
+    await db.user.delete({
+      where: {
+        email: user.email,
+      },
+    });
+  },
+});

@@ -4,6 +4,7 @@ import { DEFAULT_SORT, getOrderBy } from "~/app/(main)/transactions/_search";
 import { inUTCMonth } from "~/app/_prisma";
 import { type SortingOption } from "~/app/_sort";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
 
 export const getTransactions = (options?: { take?: number }) => {
   return db.transaction.findMany({
@@ -21,8 +22,9 @@ export const getTransactions = (options?: { take?: number }) => {
   });
 };
 
-export const getTransactionsForMonth = (date: Date) => {
-  return db.transaction.findMany({
+export const getTransactionsForMonth = async (date: Date) => {
+  const user = await getUser();
+  const transactions = await db.transaction.findMany({
     select: {
       id: true,
       amount: true,
@@ -31,6 +33,9 @@ export const getTransactionsForMonth = (date: Date) => {
           Budget: {
             select: {
               id: true,
+            },
+            where: {
+              userId: user.id,
             },
           },
         },
@@ -42,6 +47,20 @@ export const getTransactionsForMonth = (date: Date) => {
     orderBy: {
       date: "desc",
     },
+  });
+  return transactions.map((transaction) => {
+    if (transaction.category.Budget.length > 1) {
+      throw new Error(
+        `A user can have at most one budget related to a category, but user ${user.id} has ${transaction.category.Budget.length}`,
+      );
+    }
+
+    const budget = transaction.category.Budget[0];
+    return {
+      id: transaction.id,
+      amount: transaction.amount,
+      category: { budget: budget ? { id: budget.id } : null },
+    };
   });
 };
 

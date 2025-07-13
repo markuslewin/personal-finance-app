@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { env } from "~/env";
 import { sign, unsign } from "cookie-signature";
+import { getUser } from "~/server/user";
+import { redirect } from "next/navigation";
 
 const name = "userId";
 
@@ -18,7 +20,7 @@ export const createSession = async (userId: string) => {
   });
 };
 
-export const getSession = async () => {
+export const verifySession = async () => {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(name);
   if (!cookie) {
@@ -27,7 +29,7 @@ export const getSession = async () => {
   for (const secret of env.SESSION_SECRET) {
     const unsigned = unsign(cookie.value, secret);
     if (unsigned !== false) {
-      return unsigned;
+      return { userId: unsigned };
     }
   }
   return null;
@@ -36,4 +38,15 @@ export const getSession = async () => {
 export const deleteSession = async () => {
   const cookieStore = await cookies();
   cookieStore.delete(name);
+};
+
+export const requireRealUser = async () => {
+  const user = await getUser();
+  if (user.demo) {
+    redirect("/login");
+  }
+  return {
+    ...user,
+    demo: user.demo,
+  };
 };

@@ -1,21 +1,8 @@
-import { test as baseTest, expect, Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
-import { violationFingerprints } from "tests/playwright-utils";
+import { test, violationFingerprints } from "tests/playwright-utils";
 import { faker } from "@faker-js/faker";
-import { execa } from "execa";
 import { maxInt } from "~/app/_prisma";
-
-// todo: Isolate tests with `login` fixture
-const test = baseTest.extend<{ resetDatabase: undefined }>({
-  resetDatabase: async ({}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await use(undefined);
-
-    await execa({
-      stdio: "inherit",
-    })`prisma migrate reset --force --skip-generate`;
-  },
-});
 
 const waitForHydration = (page: Page) => {
   return page.waitForSelector('html[data-hydrated="true"]', {
@@ -89,7 +76,8 @@ test("overview has title", async ({ page }) => {
   await expect(page).toHaveTitle(/overview/i);
 });
 
-test("overview has data", async ({ page }) => {
+test("overview has data", async ({ page, login }) => {
+  await login();
   await page.goto("/");
 
   await expect(page.getByTestId("current-balance")).not.toHaveText(/\$0/i);
@@ -480,6 +468,14 @@ test("add budget dialog", async ({ page }) => {
   await expect(page).toHaveURL(/\/budgets$/i);
 });
 
+test.fixme("user only sees its own budgets/pots", async ({}) => {
+  //
+});
+
+test.fixme("user sees available categories/themes", async ({}) => {
+  //
+});
+
 test("budget maximum errors", async ({ page }) => {
   await page.goto("/budgets");
   await page.getByRole("link", { name: /add new budget/i }).click();
@@ -513,7 +509,7 @@ test("budget maximum errors", async ({ page }) => {
   await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
 });
 
-test("can create budget", async ({ page, resetDatabase }) => {
+test("can create budget", async ({ page, login }) => {
   const category = "Lifestyle";
   const theme = "Blue";
   const max = faker.number.int({
@@ -521,6 +517,7 @@ test("can create budget", async ({ page, resetDatabase }) => {
     max: 1000,
   });
 
+  await login();
   await page.goto("/budgets");
   await page
     .getByRole("link", {
@@ -553,10 +550,48 @@ test("can create budget", async ({ page, resetDatabase }) => {
   );
 });
 
-test("can edit budget", async ({ page, resetDatabase }) => {
+test("demo user can't create budget", async ({ page }) => {
+  const category = "Lifestyle";
+  const theme = "Blue";
+  const max = faker.number.int({
+    min: 1,
+    max: 1000,
+  });
+
+  await page.goto("/budgets");
+  await page
+    .getByRole("link", {
+      name: /add new budget/i,
+    })
+    .click();
+  await page.getByLabel(/category/i).click();
+  await page.getByLabel(category).click();
+  await page.getByLabel(/maximum/i).fill(String(max));
+  await page.getByLabel(/theme/i).click();
+  await page.getByLabel(theme).click();
+  await page
+    .getByRole("button", {
+      name: /add budget/i,
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+});
+
+test("can edit budget", async ({ page, login }) => {
   const category = "Groceries";
   const theme = "Blue";
 
+  await login();
   await page.goto("/budgets");
 
   const firstBudget = page.getByTestId("budget").first();
@@ -604,7 +639,58 @@ test("can edit budget", async ({ page, resetDatabase }) => {
   await expect(page).toHaveURL(/\/budgets$/i);
 });
 
-test("can delete budget", async ({ page, resetDatabase }) => {
+test("demo user can't edit budget", async ({ page }) => {
+  const category = "Groceries";
+  const theme = "Blue";
+
+  await page.goto("/budgets");
+
+  const firstBudget = page.getByTestId("budget").first();
+  await expect(
+    firstBudget.getByRole("heading", { name: /entertainment/i }),
+  ).toBeVisible();
+  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
+
+  await firstBudget
+    .getByRole("button", {
+      name: /actions/i,
+    })
+    .click();
+  await page
+    .getByRole("menuitem", {
+      name: /edit/i,
+    })
+    .click();
+
+  const dialog = page.getByRole("dialog", { name: /edit budget/i });
+  await expect(dialog).toBeVisible();
+  await expect(page).toHaveURL(/\/budgets\/.*\/edit$/i);
+
+  await dialog.getByLabel(/category/i).click();
+  await page.getByLabel(category).click();
+  await dialog.getByLabel(/maximum/i).fill("100");
+  await dialog.getByLabel(/theme/i).click();
+  await page.getByLabel(theme).click();
+  await dialog
+    .getByRole("button", {
+      name: /save changes/i,
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/login$/);
+
+  await page.goto("/budgets");
+
+  await expect(
+    firstBudget.getByRole("heading", {
+      name: "entertainment",
+    }),
+  ).toBeVisible();
+  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
+});
+
+test("can delete budget", async ({ page, login }) => {
+  await login();
   await page.goto("/budgets");
 
   await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
@@ -637,12 +723,47 @@ test("can delete budget", async ({ page, resetDatabase }) => {
   ]);
 });
 
+test("demo user can't delete budget", async ({ page }) => {
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+
+  await page
+    .getByTestId("budget")
+    .filter({ hasText: /bills/i })
+    .getByRole("button", { name: "actions" })
+    .click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+
+  const dialog = page.getByRole("alertdialog", {
+    name: "delete",
+  });
+  await dialog.getByRole("button", { name: "confirm" }).click();
+
+  await expect(page).toHaveURL(/\/login/i);
+
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+});
+
 test.describe("javascript disabled", () => {
   test.use({
     javaScriptEnabled: false,
   });
 
-  test("can create budget", async ({ page, resetDatabase }) => {
+  test("can create budget", async ({ page, login }) => {
+    await login();
     await page.goto("/budgets");
 
     await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
@@ -687,7 +808,8 @@ test.describe("javascript disabled", () => {
     ).toHaveText(/\$2,000.00/i);
   });
 
-  test("can edit budget", async ({ page, resetDatabase }) => {
+  test("can edit budget", async ({ page, login }) => {
+    await login();
     await page.goto("/budgets");
 
     const firstBudget = page.getByTestId("budget").first();
@@ -719,7 +841,8 @@ test.describe("javascript disabled", () => {
     await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$750.00/i);
   });
 
-  test("can delete budget", async ({ page, resetDatabase }) => {
+  test("can delete budget", async ({ page, login }) => {
+    await login();
     await page.goto("/budgets");
 
     await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
@@ -848,7 +971,8 @@ test("pots title", async ({ page }) => {
   await expect(page).toHaveTitle(/pots/i);
 });
 
-test("can create pot", async ({ page, resetDatabase }) => {
+test("can create pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -888,7 +1012,47 @@ test("can create pot", async ({ page, resetDatabase }) => {
   ]);
 });
 
-test("can edit pot", async ({ page, resetDatabase }) => {
+test("demo user can't create pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+
+  await page
+    .getByRole("link", {
+      name: "add new pot",
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/pots\/add$/i);
+
+  const dialog = page.getByRole("dialog", { name: "add new pot" });
+  await dialog.getByLabel("name").fill("A new pot");
+  await dialog.getByLabel("target").fill("2000");
+  await dialog.getByLabel("theme").click();
+  await page.getByLabel("Magenta").click();
+  await dialog.getByRole("button", { name: "add pot" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+});
+
+test("can edit pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -925,7 +1089,46 @@ test("can edit pot", async ({ page, resetDatabase }) => {
   ]);
 });
 
-test("can delete pot", async ({ page, resetDatabase }) => {
+test("demo user can't edit pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+
+  const firstPot = page.getByTestId("pot").first();
+  await firstPot.getByRole("button", { name: "actions" }).click();
+  await page.getByRole("menuitem", { name: "edit" }).click();
+
+  await expect(page).toHaveURL(/\/pots\/.*\/edit$/i);
+
+  // todo: Redirect to `/login` before this
+  const dialog = page.getByRole("dialog", { name: "edit pot" });
+  await dialog.getByLabel("name").fill("An edited pot");
+  await dialog.getByLabel("target").fill("3000");
+  await dialog.getByLabel("theme").click();
+  await page.getByLabel("Blue").click();
+  await dialog.getByRole("button", { name: "save" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+});
+
+test("can delete pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -957,7 +1160,40 @@ test("can delete pot", async ({ page, resetDatabase }) => {
   ]);
 });
 
-test("can add money to pot", async ({ page, resetDatabase }) => {
+test("demo user can't delete pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+
+  const thirdPot = page.getByTestId("pot").nth(2);
+  await thirdPot.getByRole("button", { name: "actions" }).click();
+  await page.getByRole("menuitem", { name: "delete" }).click();
+  await page
+    .getByRole("alertdialog", { name: "delete" })
+    .getByRole("button", { name: "confirm" })
+    .click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+});
+
+test("can add money to pot", async ({ page, login }) => {
+  await login();
   await page.goto("/");
 
   const balance = page.getByTestId("current-balance");
@@ -988,7 +1224,39 @@ test("can add money to pot", async ({ page, resetDatabase }) => {
   await expect(balance).toHaveText(/\$4,500.00/i);
 });
 
-test("can withdraw money from pot", async ({ page, resetDatabase }) => {
+test("demo user can't add money to pot", async ({ page }) => {
+  await page.goto("/");
+
+  const balance = page.getByTestId("current-balance");
+  await expect(balance).toHaveText(/\$4,836.00/i);
+
+  await page.goto("/pots");
+
+  const firstPot = page.getByTestId("pot").first();
+  const total = firstPot.getByTestId("total");
+  await expect(total).toHaveText(/\$159.00/i);
+
+  await firstPot.getByRole("link", { name: "add" }).click();
+
+  await expect(page).toHaveURL(/\/pots\/.*\/add-money/i);
+
+  const dialog = page.getByRole("dialog", { name: "add to" });
+  await dialog.getByLabel("amount to add").fill("336");
+  await dialog.getByRole("button", { name: "confirm" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/");
+
+  await expect(balance).toHaveText(/\$4,836.00/i);
+
+  await page.goto("/pots");
+
+  await expect(total).toHaveText(/\$159.00/i);
+});
+
+test("can withdraw money from pot", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
 
   const thirdPot = page.getByTestId("pot").nth(2);
@@ -1011,7 +1279,29 @@ test("can withdraw money from pot", async ({ page, resetDatabase }) => {
   await expect(page.getByTestId("current-balance")).toHaveText(/\$4,846.00/i);
 });
 
-test("can't add more money than current balance", async ({ page }) => {
+test("demo user can't withdraw money from pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  const thirdPot = page.getByTestId("pot").nth(2);
+  await thirdPot.getByRole("link", { name: "withdraw" }).click();
+
+  await expect(page).toHaveURL(/\/pots\/.*\/withdraw$/i);
+
+  const dialog = page.getByRole("dialog", { name: "withdraw" });
+  await dialog.getByLabel("amount to withdraw").fill("10");
+  await dialog.getByRole("button", { name: "confirm" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/");
+  await expect(page.getByTestId("current-balance")).toHaveText(/\$4,836.00/i);
+
+  await page.goto("/pots");
+  await expect(thirdPot.getByTestId("total")).toHaveText(/\$110.00/i);
+});
+
+test("can't add more money than current balance", async ({ page, login }) => {
+  await login();
   await page.goto("/pots");
   await page
     .getByTestId("pot")
@@ -1027,7 +1317,11 @@ test("can't add more money than current balance", async ({ page }) => {
   await expect(textbox).toHaveAccessibleDescription(/insufficient funds/i);
 });
 
-test("can't withdraw more money than what's in the pot", async ({ page }) => {
+test("can't withdraw more money than what's in the pot", async ({
+  page,
+  login,
+}) => {
+  await login();
   await page.goto("/pots");
   await page
     .getByTestId("pot")
@@ -1048,7 +1342,8 @@ test.describe("javascript disabled", () => {
     javaScriptEnabled: false,
   });
 
-  test("can create pot", async ({ page, resetDatabase }) => {
+  test("can create pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -1079,7 +1374,8 @@ test.describe("javascript disabled", () => {
     ]);
   });
 
-  test("can edit pot", async ({ page, resetDatabase }) => {
+  test("can edit pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -1110,7 +1406,8 @@ test.describe("javascript disabled", () => {
     ]);
   });
 
-  test("can delete pot", async ({ page, resetDatabase }) => {
+  test("can delete pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
@@ -1134,7 +1431,8 @@ test.describe("javascript disabled", () => {
     ]);
   });
 
-  test("can add money to pot", async ({ page, resetDatabase }) => {
+  test("can add money to pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     const lastPot = page.getByTestId("pot").last();
@@ -1155,7 +1453,8 @@ test.describe("javascript disabled", () => {
     await expect(page.getByTestId("current-balance")).toHaveText(/\$4,767.00/i);
   });
 
-  test("can withdraw money from pot", async ({ page, resetDatabase }) => {
+  test("can withdraw money from pot", async ({ page, login }) => {
+    await login();
     await page.goto("/pots");
 
     const lastPot = page.getByTestId("pot").last();

@@ -1,8 +1,11 @@
 import "server-only";
 import { Prisma } from "@prisma/client";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
+import { requireRealUser } from "~/app/_auth";
 
 export const getBudget = async (id: string) => {
+  const user = await getUser();
   return db.budget.findUnique({
     select: {
       id: true,
@@ -21,11 +24,13 @@ export const getBudget = async (id: string) => {
     },
     where: {
       id,
+      userId: user.id,
     },
   });
 };
 
-export const getBudgets = () => {
+export const getBudgets = async () => {
+  const user = await getUser();
   return db.budget.findMany({
     select: {
       id: true,
@@ -41,13 +46,17 @@ export const getBudgets = () => {
         },
       },
     },
+    where: {
+      userId: user.id,
+    },
     orderBy: {
       createdAt: "asc",
     },
   });
 };
 
-export const getBudgetsWithTransactions = () => {
+export const getBudgetsWithTransactions = async () => {
+  const user = await getUser();
   return db.budget.findMany({
     select: {
       id: true,
@@ -77,6 +86,9 @@ export const getBudgetsWithTransactions = () => {
         },
       },
     },
+    where: {
+      userId: user.id,
+    },
     orderBy: {
       createdAt: "asc",
     },
@@ -89,6 +101,7 @@ export const createBudget = async (data: {
   themeId: string;
 }) => {
   try {
+    const user = await requireRealUser();
     return await db.budget.create({
       data: {
         maximum: data.maximum,
@@ -100,6 +113,11 @@ export const createBudget = async (data: {
         theme: {
           connect: {
             id: data.themeId,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
           },
         },
       },
@@ -126,6 +144,7 @@ export const updateBudget = async (data: {
   categoryId: string;
   themeId: string;
 }) => {
+  const user = await requireRealUser();
   await db.budget.update({
     data: {
       maximum: data.maximum,
@@ -142,14 +161,17 @@ export const updateBudget = async (data: {
     },
     where: {
       id: data.id,
+      userId: user.id,
     },
   });
 };
 
 export const deleteBudget = async (id: string) => {
+  const user = await requireRealUser();
   await db.budget.delete({
     where: {
       id,
+      userId: user.id,
     },
   });
 };

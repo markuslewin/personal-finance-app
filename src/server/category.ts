@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
 
 export const getCategories = () => {
   return db.category.findMany({
@@ -13,7 +14,8 @@ export const getCategories = () => {
   });
 };
 
-export const getAvailableCategories = (includeCategoryId?: string) => {
+export const getAvailableCategories = async (includeCategoryId?: string) => {
+  const user = await getUser();
   return db.category.findMany({
     select: {
       id: true,
@@ -22,14 +24,27 @@ export const getAvailableCategories = (includeCategoryId?: string) => {
     where:
       includeCategoryId === undefined
         ? {
-            Budget: { is: null },
+            Budget: {
+              none: {
+                userId: user.id,
+              },
+            },
           }
         : {
             OR: [
-              { Budget: { is: null } },
               {
                 Budget: {
-                  categoryId: includeCategoryId,
+                  none: {
+                    userId: user.id,
+                  },
+                },
+              },
+              {
+                Budget: {
+                  some: {
+                    categoryId: includeCategoryId,
+                    userId: user.id,
+                  },
                 },
               },
             ],

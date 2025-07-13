@@ -65,7 +65,7 @@ const EditBudgetPage = async ({
                 name="theme"
                 themes={themes.map((t) => ({
                   ...t,
-                  unavailable: t.Budget !== null && t.Budget.id !== budget.id,
+                  unavailable: t.budget !== null && t.budget.id !== budget.id,
                 }))}
               />
               <Form.Message name="theme" />

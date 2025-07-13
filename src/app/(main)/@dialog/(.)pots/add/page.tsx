@@ -15,7 +15,7 @@ const AddPotPage = async () => {
   const themes = await getThemesWithPot();
 
   // todo: Disable "Add New Pot"
-  const defaultTheme = themes.find((t) => t.Pot === null);
+  const defaultTheme = themes.find((t) => t.pot === null);
   if (defaultTheme === undefined) {
     throw new Error("No available theme left for budget.");
   }
@@ -73,7 +73,7 @@ const AddPotPage = async () => {
                           name="theme"
                           themes={themes.map((t) => ({
                             ...t,
-                            unavailable: t.Pot !== null,
+                            unavailable: t.pot !== null,
                           }))}
                         />
                         <Form.Message name="theme" />

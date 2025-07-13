@@ -82,7 +82,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                           name="theme"
                           themes={themes.map((t) => ({
                             ...t,
-                            unavailable: t.Pot !== null && t.Pot.id !== pot.id,
+                            unavailable: t.pot !== null && t.pot.id !== pot.id,
                           }))}
                         />
                         <Form.Message name="theme" />

@@ -1,8 +1,11 @@
 import { Prisma } from "@prisma/client";
 import "server-only";
+import { requireRealUser } from "~/app/_auth";
 import { db } from "~/server/db";
+import { getUser } from "~/server/user";
 
-export const getPot = (id: string) => {
+export const getPot = async (id: string) => {
+  const user = await getUser();
   return db.pot.findUnique({
     select: {
       id: true,
@@ -17,11 +20,13 @@ export const getPot = (id: string) => {
     },
     where: {
       id,
+      userId: user.id,
     },
   });
 };
 
-export const getPots = () => {
+export const getPots = async () => {
+  const user = await getUser();
   return db.pot.findMany({
     select: {
       id: true,
@@ -33,6 +38,9 @@ export const getPots = () => {
         },
       },
       total: true,
+    },
+    where: {
+      userId: user.id,
     },
     orderBy: {
       createdAt: "asc",
@@ -46,6 +54,7 @@ export const createPot = async (data: {
   themeId: string;
 }) => {
   try {
+    const user = await requireRealUser();
     return await db.pot.create({
       data: {
         name: data.name,
@@ -54,6 +63,11 @@ export const createPot = async (data: {
         theme: {
           connect: {
             id: data.themeId,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
           },
         },
       },
@@ -94,6 +108,7 @@ export const updatePot = async (data: {
   themeId?: string;
 }) => {
   try {
+    const user = await requireRealUser();
     await db.pot.update({
       select: {
         id: true,
@@ -114,6 +129,7 @@ export const updatePot = async (data: {
       },
       where: {
         id: data.id,
+        userId: user.id,
       },
     });
   } catch (error) {
@@ -142,6 +158,8 @@ export const updatePot = async (data: {
 };
 
 export const deletePot = async (id: string) => {
+  const user = await requireRealUser();
+
   // todo: Transaction
   const pot = await db.pot.delete({
     select: {
@@ -149,16 +167,143 @@ export const deletePot = async (id: string) => {
     },
     where: {
       id,
+      userId: user.id,
     },
   });
 
-  const balance = await db.balance.findFirstOrThrow();
   await db.balance.update({
     data: {
-      current: balance.current + pot.total,
+      current: {
+        increment: pot.total,
+      },
     },
     where: {
-      id: balance.id,
+      userId: user.id,
+    },
+  });
+};
+
+export const addMoneyToPot = async (data: { id: string; amount: number }) => {
+  const user = await requireRealUser();
+  // todo: Transaction
+  // todo: Lock
+  const pot = await db.pot.findUnique({
+    select: {
+      total: true,
+      user: {
+        select: {
+          balance: {
+            select: {
+              current: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: data.id,
+      userId: user.id,
+    },
+  });
+  if (!pot) {
+    throw new Error("Pot not found");
+  }
+  if (!pot.user.balance) {
+    throw new Error("Balance not found");
+  }
+
+  if (pot.user.balance.current < data.amount) {
+    throw new PotError("Insufficient funds", {
+      cause: {
+        field: "amount",
+      },
+    });
+  }
+
+  await db.pot.update({
+    data: {
+      total: {
+        increment: data.amount,
+      },
+      user: {
+        update: {
+          balance: {
+            update: {
+              current: {
+                decrement: data.amount,
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: data.id,
+      userId: user.id,
+    },
+  });
+};
+
+export const withdrawMoneyFromPot = async (data: {
+  id: string;
+  amount: number;
+}) => {
+  const user = await requireRealUser();
+  // todo: Transaction
+  // todo: Lock
+  const pot = await db.pot.findUnique({
+    select: {
+      total: true,
+      user: {
+        select: {
+          balance: {
+            select: {
+              current: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: data.id,
+      userId: user.id,
+    },
+  });
+  if (!pot) {
+    throw new Error("Pot not found");
+  }
+  if (!pot.user.balance) {
+    throw new Error("Balance not found");
+  }
+
+  if (pot.total < data.amount) {
+    throw new PotError("Insufficient funds", {
+      cause: {
+        field: "amount",
+      },
+    });
+  }
+
+  await db.pot.update({
+    data: {
+      total: {
+        decrement: data.amount,
+      },
+      user: {
+        update: {
+          balance: {
+            update: {
+              current: {
+                increment: data.amount,
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: data.id,
+      userId: user.id,
     },
   });
 };
@@ -174,6 +319,6 @@ export class PotError extends Error {
 }
 
 type Cause = {
-  field: "theme";
-  error: Error;
+  field: "theme" | "amount";
+  error?: Error;
 };

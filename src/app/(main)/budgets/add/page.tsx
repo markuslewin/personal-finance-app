@@ -23,7 +23,7 @@ const AddBudgetPage = async () => {
     throw new Error("No categories without budget left.");
   }
 
-  const defaultTheme = themes.find((t) => t.Budget === null);
+  const defaultTheme = themes.find((t) => t.budget === null);
   if (defaultTheme === undefined) {
     throw new Error("No available theme left for budget.");
   }
@@ -59,7 +59,7 @@ const AddBudgetPage = async () => {
                 name="theme"
                 themes={themes.map((t) => ({
                   ...t,
-                  unavailable: t.Budget !== null,
+                  unavailable: t.budget !== null,
                 }))}
               />
               <Form.Message name="theme" />

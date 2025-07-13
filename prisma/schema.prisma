@@ -16,6 +16,9 @@ model Balance {
     income   Int
     expenses Int
 
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -55,13 +58,18 @@ model Budget {
     id      String @id @default(cuid())
     maximum Int
 
-    categoryId String   @unique
+    categoryId String
     category   Category @relation(fields: [categoryId], references: [id])
-    themeId    String   @unique
+    themeId    String
     theme      Theme    @relation(fields: [themeId], references: [id])
+    userId     String
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([themeId, userId])
+    @@unique([categoryId, userId])
 }
 
 model Pot {
@@ -70,19 +78,24 @@ model Pot {
     target Int
     total  Int
 
-    themeId String @unique
+    themeId String
     theme   Theme  @relation(fields: [themeId], references: [id])
+    userId  String
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@unique([themeId, userId])
 }
 
 model Category {
     id   String @id @default(cuid())
     name String @unique
+    // todo: order Int
 
     Transaction Transaction[]
-    Budget      Budget?
+    Budget      Budget[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -92,20 +105,25 @@ model Theme {
     id    String @id @default(cuid())
     name  String @unique
     color String
+    // todo: order Int
 
-    Budget Budget?
-    Pot    Pot?
+    Budget Budget[]
+    Pot    Pot[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model User {
-    id    String @id @default(cuid())
-    email String @unique
+    id    String  @id @default(cuid())
+    email String  @unique
     name  String
+    demo  Boolean
 
     password Password?
+    balance  Balance?
+    budgets  Budget[]
+    pots     Pot[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

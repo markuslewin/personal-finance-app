@@ -57,7 +57,7 @@ const SignupForm = () => {
         <Status className="sr-only">
           <FormStatus>
             {(status) => {
-              return status.pending ? <>Signing in</> : null;
+              return status.pending ? <>Creating account</> : null;
             }}
           </FormStatus>
         </Status>
@@ -67,10 +67,10 @@ const SignupForm = () => {
               return status.pending ? (
                 <>
                   <Spinner />
-                  <span className="sr-only">Signing In</span>
+                  <span className="sr-only">Creating Account</span>
                 </>
               ) : (
-                <>Sign In</>
+                <>Create Account</>
               );
             }}
           </FormStatus>

@@ -58,11 +58,11 @@ const OverviewPage = async () => {
   // Budgets
   const totalByBudgetId = transactionsThisMonth.reduce(
     (acc, transaction) => {
-      if (transaction.category.Budget === null) {
+      if (transaction.category.budget === null) {
         return acc;
       }
 
-      const budgetId = transaction.category.Budget.id;
+      const budgetId = transaction.category.budget.id;
       const budgetTotal = acc[budgetId] ?? 0;
 
       return { ...acc, [budgetId]: budgetTotal + transaction.amount };
