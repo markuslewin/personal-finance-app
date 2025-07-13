@@ -550,6 +550,43 @@ test("can create budget", async ({ page, login }) => {
   );
 });
 
+test("demo user can't create budget", async ({ page }) => {
+  const category = "Lifestyle";
+  const theme = "Blue";
+  const max = faker.number.int({
+    min: 1,
+    max: 1000,
+  });
+
+  await page.goto("/budgets");
+  await page
+    .getByRole("link", {
+      name: /add new budget/i,
+    })
+    .click();
+  await page.getByLabel(/category/i).click();
+  await page.getByLabel(category).click();
+  await page.getByLabel(/maximum/i).fill(String(max));
+  await page.getByLabel(/theme/i).click();
+  await page.getByLabel(theme).click();
+  await page
+    .getByRole("button", {
+      name: /add budget/i,
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/budgets");
+
+  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
+    /entertainment/i,
+    /bills/i,
+    /dining out/i,
+    /personal care/i,
+  ]);
+});
+
 test("can edit budget", async ({ page, login }) => {
   const category = "Groceries";
   const theme = "Blue";
@@ -934,10 +971,6 @@ test("pots title", async ({ page }) => {
   await expect(page).toHaveTitle(/pots/i);
 });
 
-test.fixme("demo user can't create/update/delete pot/budget", async ({}) => {
-  //
-});
-
 test("can create pot", async ({ page, login }) => {
   await login();
   await page.goto("/pots");
@@ -976,6 +1009,45 @@ test("can create pot", async ({ page, login }) => {
     /new laptop/i,
     /holiday/i,
     /a new pot/i,
+  ]);
+});
+
+test("demo user can't create pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
+  ]);
+
+  await page
+    .getByRole("link", {
+      name: "add new pot",
+    })
+    .click();
+
+  await expect(page).toHaveURL(/\/pots\/add$/i);
+
+  const dialog = page.getByRole("dialog", { name: "add new pot" });
+  await dialog.getByLabel("name").fill("A new pot");
+  await dialog.getByLabel("target").fill("2000");
+  await dialog.getByLabel("theme").click();
+  await page.getByLabel("Magenta").click();
+  await dialog.getByRole("button", { name: "add pot" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/pots");
+
+  await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
+    /savings/i,
+    /concert ticket/i,
+    /gift/i,
+    /new laptop/i,
+    /holiday/i,
   ]);
 });
 
