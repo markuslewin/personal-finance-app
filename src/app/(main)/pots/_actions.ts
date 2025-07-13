@@ -13,15 +13,15 @@ import {
   withdrawSchema,
   type PotSchema,
   type EditPotSchema,
+  type WithdrawSchema,
 } from "~/app/(main)/pots/_schemas";
-import { db } from "~/server/db";
 import {
   addMoneyToPot,
   createPot,
   deletePot,
-  getPot,
   PotError,
   updatePot,
+  withdrawMoneyFromPot,
 } from "~/server/pot";
 
 export const add = async (prevState: unknown, formData: FormData) => {
@@ -145,43 +145,23 @@ export const withdraw = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {
     async: true,
     schema: withdrawSchema.transform(async (val, ctx) => {
-      // todo: Transaction
-      // todo: Lock
-      const pot = await getPot(val.id);
-      if (!pot) {
-        throw new Error("Pot not found");
+      try {
+        await withdrawMoneyFromPot(val);
+        return true;
+      } catch (error) {
+        if (error instanceof PotError) {
+          const result = withdrawSchema.keyof().safeParse(error.cause.field);
+          if (result.success) {
+            ctx.addIssue({
+              path: [result.data] satisfies [keyof WithdrawSchema],
+              code: z.ZodIssueCode.custom,
+              message: error.message,
+            });
+            return z.NEVER;
+          }
+        }
+        throw error;
       }
-
-      if (pot.total < val.amount) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["amount"] satisfies [keyof AddMoneySchema],
-          message: "Insufficient funds",
-        });
-        return z.NEVER;
-      }
-
-      await updatePot({
-        id: pot.id,
-        total: pot.total - val.amount,
-      });
-
-      const balance = await db.balance.findFirstOrThrow({
-        select: {
-          id: true,
-          current: true,
-        },
-      });
-      await db.balance.update({
-        data: {
-          current: balance.current + val.amount,
-        },
-        where: {
-          id: balance.id,
-        },
-      });
-
-      return true;
     }),
   });
   if (submission.status !== "success") {

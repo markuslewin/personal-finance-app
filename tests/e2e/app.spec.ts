@@ -1207,6 +1207,27 @@ test("can withdraw money from pot", async ({ page, login }) => {
   await expect(page.getByTestId("current-balance")).toHaveText(/\$4,846.00/i);
 });
 
+test("demo user can't withdraw money from pot", async ({ page }) => {
+  await page.goto("/pots");
+
+  const thirdPot = page.getByTestId("pot").nth(2);
+  await thirdPot.getByRole("link", { name: "withdraw" }).click();
+
+  await expect(page).toHaveURL(/\/pots\/.*\/withdraw$/i);
+
+  const dialog = page.getByRole("dialog", { name: "withdraw" });
+  await dialog.getByLabel("amount to withdraw").fill("10");
+  await dialog.getByRole("button", { name: "confirm" }).click();
+
+  await expect(page).toHaveURL(/\/login$/i);
+
+  await page.goto("/");
+  await expect(page.getByTestId("current-balance")).toHaveText(/\$4,836.00/i);
+
+  await page.goto("/pots");
+  await expect(thirdPot.getByTestId("total")).toHaveText(/\$110.00/i);
+});
+
 test("can't add more money than current balance", async ({ page, login }) => {
   await login();
   await page.goto("/pots");

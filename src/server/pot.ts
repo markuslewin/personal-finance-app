@@ -244,6 +244,70 @@ export const addMoneyToPot = async (data: { id: string; amount: number }) => {
   });
 };
 
+export const withdrawMoneyFromPot = async (data: {
+  id: string;
+  amount: number;
+}) => {
+  const user = await requireRealUser();
+  // todo: Transaction
+  // todo: Lock
+  const pot = await db.pot.findUnique({
+    select: {
+      total: true,
+      user: {
+        select: {
+          balance: {
+            select: {
+              current: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: data.id,
+      userId: user.id,
+    },
+  });
+  if (!pot) {
+    throw new Error("Pot not found");
+  }
+  if (!pot.user.balance) {
+    throw new Error("Balance not found");
+  }
+
+  if (pot.total < data.amount) {
+    throw new PotError("Insufficient funds", {
+      cause: {
+        field: "amount",
+      },
+    });
+  }
+
+  await db.pot.update({
+    data: {
+      total: {
+        decrement: data.amount,
+      },
+      user: {
+        update: {
+          balance: {
+            update: {
+              current: {
+                increment: data.amount,
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: data.id,
+      userId: user.id,
+    },
+  });
+};
+
 export class PotError extends Error {
   cause: Cause;
 
