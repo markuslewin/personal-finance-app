@@ -328,32 +328,3 @@ test("transactions a11y", async ({ page }) => {
   // Disabled previous/next buttons have insufficient contrast
   expect(violationFingerprints(results)).toMatchSnapshot();
 });
-
-test("add budget dialog", async ({ page }) => {
-  await page.goto("/budgets");
-  await page
-    .getByRole("link", {
-      name: /add new budget/i,
-    })
-    .click();
-
-  await expect(
-    page.getByRole("dialog", {
-      name: /add new budget/i,
-    }),
-  ).toBeVisible();
-  await expect(page).toHaveURL(/\/budgets\/add$/i);
-
-  await page
-    .getByRole("button", {
-      name: /close/i,
-    })
-    .click();
-
-  await expect(
-    page.getByRole("dialog", {
-      name: /add new budget/i,
-    }),
-  ).not.toBeVisible();
-  await expect(page).toHaveURL(/\/budgets$/i);
-});

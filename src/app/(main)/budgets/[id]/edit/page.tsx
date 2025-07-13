@@ -15,12 +15,15 @@ import Spinner from "~/app/_components/ui/spinner";
 import { getBudget } from "~/server/budget";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
+import { requireRealUser } from "~/app/_auth";
 
 const EditBudgetPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) => {
+  await requireRealUser();
+
   const id = (await params).id;
   const budget = await getBudget(id);
   if (!budget) {

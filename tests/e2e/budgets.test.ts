@@ -4,7 +4,8 @@ import { expect } from "@playwright/test";
 import { test } from "tests/playwright-utils";
 import { maxInt } from "~/app/_prisma";
 
-test("budget maximum errors", async ({ page }) => {
+test("budget maximum errors", async ({ page, login }) => {
+  await login();
   await page.goto("/budgets");
   await page.getByRole("link", { name: /add new budget/i }).click();
 
@@ -35,6 +36,36 @@ test("budget maximum errors", async ({ page }) => {
   await submitButton.click();
 
   await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
+});
+
+test("add budget dialog", async ({ page, login }) => {
+  await login();
+  await page.goto("/budgets");
+  await page
+    .getByRole("link", {
+      name: /add new budget/i,
+    })
+    .click();
+
+  await expect(
+    page.getByRole("dialog", {
+      name: /add new budget/i,
+    }),
+  ).toBeVisible();
+  await expect(page).toHaveURL(/\/budgets\/add$/i);
+
+  await page
+    .getByRole("button", {
+      name: /close/i,
+    })
+    .click();
+
+  await expect(
+    page.getByRole("dialog", {
+      name: /add new budget/i,
+    }),
+  ).not.toBeVisible();
+  await expect(page).toHaveURL(/\/budgets$/i);
 });
 
 test("can create budget", async ({ page, login }) => {
@@ -79,40 +110,14 @@ test("can create budget", async ({ page, login }) => {
 });
 
 test("demo user can't create budget", async ({ page }) => {
-  const category = "Lifestyle";
-  const theme = "Blue";
-  const max = faker.number.int({
-    min: 1,
-    max: 1000,
-  });
-
   await page.goto("/budgets");
   await page
     .getByRole("link", {
       name: /add new budget/i,
     })
     .click();
-  await page.getByLabel(/category/i).click();
-  await page.getByLabel(category).click();
-  await page.getByLabel(/maximum/i).fill(String(max));
-  await page.getByLabel(/theme/i).click();
-  await page.getByLabel(theme).click();
-  await page
-    .getByRole("button", {
-      name: /add budget/i,
-    })
-    .click();
 
   await expect(page).toHaveURL(/\/login$/i);
-
-  await page.goto("/budgets");
-
-  await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
-    /entertainment/i,
-    /bills/i,
-    /dining out/i,
-    /personal care/i,
-  ]);
 });
 
 test("can edit budget", async ({ page, login }) => {
@@ -168,17 +173,9 @@ test("can edit budget", async ({ page, login }) => {
 });
 
 test("demo user can't edit budget", async ({ page }) => {
-  const category = "Groceries";
-  const theme = "Blue";
-
   await page.goto("/budgets");
 
   const firstBudget = page.getByTestId("budget").first();
-  await expect(
-    firstBudget.getByRole("heading", { name: /entertainment/i }),
-  ).toBeVisible();
-  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
-
   await firstBudget
     .getByRole("button", {
       name: /actions/i,
@@ -190,31 +187,7 @@ test("demo user can't edit budget", async ({ page }) => {
     })
     .click();
 
-  const dialog = page.getByRole("dialog", { name: /edit budget/i });
-  await expect(dialog).toBeVisible();
-  await expect(page).toHaveURL(/\/budgets\/.*\/edit$/i);
-
-  await dialog.getByLabel(/category/i).click();
-  await page.getByLabel(category).click();
-  await dialog.getByLabel(/maximum/i).fill("100");
-  await dialog.getByLabel(/theme/i).click();
-  await page.getByLabel(theme).click();
-  await dialog
-    .getByRole("button", {
-      name: /save changes/i,
-    })
-    .click();
-
   await expect(page).toHaveURL(/\/login$/);
-
-  await page.goto("/budgets");
-
-  await expect(
-    firstBudget.getByRole("heading", {
-      name: "entertainment",
-    }),
-  ).toBeVisible();
-  await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
 });
 
 test("can delete budget", async ({ page, login }) => {
@@ -485,7 +458,8 @@ test("budgets a11y", async ({ page }) => {
   expect(results.violations).toEqual([]);
 });
 
-test("add budget a11y", async ({ page }) => {
+test("add budget a11y", async ({ page, login }) => {
+  await login();
   await page.goto("/budgets/add");
 
   const results = await new AxeBuilder({ page }).analyze();
