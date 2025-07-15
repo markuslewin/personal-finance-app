@@ -7,6 +7,7 @@ import { type ReactNode, useState } from "react";
 import userEvent from "@testing-library/user-event";
 import { Budget } from "~/app/(main)/budgets/_components/budget";
 import { faker } from "@faker-js/faker";
+import { ProgressBarProvider } from "~/app/_components/progress";
 
 jest.mock("next/navigation");
 jest.mock("../_actions.ts");
@@ -28,7 +29,7 @@ const A = () => {
 const setup = (jsx: ReactNode) => {
   return {
     user: userEvent.setup(),
-    ...render(jsx),
+    ...render(jsx, { wrapper: ProgressBarProvider }),
   };
 };
 
