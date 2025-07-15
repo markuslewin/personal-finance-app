@@ -68,7 +68,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-signature": "^1.1.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.12",
+    "@types/node": "^24.0.14",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.30.1",
