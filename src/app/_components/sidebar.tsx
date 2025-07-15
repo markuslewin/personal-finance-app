@@ -17,7 +17,7 @@ import IconNavRecurringBills from "~/app/_assets/icon-nav-recurring-bills.svg";
 import IconNavTransactions from "~/app/_assets/icon-nav-transactions.svg";
 import IconMinimizeMenu from "~/app/_assets/icon-minimize-menu.svg";
 import { Dehydrated } from "~/app/_components/hydration";
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 
 type SidebarProps = ComponentPropsWithRef<"div"> & {
   isOpen: boolean;

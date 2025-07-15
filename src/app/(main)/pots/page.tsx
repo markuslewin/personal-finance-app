@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 import * as Meter from "~/app/_components/meter";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import { currency, percent } from "~/app/_format";

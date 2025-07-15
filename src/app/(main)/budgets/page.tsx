@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 import { nowDate } from "~/app/_now";
 import * as Donut from "~/app/_components/ui/donut";
 import { currency } from "~/app/_format";

@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconPot from "~/app/_assets/icon-pot.svg";
 import { useId, type ComponentPropsWithRef } from "react";

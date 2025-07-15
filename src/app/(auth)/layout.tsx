@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 import { type ReactNode } from "react";
 import LogoLarge from "~/app/_assets/logo-large.svg";
 

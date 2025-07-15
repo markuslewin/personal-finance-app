@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import * as ActionsMenu from "~/app/_components/actions-menu";
 import * as DeleteDialog from "~/app/(main)/pots/_components/delete-dialog";
+import { useProgress } from "~/app/_components/progress";
 
 type PotActionsProps = {
   pot: {
@@ -16,6 +17,7 @@ const PotActions = ({ pot }: PotActionsProps) => {
   const router = useRouter();
   // todo: Might want to hoist dialog to page
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const progress = useProgress();
 
   return (
     <>
@@ -25,7 +27,10 @@ const PotActions = ({ pot }: PotActionsProps) => {
           <ActionsMenu.Content>
             <ActionsMenu.Item
               onSelect={() => {
-                router.push(`/pots/${pot.id}/edit`);
+                startTransition(() => {
+                  progress.start();
+                  router.push(`/pots/${pot.id}/edit`);
+                });
               }}
             >
               Edit Pot

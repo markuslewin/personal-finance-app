@@ -1,7 +1,7 @@
 import { cx } from "class-variance-authority";
 import { type Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 import IconCaretLeft from "~/app/_assets/icon-caret-left.svg";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import { type ComponentPropsWithRef, useId } from "react";

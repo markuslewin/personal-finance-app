@@ -1,5 +1,5 @@
 import SignupForm from "~/app/(auth)/signup/_components/signup-form";
-import Link from "next/link";
+import { Link } from "~/app/_components/link";
 
 const SignupPage = async () => {
   return (

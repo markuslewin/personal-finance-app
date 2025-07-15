@@ -9,6 +9,7 @@ import { publicSans } from "~/app/_fonts";
 
 import { type ReactNode } from "react";
 import { Html } from "~/app/_components/html";
+import { ProgressBarProvider, ProgressBar } from "~/app/_components/progress";
 
 export const metadata: Metadata = {
   title: {
@@ -45,9 +46,12 @@ export default async function RootLayout({
 
   return (
     <Html lang="en" className={`${publicSans.variable}`}>
-      <body className="bg-grey-900 font-public-sans text-preset-4 text-white">
-        {children}
-      </body>
+      <ProgressBarProvider>
+        <body className="bg-grey-900 font-public-sans text-preset-4 text-white">
+          {children}
+          <ProgressBar />
+        </body>
+      </ProgressBarProvider>
     </Html>
   );
 }
