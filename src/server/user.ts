@@ -3,8 +3,9 @@ import { db } from "~/server/db";
 import bcrypt from "bcrypt";
 import { createSession, verifySession } from "~/app/_auth";
 import { userSeed } from "~/data/data";
+import { cache } from "react";
 
-export const getUser = async () => {
+export const getUser = cache(async () => {
   const session = await verifySession();
   if (session) {
     const user = await db.user.findUnique({
@@ -29,7 +30,7 @@ export const getUser = async () => {
       demo: true,
     },
   });
-};
+});
 
 export const logIn = async ({
   email,

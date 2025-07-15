@@ -3,6 +3,7 @@ import { env } from "~/env";
 import { sign, unsign } from "cookie-signature";
 import { getUser } from "~/server/user";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 const name = "userId";
 
@@ -20,7 +21,7 @@ export const createSession = async (userId: string) => {
   });
 };
 
-export const verifySession = async () => {
+export const verifySession = cache(async () => {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(name);
   if (!cookie) {
@@ -33,7 +34,7 @@ export const verifySession = async () => {
     }
   }
   return null;
-};
+});
 
 export const deleteSession = async () => {
   const cookieStore = await cookies();
