@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import { test, expect } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { type ReactNode, useState } from "react";
 import userEvent from "@testing-library/user-event";

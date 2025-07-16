@@ -67,7 +67,7 @@ export const ProgressBarProvider = (props: ProgressProps) => {
   useInterval(
     () => {
       setValue((value) => {
-        return Math.min(getDiff(value), 99);
+        return Math.min(value + getDiff(value), 99);
       });
     },
     loading ? 750 : null,
@@ -110,12 +110,14 @@ export const ProgressBar = () => {
         "pointer-events-none fixed inset-x-0 top-0 bg-white transition-opacity",
         loading ? "opacity-100" : "opacity-0",
       )}
+      data-testid="progress-bar-root"
     >
       <div
         className="h-50 origin-left bg-grey-900 transition-transform ease-initial"
         style={{
           transform: `scaleX(${value / 100})`,
         }}
+        data-testid="progress-bar-indicator"
       />
     </div>
   );
