@@ -68,7 +68,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-signature": "^1.1.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.14",
+    "@types/node": "^22.16.4",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.31.0",
@@ -91,7 +91,7 @@
     "initVersion": "7.38.1"
   },
   "engines": {
-    "node": ">= 21"
+    "node": "22"
   },
   "packageManager": "npm@10.9.0",
   "prisma": {
