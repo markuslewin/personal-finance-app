@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS base
+FROM node:22-alpine AS base
 
 FROM base AS deps
 WORKDIR /app
@@ -6,12 +6,6 @@ COPY package.json package-lock.json ./
 # `postinstall` generates the Prisma Client
 COPY prisma ./prisma
 RUN npm ci
-
-FROM base AS dev
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-CMD [ "npm", "run", "dev" ]
 
 FROM base AS build
 # Skip validating runtime variables of app during build

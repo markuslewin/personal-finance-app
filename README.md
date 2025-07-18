@@ -2,19 +2,19 @@
 
 ![Design preview for the Personal finance app coding challenge](./preview.jpg)
 
-## Starting the dev server
+## Development
 
 The web app fetches data from an MS SQL database. The project contains configurations for managing a local database using Docker.
 
-Data is persisted to the volume `mssql_data`.
+1. Start the database: `docker compose up`
+2. Apply the database migrations, generate the database client, and seed the database: `npm run db:reset`
+3. Start the dev server of the web app: `npm run dev`
+
+[`migrate reset`](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#migrate-reset) provides flags to skip generating the client or seeding the database, e.g. `npm run db:reset -- --skip-seed`.
 
 The connection string inside of `.env.example` points to the database server created by Docker Compose.
 
-1. Start the app and database: `docker compose -f compose.dev.yaml up --build --watch`
-2. Apply database migrations: `npm run db:migrate`
-3. (Optional) Seed with demo data: `npm run db:seed`
-
-Use `docker compose -f compose.dev.yaml down` to stop containers.
+Data is persisted to the volume `mssql_data`.
 
 ## Making changes to the database
 
@@ -25,24 +25,6 @@ The common flow for schema changes:
 3. Commit migration to version control
 
 Use `npm run db:reset` to reset the database.
-
-## Running the tests
-
-Start the dev server, then:
-
-- Headless: `npm run test`
-- UI Mode: `npm run test:dev`
-
-## Useful commands
-
-Useful commands for managing volumes:
-
-- `docker volume rm <VOLUME NAME>`: Clear database by removing volume
-- `docker volume ls`: List volumes
-
----
-
-The production build can be run locally with `docker compose -f compose.prod.yaml`.
 
 ## Welcome! 👋
 

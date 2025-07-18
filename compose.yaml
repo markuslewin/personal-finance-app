@@ -1,0 +1,21 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Passw0rd
+    ports:
+      - 1433:1433
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  # app:
+  #   build: .
+  #   env_file: .env
+  #   environment:
+  #     DATABASE_URL: sqlserver://db;database=master;user=sa;password=Passw0rd;encrypt=true;trustServerCertificate=true;
+  #   ports:
+  #     - 3000:3000
+
+volumes:
+  mssql_data:
