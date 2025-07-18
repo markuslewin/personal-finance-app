@@ -23,8 +23,15 @@ export const useAppForm = <Schema extends ZodTypeAny>({
   return useForm({
     constraint: getZodConstraint(schema),
     defaultValue,
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
+    // todo:
+    // We'd like to validate `onBlur`, but this causes dialogs to be focused when the user tabs out of an input
+    // See https://github.com/radix-ui/primitives/issues/2436, and possibly https://github.com/radix-ui/primitives/issues/3185
+    // - As a `focusout` event handler runs, the `document.activeElement` is temporarily set to `body` by the browser
+    // - Conform creates a "submitter" `button` to `requestSubmit` in order to trigger validation
+    // Radix's `FocusScope` listens for mutations. When it receives the mutation record of Conform's `button` mutations during a `focusout` event, it sees the `document.activeElement` is `body`, and brings the focus to `Dialog.Content`
+    // shouldValidate: "onBlur",
+    // shouldRevalidate: "onInput",
+    shouldValidate: "onInput",
     lastResult,
     onValidate: ({ formData }) => {
       return parseWithZod(formData, { schema });
