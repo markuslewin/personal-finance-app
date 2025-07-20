@@ -2,8 +2,10 @@
 
 import { type ReactNode } from "react";
 import * as Form from "~/app/_components/form";
-import { add } from "~/app/(main)/budgets/_actions";
+import { dehydratedAdd, hydratedAdd } from "~/app/(main)/budgets/_actions";
 import { type BudgetSchema, budgetSchema } from "~/app/(main)/budgets/_schemas";
+import { useRouter } from "next/navigation";
+import { useAppEvent } from "~/app/_components/app-event";
 
 type AddBudgetFormProps = {
   children: ReactNode;
@@ -11,7 +13,21 @@ type AddBudgetFormProps = {
 };
 
 const AddBudgetForm = (props: AddBudgetFormProps) => {
-  return <Form.Root schema={budgetSchema} action={add} {...props} />;
+  const router = useRouter();
+  const { setAppEvent } = useAppEvent();
+
+  return (
+    <Form.Root
+      schema={budgetSchema}
+      dehydratedAction={dehydratedAdd}
+      hydratedAction={hydratedAdd}
+      onSuccess={(data) => {
+        router.push(data.redirect);
+        setAppEvent({ type: "created-budget", data: data.budget });
+      }}
+      {...props}
+    />
+  );
 };
 
 export default AddBudgetForm;

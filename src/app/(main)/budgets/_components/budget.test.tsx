@@ -9,6 +9,7 @@ import userEvent from "@testing-library/user-event";
 import { Budget } from "~/app/(main)/budgets/_components/budget";
 import { faker } from "@faker-js/faker";
 import { ProgressBarProvider } from "~/app/_components/progress";
+import { AppEventProvider } from "~/app/_components/app-event";
 
 jest.mock("next/navigation");
 jest.mock("../_actions.ts");
@@ -27,10 +28,18 @@ const A = () => {
   );
 };
 
+const Providers = ({ children }: { children: ReactNode }) => {
+  return (
+    <AppEventProvider>
+      <ProgressBarProvider>{children}</ProgressBarProvider>
+    </AppEventProvider>
+  );
+};
+
 const setup = (jsx: ReactNode) => {
   return {
     user: userEvent.setup(),
-    ...render(jsx, { wrapper: ProgressBarProvider }),
+    ...render(jsx, { wrapper: Providers }),
   };
 };
 

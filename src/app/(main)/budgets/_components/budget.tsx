@@ -1,6 +1,8 @@
+"use client";
+
 import { Link } from "~/app/_components/link";
 import Image from "next/image";
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import BudgetActions from "~/app/(main)/budgets/_components/budget-actions-menu";
 import { Hydrated, Dehydrated } from "~/app/_components/hydration";
 import { currency, date } from "~/app/_format";
@@ -8,6 +10,7 @@ import { clamp } from "~/app/_math";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import * as Meter from "~/app/_components/meter";
+import { useAppEvent } from "~/app/_components/app-event";
 
 type BudgetProps = {
   budget: {
@@ -31,10 +34,25 @@ type BudgetProps = {
 };
 
 export const Budget = ({ budget, spent }: BudgetProps) => {
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const meterLabelId = useId();
   const latestSpendingLabelId = useId();
+  const { appEvent, setAppEvent } = useAppEvent();
 
   const free = Math.max(0, budget.maximum - spent);
+
+  useEffect(() => {
+    let id: NodeJS.Timeout;
+    if (appEvent?.type === "created-budget" && appEvent.data.id === budget.id) {
+      id = setTimeout(() => {
+        headingRef.current!.focus();
+        setAppEvent(null);
+      });
+    }
+    return () => {
+      clearTimeout(id);
+    };
+  }, [budget.id, appEvent, setAppEvent]);
 
   return (
     <article
@@ -46,7 +64,12 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
     >
       <header className="grid grid-cols-[auto_1fr_auto] items-center gap-200">
         <div className="size-200 rounded-full bg-[var(--theme-color)] forced-color-adjust-none" />
-        <h3 className="text-preset-2 text-grey-900" data-testid="name">
+        <h3
+          className="text-preset-2 text-grey-900"
+          ref={headingRef}
+          tabIndex={-1}
+          data-testid="name"
+        >
           {budget.category.name}
         </h3>
         <Hydrated>

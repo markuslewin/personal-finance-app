@@ -6,8 +6,8 @@ import { type Schema, schema } from "~/app/(auth)/signup/_schema";
 import { signUp as _signUp, UserError } from "~/server/user";
 import { z } from "zod";
 
-export const signUp = async (prevState: unknown, formData: FormData) => {
-  const submission = await parseWithZod(formData, {
+const parseAndSignUp = (formData: FormData) => {
+  return parseWithZod(formData, {
     async: true,
     schema: schema.transform(async (val, ctx) => {
       try {
@@ -35,6 +35,13 @@ export const signUp = async (prevState: unknown, formData: FormData) => {
       return true;
     }),
   });
+};
+
+export const dehydratedSignUp = async (
+  prevState: unknown,
+  formData: FormData,
+) => {
+  const submission = await parseAndSignUp(formData);
   if (submission.status !== "success") {
     return submission.reply({
       hideFields: ["create-password"] satisfies [keyof Schema],
@@ -42,4 +49,18 @@ export const signUp = async (prevState: unknown, formData: FormData) => {
   }
 
   redirect("/");
+};
+
+export const hydratedSignUp = async (formData: FormData) => {
+  const submission = await parseAndSignUp(formData);
+  if (submission.status !== "success") {
+    return {
+      ok: false,
+      result: submission.reply({
+        hideFields: ["create-password"] satisfies [keyof Schema],
+      }),
+    } as const;
+  }
+
+  return { ok: true, data: { redirect: "/", budget: { id: "todo" } } } as const;
 };

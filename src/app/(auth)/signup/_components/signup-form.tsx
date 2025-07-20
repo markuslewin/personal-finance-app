@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signUp } from "~/app/(auth)/signup/_actions";
+import { dehydratedSignUp, hydratedSignUp } from "~/app/(auth)/signup/_actions";
 import { schema } from "~/app/(auth)/signup/_schema";
 import * as Form from "~/app/_components/form";
 import * as Toggle from "@radix-ui/react-toggle";
@@ -12,12 +12,21 @@ import IconShowPassword from "~/app/_assets/icon-show-password.svg";
 import Status from "~/app/_components/status";
 import { FormStatus } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 const SignupForm = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Form.Root action={signUp} schema={schema}>
+    <Form.Root
+      schema={schema}
+      dehydratedAction={dehydratedSignUp}
+      hydratedAction={hydratedSignUp}
+      onSuccess={(data) => {
+        router.push(data.redirect);
+      }}
+    >
       <div className="grid gap-50">
         <Form.Label name="name">Name</Form.Label>
         <Form.Textbox name="name" />

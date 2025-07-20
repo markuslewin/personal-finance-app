@@ -17,8 +17,8 @@ import {
   updateBudget,
 } from "~/server/budget";
 
-export const add = async (prevState: unknown, formData: FormData) => {
-  const submission = await parseWithZod(formData, {
+const parseAndAdd = (formData: FormData) => {
+  return parseWithZod(formData, {
     async: true,
     schema: budgetSchema.transform(async (val, ctx) => {
       try {
@@ -40,12 +40,29 @@ export const add = async (prevState: unknown, formData: FormData) => {
       }
     }),
   });
+};
+
+export const dehydratedAdd = async (prevState: unknown, formData: FormData) => {
+  const submission = await parseAndAdd(formData);
   if (submission.status !== "success") {
     return submission.reply();
   }
 
   revalidatePath("/budgets");
   redirect("/budgets");
+};
+
+export const hydratedAdd = async (formData: FormData) => {
+  const submission = await parseAndAdd(formData);
+  if (submission.status !== "success") {
+    return { ok: false, result: submission.reply() } as const;
+  }
+
+  revalidatePath("/budgets");
+  return {
+    ok: true,
+    data: { redirect: "/budgets", budget: submission.value },
+  } as const;
 };
 
 // todo: Restructure, see Pot action

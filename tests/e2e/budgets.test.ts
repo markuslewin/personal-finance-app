@@ -41,11 +41,11 @@ test("budget maximum errors", async ({ page, login }) => {
 test("add budget dialog", async ({ page, login }) => {
   await login();
   await page.goto("/budgets");
-  await page
-    .getByRole("link", {
-      name: /add new budget/i,
-    })
-    .click();
+
+  const addLink = page.getByRole("link", {
+    name: /add new budget/i,
+  });
+  await addLink.click();
 
   await expect(
     page.getByRole("dialog", {
@@ -66,6 +66,7 @@ test("add budget dialog", async ({ page, login }) => {
     }),
   ).not.toBeVisible();
   await expect(page).toHaveURL(/\/budgets$/i);
+  await expect(addLink).toBeFocused();
 });
 
 test("can create budget", async ({ page, login }) => {
@@ -99,11 +100,9 @@ test("can create budget", async ({ page, login }) => {
   ).toBeAttached();
 
   const lastBudget = page.getByTestId("budget").last();
-  // todo: Scroll
-  // await expect(lastBudget).toBeInViewport();
   await expect(
     lastBudget.getByRole("heading", { name: category }),
-  ).toBeVisible();
+  ).toBeFocused();
   await expect(lastBudget.getByText(/maximum/i)).toHaveText(
     new RegExp(String(max)),
   );
@@ -133,11 +132,10 @@ test("can edit budget", async ({ page, login }) => {
   ).toBeVisible();
   await expect(firstBudget.getByText(/maximum/i)).toHaveText(/\$50.00/i);
 
-  await firstBudget
-    .getByRole("button", {
-      name: /actions/i,
-    })
-    .click();
+  const actionsButton = firstBudget.getByRole("button", {
+    name: /actions/i,
+  });
+  await actionsButton.click();
   await page
     .getByRole("menuitem", {
       name: /edit/i,
@@ -163,6 +161,7 @@ test("can edit budget", async ({ page, login }) => {
     page.getByRole("status").and(page.getByText(/saving changes/i)),
   ).toBeAttached();
   await expect(dialog).not.toBeAttached();
+  await expect(actionsButton).toBeFocused();
   await expect(
     firstBudget.getByRole("heading", {
       name: category,

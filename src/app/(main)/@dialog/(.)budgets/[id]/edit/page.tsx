@@ -34,7 +34,9 @@ const EditBudgetPage = async ({
   ]);
 
   return (
-    <RoutedDialog>
+    <RoutedDialog
+      onCloseAppEvent={{ type: "edit-budget", data: { id: budget.id } }}
+    >
       <Dialog.Portal>
         <Dialog.Overlay asChild>
           <DialogUI.Overlay>

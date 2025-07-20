@@ -2,20 +2,26 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
-import { type ComponentPropsWithRef } from "react";
+import { startTransition, type ComponentPropsWithRef } from "react";
+import { type AppEvent, useAppEvent } from "~/app/_components/app-event";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface RoutedDialogProps extends ComponentPropsWithRef<typeof Dialog.Root> {}
+interface RoutedDialogProps extends ComponentPropsWithRef<typeof Dialog.Root> {
+  onCloseAppEvent: AppEvent;
+}
 
-const RoutedDialog = (props: RoutedDialogProps) => {
+const RoutedDialog = ({ onCloseAppEvent, ...props }: RoutedDialogProps) => {
   const router = useRouter();
+  const { setAppEvent } = useAppEvent();
 
   return (
     <Dialog.Root
       open={true}
       onOpenChange={(open) => {
         if (!open) {
-          router.back();
+          startTransition(() => {
+            router.back();
+            setAppEvent(onCloseAppEvent);
+          });
         }
       }}
       {...props}

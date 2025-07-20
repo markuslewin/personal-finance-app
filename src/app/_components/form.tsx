@@ -10,27 +10,30 @@ import {
   getSelectProps,
   type SubmissionResult,
   useField,
+  useForm,
   useInputControl,
 } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
+import { cx } from "class-variance-authority";
 import {
+  type ComponentPropsWithRef,
   createContext,
   type FocusEvent,
   type FocusEventHandler,
   type RefObject,
+  startTransition,
   useActionState,
   useContext,
   useMemo,
   useRef,
-  type ComponentPropsWithRef,
+  useState,
 } from "react";
-import { useAppForm } from "~/app/_form";
-import * as Dialog from "~/app/_components/ui/dialog";
-import TextboxUI from "~/app/_components/ui/textbox";
-import ComboboxUI from "~/app/_components/ui/combobox";
 import type z from "zod";
 import { type ZodTypeAny } from "zod";
-import { cx } from "class-variance-authority";
+import ComboboxUI from "~/app/_components/ui/combobox";
+import * as Dialog from "~/app/_components/ui/dialog";
 import * as Select from "~/app/_components/ui/select";
+import TextboxUI from "~/app/_components/ui/textbox";
 
 type RootProps<Schema extends ZodTypeAny> = Omit<
   ComponentPropsWithRef<"form">,
@@ -38,25 +41,65 @@ type RootProps<Schema extends ZodTypeAny> = Omit<
 > & {
   schema: Schema;
   defaultValue?: DefaultValue<z.input<Schema>>;
-  action: (
+  dehydratedAction: (
     prevState: unknown,
     formData: FormData,
-  ) => Promise<SubmissionResult<string[]> | undefined>;
+  ) => Promise<SubmissionResult<string[]>>;
+  hydratedAction: (formData: FormData) => Promise<
+    | { ok: false; result: SubmissionResult<string[]> }
+    // todo: `data` generic
+    | { ok: true; data: { redirect: string; budget: { id: string } } }
+  >;
+  onSuccess: (data: { redirect: string; budget: { id: string } }) => void;
 };
 
 export const Root = <Schema extends ZodTypeAny>({
   schema,
   defaultValue,
-  action,
+  dehydratedAction,
+  hydratedAction,
+  onSuccess,
   ...props
 }: RootProps<Schema>) => {
-  // todo: Move into `useAppForm`
-  const [lastResult, formAction] = useActionState(action, undefined);
-  const [form] = useAppForm({
-    schema,
+  const [dehydratedLastResult, formAction] = useActionState(
+    dehydratedAction,
+    undefined,
+  );
+  const [hydratedLastResult, setHydratedLastResult] = useState<
+    SubmissionResult<string[]> | undefined
+  >(undefined);
+  const [form] = useForm({
+    constraint: getZodConstraint(schema),
     defaultValue,
-    lastResult,
-    action: formAction,
+    // todo:
+    // We'd like to validate `onBlur`, but this causes dialogs to be focused when the user tabs out of an input
+    // See https://github.com/radix-ui/primitives/issues/2436, and possibly https://github.com/radix-ui/primitives/issues/3185
+    // - As a `focusout` event handler runs, the `document.activeElement` is temporarily set to `body` by the browser
+    // - Conform creates a "submitter" `button` to `requestSubmit` in order to trigger validation
+    // Radix's `FocusScope` listens for mutations. When it receives the mutation record of Conform's `button` mutations during a `focusout` event, it sees the `document.activeElement` is `body`, and brings the focus to `Dialog.Content`
+    // shouldValidate: "onBlur",
+    // shouldRevalidate: "onInput",
+    shouldValidate: "onInput",
+    lastResult: hydratedLastResult ?? dehydratedLastResult,
+    onValidate: ({ formData }) => {
+      return parseWithZod(formData, { schema });
+    },
+    // Avoid the automatic form reset of hydrated forms in React after server-side validation fails
+    onSubmit: (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      // `useFormStatus().isPending`
+      startTransition(async () => {
+        const response = await hydratedAction(formData);
+        if (response.ok) {
+          startTransition(() => {
+            onSuccess(response.data);
+          });
+        } else {
+          setHydratedLastResult(response.result);
+        }
+      });
+    },
   });
 
   return (
