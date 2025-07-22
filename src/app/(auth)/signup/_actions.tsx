@@ -27,6 +27,7 @@ export const signUp = async (prevState: unknown, formData: FormData) => {
             code: z.ZodIssueCode.custom,
             message: error.message,
           });
+          return z.NEVER;
         }
 
         throw error;

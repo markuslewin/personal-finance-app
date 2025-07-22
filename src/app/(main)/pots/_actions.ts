@@ -79,8 +79,8 @@ export const edit = async (prevState: unknown, formData: FormData) => {
               code: z.ZodIssueCode.custom,
               message: error.message,
             });
+            return z.NEVER;
           }
-          return z.NEVER;
         }
         throw error;
       }
