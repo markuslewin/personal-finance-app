@@ -75,7 +75,7 @@
     "eslint-config-next": "^15.4.2",
     "execa": "^9.6.0",
     "jest": "^30.0.5",
-    "jest-environment-jsdom": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.5",
     "postcss": "^8.4.39",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
