@@ -31,6 +31,8 @@ import type z from "zod";
 import { type ZodTypeAny } from "zod";
 import { cx } from "class-variance-authority";
 import * as Select from "~/app/_components/ui/select";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import { nbsp } from "~/app/_unicode";
 
 type RootProps<Schema extends ZodTypeAny> = Omit<
   ComponentPropsWithRef<"form">,
@@ -94,6 +96,28 @@ export const Message = ({ name, ...props }: MessageProps) => {
   );
 };
 
+type CharactersLeftProps = ComponentPropsWithRef<typeof Dialog.Message> & {
+  name: string;
+};
+
+export const CharactersLeft = ({ name, ...props }: CharactersLeftProps) => {
+  const [meta] = useField(name);
+
+  const { maxLength } = meta;
+  if (typeof maxLength !== "number") {
+    throw new Error("Expected maxLength to be set");
+  }
+
+  const length = typeof meta.value === "string" ? meta.value.length : 0;
+
+  return (
+    <Dialog.Message id={meta.descriptionId} {...props}>
+      <Hydrated>{Math.max(0, maxLength - length)} characters left</Hydrated>
+      <Dehydrated>{nbsp}</Dehydrated>
+    </Dialog.Message>
+  );
+};
+
 type HiddenFieldProps = ComponentPropsWithRef<"input"> & {
   name: string;
 };
@@ -106,7 +130,7 @@ export const HiddenField = ({ name, ...props }: HiddenFieldProps) => {
 
 type TextboxProps = ComponentPropsWithRef<typeof TextboxUI> & {
   name: string;
-  type?: Parameters<typeof getInputProps>[1]["type"];
+  type?: "text" | "password";
 };
 
 export const Textbox = ({ name, type = "text", ...props }: TextboxProps) => {
@@ -114,7 +138,11 @@ export const Textbox = ({ name, type = "text", ...props }: TextboxProps) => {
 
   return (
     <TextboxUI
-      {...getInputProps(meta, { type, ariaAttributes: true })}
+      {...getInputProps(meta, {
+        type,
+        ariaAttributes: true,
+        ariaDescribedBy: meta.descriptionId,
+      })}
       key={meta.key}
       {...props}
     />

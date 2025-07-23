@@ -7,8 +7,6 @@ import Button from "~/app/_components/ui/button";
 import EditPotForm from "~/app/(main)/pots/_components/edit-pot-form";
 import DeletePotForm from "~/app/(main)/pots/_components/delete-pot-form";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
-import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
-import { nbsp } from "~/app/_unicode";
 import DialogPage from "~/app/_components/ui/dialog-page";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
@@ -46,14 +44,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <Dialog.Group>
               <Form.Label name="name">Pot Name</Form.Label>
               <Form.Textbox name="name" placeholder="e.g. Rainy Days" />
-              <Form.Message name="name" />
-              {/* todo: ARIA description */}
-              <Dialog.Message>
-                <Hydrated>
-                  <CharactersLeft name="name" /> characters left
-                </Hydrated>
-                <Dehydrated>{nbsp}</Dehydrated>
-              </Dialog.Message>
+              <Form.CharactersLeft name="name" />
             </Dialog.Group>
             <Dialog.Group>
               <Form.Label name="target">Target</Form.Label>

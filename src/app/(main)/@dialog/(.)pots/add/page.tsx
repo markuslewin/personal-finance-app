@@ -5,7 +5,6 @@ import * as DialogUI from "~/app/_components/ui/dialog";
 import Button from "~/app/_components/ui/button";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import AddPotForm from "~/app/(main)/pots/_components/add-pot-form";
-import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
@@ -59,11 +58,7 @@ const AddPotPage = async () => {
                           name="name"
                           placeholder="e.g. Rainy Days"
                         />
-                        <Form.Message name="name" />
-                        {/* todo: ARIA description */}
-                        <DialogUI.Message>
-                          <CharactersLeft name="name" /> characters left
-                        </DialogUI.Message>
+                        <Form.CharactersLeft name="name" />
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="target">Target</Form.Label>

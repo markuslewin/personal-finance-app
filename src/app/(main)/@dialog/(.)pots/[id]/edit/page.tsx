@@ -6,9 +6,6 @@ import Button from "~/app/_components/ui/button";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import { notFound } from "next/navigation";
 import EditPotForm from "~/app/(main)/pots/_components/edit-pot-form";
-import { Dehydrated, Hydrated } from "~/app/_components/hydration";
-import { nbsp } from "~/app/_unicode";
-import CharactersLeft from "~/app/(main)/pots/_components/characters-left";
 import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
@@ -65,14 +62,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                           name="name"
                           placeholder="e.g. Rainy Days"
                         />
-                        <Form.Message name="name" />
-                        {/* todo: ARIA description */}
-                        <DialogUI.Message>
-                          <Hydrated>
-                            <CharactersLeft name="name" /> characters left
-                          </Hydrated>
-                          <Dehydrated>{nbsp}</Dehydrated>
-                        </DialogUI.Message>
+                        <Form.CharactersLeft name="name" />
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="target">Target</Form.Label>
