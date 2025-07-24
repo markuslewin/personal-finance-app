@@ -1,6 +1,5 @@
 import * as Dialog from "~/app/_components/ui/dialog";
 import * as Form from "~/app/_components/form";
-import * as PrefixTextbox from "~/app/_components/ui/prefix-textbox";
 import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/_components/themes-combobox";
