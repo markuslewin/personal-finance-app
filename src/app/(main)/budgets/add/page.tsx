@@ -1,5 +1,6 @@
 import * as Dialog from "~/app/_components/ui/dialog";
 import * as Form from "~/app/_components/form";
+import * as PrefixTextbox from "~/app/_components/ui/prefix-textbox";
 import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/_components/themes-combobox";
@@ -11,6 +12,7 @@ import Spinner from "~/app/_components/ui/spinner";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const AddBudgetPage = async () => {
   await requireRealUser();
@@ -53,7 +55,7 @@ const AddBudgetPage = async () => {
             </Dialog.Group>
             <Dialog.Group>
               <Form.Label name="maximum">Maximum Spend</Form.Label>
-              <Form.Textbox name="maximum" placeholder="e.g. 2000" />
+              <DollarTextbox name="maximum" placeholder="e.g. 2000" />
               <Form.Message name="maximum" />
             </Dialog.Group>
             <Dialog.Group>

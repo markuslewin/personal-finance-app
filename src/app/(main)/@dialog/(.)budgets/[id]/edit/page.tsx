@@ -14,6 +14,7 @@ import { getBudget } from "~/server/budget";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const EditBudgetPage = async ({
   params,
@@ -77,7 +78,7 @@ const EditBudgetPage = async ({
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="maximum">Maximum Spend</Form.Label>
-                        <Form.Textbox name="maximum" placeholder="e.g. 2000" />
+                        <DollarTextbox name="maximum" placeholder="e.g. 2000" />
                         <Form.Message name="maximum" />
                       </DialogUI.Group>
                       <DialogUI.Group>

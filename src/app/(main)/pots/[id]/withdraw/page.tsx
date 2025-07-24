@@ -12,6 +12,7 @@ import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
 import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const WithdrawFromPotPage = async ({
   params,
@@ -53,7 +54,7 @@ const WithdrawFromPotPage = async ({
             <Form.HiddenField name="id" />
             <Dialog.Group>
               <Form.Label name="amount">Amount to Withdraw</Form.Label>
-              <Form.Textbox name="amount" placeholder="e.g. 2000" />
+              <DollarTextbox name="amount" placeholder="e.g. 2000" />
               <Form.Message name="amount" />
             </Dialog.Group>
           </Dialog.Groups>

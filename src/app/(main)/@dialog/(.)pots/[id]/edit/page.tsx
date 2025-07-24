@@ -12,6 +12,7 @@ import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
 import { getThemesWithPot } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   await requireRealUser();
@@ -66,7 +67,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                       </DialogUI.Group>
                       <DialogUI.Group>
                         <Form.Label name="target">Target</Form.Label>
-                        <Form.Textbox name="target" placeholder="e.g. 2000" />
+                        <DollarTextbox name="target" placeholder="e.g. 2000" />
                         <Form.Message name="target" />
                       </DialogUI.Group>
                       <DialogUI.Group>
