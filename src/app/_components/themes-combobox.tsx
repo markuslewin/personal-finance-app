@@ -18,7 +18,7 @@ const ThemesCombobox = async ({ name, themes }: ThemesComboboxProps) => {
   return (
     <>
       <Dehydrated>
-        <Form.Combobox name={name}>
+        <Form.Combobox className="pl-[2.9375rem]" name={name}>
           {themes
             .filter((t) => !t.unavailable)
             .map((theme) => {
