@@ -33,6 +33,7 @@ import { cx } from "class-variance-authority";
 import * as Select from "~/app/_components/ui/select";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import { nbsp } from "~/app/_unicode";
+import * as Slot from "@radix-ui/react-slot";
 
 type RootProps<Schema extends ZodTypeAny> = Omit<
   ComponentPropsWithRef<"form">,
@@ -40,6 +41,7 @@ type RootProps<Schema extends ZodTypeAny> = Omit<
 > & {
   schema: Schema;
   defaultValue?: DefaultValue<z.input<Schema>>;
+  asChild?: boolean;
   action: (
     prevState: unknown,
     formData: FormData,
@@ -49,6 +51,7 @@ type RootProps<Schema extends ZodTypeAny> = Omit<
 export const Root = <Schema extends ZodTypeAny>({
   schema,
   defaultValue,
+  asChild = false,
   action,
   ...props
 }: RootProps<Schema>) => {
@@ -61,9 +64,11 @@ export const Root = <Schema extends ZodTypeAny>({
     action: formAction,
   });
 
+  const Comp = asChild ? Slot.Root : FormUI.Root;
+
   return (
     <FormProvider context={form.context}>
-      <FormUI.Root {...getFormProps(form)} action={formAction} {...props} />
+      <Comp {...getFormProps(form)} action={formAction} {...props} />
     </FormProvider>
   );
 };
