@@ -18,6 +18,7 @@ import { getPots } from "~/server/pot";
 import { getTransactions, getTransactionsForMonth } from "~/server/transaction";
 import { getBalance } from "~/server/balance";
 import { getRecurringBills } from "~/server/recurring-bill";
+import { getRelevantBudgetIds } from "~/app/(main)/_budget";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -42,21 +43,22 @@ const OverviewPage = async () => {
     getRecurringBills(),
   ]);
 
+  const expensesTransactions = transactionsThisMonth.filter(
+    (t) => t.amount < 0,
+  );
+
   // Intro
   const income = sum(
     transactionsThisMonth.filter((t) => t.amount > 0),
     (t) => t.amount,
   );
-  const expenses = sum(
-    transactionsThisMonth.filter((t) => t.amount < 0),
-    (t) => t.amount,
-  );
+  const expenses = sum(expensesTransactions, (t) => t.amount);
 
   // Pots
   const totalSaved = sum(pots, (p) => p.total);
 
   // Budgets
-  const totalByBudgetId = transactionsThisMonth.reduce(
+  const totalByBudgetId = expensesTransactions.reduce(
     (acc, transaction) => {
       if (transaction.category.budget === null) {
         return acc;
@@ -298,22 +300,27 @@ const PotsCard = ({ totalSaved, pots }: PotsCardProps) => {
         </div>
         <h3 className="sr-only">Per Pot</h3>
         <ul
-          className="grid grow basis-[17.3125rem] grid-cols-2 gap-200 py-50"
+          className="grid grow basis-[17.3125rem] auto-cols-fr grid-flow-col grid-rows-2 gap-200 py-50"
           role="list"
           aria-labelledby={headingId}
         >
-          {pots.map((pot) => {
-            return (
-              <LegendItem key={pot.id} color={pot.theme.color}>
-                <LegendName>{pot.name}</LegendName>
-                <LegendValue>
-                  {currency(pot.total, {
-                    trailingZeroDisplay: "stripIfInteger",
-                  })}
-                </LegendValue>
-              </LegendItem>
-            );
-          })}
+          {pots
+            .toSorted((a, b) => {
+              return b.total - a.total;
+            })
+            .slice(0, 4)
+            .map((pot) => {
+              return (
+                <LegendItem key={pot.id} color={pot.theme.color}>
+                  <LegendName>{pot.name}</LegendName>
+                  <LegendValue>
+                    {currency(pot.total, {
+                      trailingZeroDisplay: "stripIfInteger",
+                    })}
+                  </LegendValue>
+                </LegendItem>
+              );
+            })}
         </ul>
       </CardContent>
     </Card>
@@ -409,6 +416,8 @@ type BudgetsCardProps = {
 const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
   const headingId = useId();
 
+  const relevantBudgetIds = new Set(getRelevantBudgetIds(budgets));
+
   return (
     <Card className="desktop:row-span-2 desktop:row-start-1">
       <CardHeader>
@@ -451,14 +460,18 @@ const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
             role="list"
             aria-labelledby={headingId}
           >
-            {budgets.map((budget) => {
-              return (
-                <LegendItem key={budget.id} color={budget.theme.color}>
-                  <LegendName>{budget.category.name}</LegendName>
-                  <LegendValue>{currency(-1 * budget.spent)}</LegendValue>
-                </LegendItem>
-              );
-            })}
+            {budgets
+              .filter((budget) => {
+                return relevantBudgetIds.has(budget.id);
+              })
+              .map((budget) => {
+                return (
+                  <LegendItem key={budget.id} color={budget.theme.color}>
+                    <LegendName>{budget.category.name}</LegendName>
+                    <LegendValue>{currency(-1 * budget.spent)}</LegendValue>
+                  </LegendItem>
+                );
+              })}
           </ul>
         </div>
       </CardContent>
