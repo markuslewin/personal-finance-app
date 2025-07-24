@@ -1,4 +1,5 @@
 import * as Dialog from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import * as Form from "~/app/_components/form";
 import * as DeleteDialog from "~/app/(main)/pots/_components/delete-dialog";
 import { notFound } from "next/navigation";
@@ -41,18 +42,18 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           }}
         >
           <Form.HiddenField name="id" />
-          <Dialog.Groups>
-            <Dialog.Group>
+          <FormUI.Groups>
+            <FormUI.Group>
               <Form.Label name="name">Pot Name</Form.Label>
               <Form.Textbox name="name" placeholder="e.g. Rainy Days" />
               <Form.CharactersLeft name="name" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="target">Target</Form.Label>
               <DollarTextbox name="target" placeholder="e.g. 2000" />
               <Form.Message name="target" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="theme">Theme</Form.Label>
               <ThemesCombobox
                 name="theme"
@@ -62,8 +63,8 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 }))}
               />
               <Form.Message name="theme" />
-            </Dialog.Group>
-          </Dialog.Groups>
+            </FormUI.Group>
+          </FormUI.Groups>
           <Status className="sr-only">
             <Pending>Saving changes</Pending>
           </Status>

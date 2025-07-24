@@ -1,4 +1,5 @@
 import * as Dialog from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import * as Form from "~/app/_components/form";
 import * as DeleteDialog from "~/app/(main)/budgets/_components/delete-dialog";
 import { notFound } from "next/navigation";
@@ -52,18 +53,18 @@ const EditBudgetPage = async ({
           }}
         >
           <Form.HiddenField name="id" />
-          <Dialog.Groups>
-            <Dialog.Group>
+          <FormUI.Groups>
+            <FormUI.Group>
               <Form.Label name="category">Budget Category</Form.Label>
               <CategoriesCombobox name="category" categories={categories} />
               <Form.Message name="category" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="maximum">Maximum Spend</Form.Label>
               <DollarTextbox name="maximum" placeholder="e.g. 2000" />
               <Form.Message name="maximum" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="theme">Theme</Form.Label>
               <ThemesCombobox
                 name="theme"
@@ -73,8 +74,8 @@ const EditBudgetPage = async ({
                 }))}
               />
               <Form.Message name="theme" />
-            </Dialog.Group>
-          </Dialog.Groups>
+            </FormUI.Group>
+          </FormUI.Groups>
           <Status className="sr-only">
             <Pending>Saving changes</Pending>
           </Status>

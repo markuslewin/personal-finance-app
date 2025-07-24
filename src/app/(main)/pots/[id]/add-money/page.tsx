@@ -1,6 +1,7 @@
 import * as Form from "~/app/_components/form";
 import { notFound } from "next/navigation";
 import * as Dialog from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import Button from "~/app/_components/ui/button";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import AddMoneyForm from "~/app/(main)/pots/_components/add-money-form";
@@ -47,14 +48,14 @@ const AddMoneyToPotPage = async ({
               <div className="mt-[2.25rem] text-preset-5-bold">{nbsp}</div>
             </div>
           </Dehydrated>
-          <Dialog.Groups>
+          <FormUI.Groups>
             <Form.HiddenField name="id" />
-            <Dialog.Group>
+            <FormUI.Group>
               <Form.Label name="amount">Amount to Add</Form.Label>
               <DollarTextbox name="amount" placeholder="e.g. 2000" />
               <Form.Message name="amount" />
-            </Dialog.Group>
-          </Dialog.Groups>
+            </FormUI.Group>
+          </FormUI.Groups>
           <Status className="sr-only">
             <Pending>Adding money</Pending>
           </Status>

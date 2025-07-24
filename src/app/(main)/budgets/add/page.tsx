@@ -1,4 +1,5 @@
 import * as Dialog from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import * as Form from "~/app/_components/form";
 import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
@@ -46,18 +47,18 @@ const AddBudgetPage = async () => {
             theme: defaultTheme.id,
           }}
         >
-          <Dialog.Groups>
-            <Dialog.Group>
+          <FormUI.Groups>
+            <FormUI.Group>
               <Form.Label name="category">Budget Category</Form.Label>
               <CategoriesCombobox name="category" categories={categories} />
               <Form.Message name="category" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="maximum">Maximum Spend</Form.Label>
               <DollarTextbox name="maximum" placeholder="e.g. 2000" />
               <Form.Message name="maximum" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="theme">Theme</Form.Label>
               <ThemesCombobox
                 name="theme"
@@ -67,8 +68,8 @@ const AddBudgetPage = async () => {
                 }))}
               />
               <Form.Message name="theme" />
-            </Dialog.Group>
-          </Dialog.Groups>
+            </FormUI.Group>
+          </FormUI.Groups>
           <Status className="sr-only">
             <Pending>Adding budget</Pending>
           </Status>

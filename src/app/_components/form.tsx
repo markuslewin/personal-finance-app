@@ -24,7 +24,7 @@ import {
   type ComponentPropsWithRef,
 } from "react";
 import { useAppForm } from "~/app/_form";
-import * as Dialog from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import TextboxUI from "~/app/_components/ui/textbox";
 import ComboboxUI from "~/app/_components/ui/combobox";
 import type z from "zod";
@@ -63,22 +63,22 @@ export const Root = <Schema extends ZodTypeAny>({
 
   return (
     <FormProvider context={form.context}>
-      <Dialog.Form {...getFormProps(form)} action={formAction} {...props} />
+      <FormUI.Root {...getFormProps(form)} action={formAction} {...props} />
     </FormProvider>
   );
 };
 
-type LabelProps = ComponentPropsWithRef<typeof Dialog.Label> & {
+type LabelProps = ComponentPropsWithRef<typeof FormUI.Label> & {
   name: string;
 };
 
 export const Label = ({ name, ...props }: LabelProps) => {
   const [meta] = useField(name);
 
-  return <Dialog.Label htmlFor={meta.id} {...props} />;
+  return <FormUI.Label htmlFor={meta.id} {...props} />;
 };
 
-type MessageProps = ComponentPropsWithRef<typeof Dialog.Message> & {
+type MessageProps = ComponentPropsWithRef<typeof FormUI.Message> & {
   name: string;
 };
 
@@ -86,17 +86,17 @@ export const Message = ({ name, ...props }: MessageProps) => {
   const [meta] = useField(name);
 
   return (
-    <Dialog.Message
+    <FormUI.Message
       id={meta.errorId}
       {...props}
       className={cx(!meta.errors ? "hidden" : "")}
     >
       {meta.errors}
-    </Dialog.Message>
+    </FormUI.Message>
   );
 };
 
-type CharactersLeftProps = ComponentPropsWithRef<typeof Dialog.Message> & {
+type CharactersLeftProps = ComponentPropsWithRef<typeof FormUI.Message> & {
   name: string;
 };
 
@@ -111,10 +111,10 @@ export const CharactersLeft = ({ name, ...props }: CharactersLeftProps) => {
   const length = typeof meta.value === "string" ? meta.value.length : 0;
 
   return (
-    <Dialog.Message id={meta.descriptionId} {...props}>
+    <FormUI.Message id={meta.descriptionId} {...props}>
       <Hydrated>{Math.max(0, maxLength - length)} characters left</Hydrated>
       <Dehydrated>{nbsp}</Dehydrated>
-    </Dialog.Message>
+    </FormUI.Message>
   );
 };
 

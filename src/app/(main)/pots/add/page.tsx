@@ -1,4 +1,5 @@
 import * as Dialog from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import * as Form from "~/app/_components/form";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
@@ -35,18 +36,18 @@ const AddPotPage = async () => {
             theme: defaultTheme.id,
           }}
         >
-          <Dialog.Groups>
-            <Dialog.Group>
+          <FormUI.Groups>
+            <FormUI.Group>
               <Form.Label name="name">Pot Name</Form.Label>
               <Form.Textbox name="name" placeholder="e.g. Rainy Days" />
               <Form.CharactersLeft name="name" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="target">Target</Form.Label>
               <DollarTextbox name="target" placeholder="e.g. 2000" />
               <Form.Message name="target" />
-            </Dialog.Group>
-            <Dialog.Group>
+            </FormUI.Group>
+            <FormUI.Group>
               <Form.Label name="theme">Theme</Form.Label>
               <ThemesCombobox
                 name="theme"
@@ -56,8 +57,8 @@ const AddPotPage = async () => {
                 }))}
               />
               <Form.Message name="theme" />
-            </Dialog.Group>
-          </Dialog.Groups>
+            </FormUI.Group>
+          </FormUI.Groups>
           <Status className="sr-only">
             <Pending>Adding pot</Pending>
           </Status>

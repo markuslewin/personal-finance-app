@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import RoutedDialog from "~/app/_components/routed-dialog";
 import * as Form from "~/app/_components/form";
 import * as DialogUI from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import Button from "~/app/_components/ui/button";
 import { notFound } from "next/navigation";
 import AddMoneyForm from "~/app/(main)/pots/_components/add-money-form";
@@ -57,14 +58,14 @@ const AddMoneyToPotPage = async ({
                       total={pot.total}
                       target={pot.target}
                     />
-                    <DialogUI.Groups>
+                    <FormUI.Groups>
                       <Form.HiddenField name="id" />
-                      <DialogUI.Group>
+                      <FormUI.Group>
                         <Form.Label name="amount">Amount to Add</Form.Label>
                         <DollarTextbox name="amount" placeholder="e.g. 2000" />
                         <Form.Message name="amount" />
-                      </DialogUI.Group>
-                    </DialogUI.Groups>
+                      </FormUI.Group>
+                    </FormUI.Groups>
                     <Status className="sr-only">
                       <Pending>Adding money</Pending>
                     </Status>

@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import RoutedDialog from "~/app/_components/routed-dialog";
 import * as Form from "~/app/_components/form";
 import * as DialogUI from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import Button from "~/app/_components/ui/button";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import { notFound } from "next/navigation";
@@ -56,21 +57,21 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                     }}
                   >
                     <Form.HiddenField name="id" />
-                    <DialogUI.Groups>
-                      <DialogUI.Group>
+                    <FormUI.Groups>
+                      <FormUI.Group>
                         <Form.Label name="name">Pot Name</Form.Label>
                         <Form.Textbox
                           name="name"
                           placeholder="e.g. Rainy Days"
                         />
                         <Form.CharactersLeft name="name" />
-                      </DialogUI.Group>
-                      <DialogUI.Group>
+                      </FormUI.Group>
+                      <FormUI.Group>
                         <Form.Label name="target">Target</Form.Label>
                         <DollarTextbox name="target" placeholder="e.g. 2000" />
                         <Form.Message name="target" />
-                      </DialogUI.Group>
-                      <DialogUI.Group>
+                      </FormUI.Group>
+                      <FormUI.Group>
                         <Form.Label name="theme">Theme</Form.Label>
                         <ThemesCombobox
                           name="theme"
@@ -80,8 +81,8 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                           }))}
                         />
                         <Form.Message name="theme" />
-                      </DialogUI.Group>
-                    </DialogUI.Groups>
+                      </FormUI.Group>
+                    </FormUI.Groups>
                     <Status className="sr-only">
                       <Pending>Saving changes</Pending>
                     </Status>

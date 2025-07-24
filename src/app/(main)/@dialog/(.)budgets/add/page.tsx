@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import RoutedDialog from "~/app/_components/routed-dialog";
 import * as Form from "~/app/_components/form";
 import * as DialogUI from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import Button from "~/app/_components/ui/button";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import ThemesCombobox from "~/app/_components/themes-combobox";
@@ -63,21 +64,21 @@ const AddBudgetPage = async () => {
                       theme: defaultTheme.id,
                     }}
                   >
-                    <DialogUI.Groups>
-                      <DialogUI.Group>
+                    <FormUI.Groups>
+                      <FormUI.Group>
                         <Form.Label name="category">Budget Category</Form.Label>
                         <CategoriesCombobox
                           name="category"
                           categories={categories}
                         />
                         <Form.Message name="category" />
-                      </DialogUI.Group>
-                      <DialogUI.Group>
+                      </FormUI.Group>
+                      <FormUI.Group>
                         <Form.Label name="maximum">Maximum Spend</Form.Label>
                         <DollarTextbox name="maximum" placeholder="e.g. 2000" />
                         <Form.Message name="maximum" />
-                      </DialogUI.Group>
-                      <DialogUI.Group>
+                      </FormUI.Group>
+                      <FormUI.Group>
                         <Form.Label name="theme">Theme</Form.Label>
                         <ThemesCombobox
                           name="theme"
@@ -87,8 +88,8 @@ const AddBudgetPage = async () => {
                           }))}
                         />
                         <Form.Message name="theme" />
-                      </DialogUI.Group>
-                    </DialogUI.Groups>
+                      </FormUI.Group>
+                    </FormUI.Groups>
                     <Status className="sr-only">
                       <Pending>Adding budget</Pending>
                     </Status>
