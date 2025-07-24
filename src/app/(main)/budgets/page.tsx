@@ -5,7 +5,7 @@ import * as Donut from "~/app/_components/ui/donut";
 import { currency } from "~/app/_format";
 import Button from "~/app/_components/ui/button";
 import { clamp, sum } from "~/app/_math";
-import { getBudgetsWithTransactions } from "~/server/budget";
+import { getBudgetsWithSpendingTransactions } from "~/server/budget";
 import { getSumByCategoryForMonth } from "~/server/transaction";
 import { Budget } from "~/app/(main)/budgets/_components/budget";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 const BudgetsPage = async () => {
-  const budgets = await getBudgetsWithTransactions();
+  const budgets = await getBudgetsWithSpendingTransactions();
   const sumByCategory = await getSumByCategoryForMonth(
     budgets.map((b) => b.category.id),
     nowDate,

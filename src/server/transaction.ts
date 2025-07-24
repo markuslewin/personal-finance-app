@@ -125,6 +125,9 @@ export const getSumByCategoryForMonth = async (
           },
         },
         {
+          amount: {
+            lt: 0,
+          },
           date: inUTCMonth(date),
         },
       ],

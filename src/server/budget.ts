@@ -55,7 +55,7 @@ export const getBudgets = async () => {
   });
 };
 
-export const getBudgetsWithTransactions = async () => {
+export const getBudgetsWithSpendingTransactions = async () => {
   const user = await getUser();
   return db.budget.findMany({
     select: {
@@ -72,6 +72,11 @@ export const getBudgetsWithTransactions = async () => {
               avatar: true,
               amount: true,
               date: true,
+            },
+            where: {
+              amount: {
+                lt: 0,
+              },
             },
             orderBy: {
               date: "desc",
