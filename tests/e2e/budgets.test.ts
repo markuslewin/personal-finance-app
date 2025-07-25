@@ -448,6 +448,47 @@ test("shows budget information", async ({ page }) => {
   ]);
 });
 
+test("receives error message when exceeding max budgets", async ({
+  page,
+  login,
+}) => {
+  test.setTimeout(80_000);
+
+  await login();
+  await page.goto("/budgets");
+  for (let i = 4; i < 10; ++i) {
+    await page
+      .getByRole("link", {
+        name: /add new budget/i,
+      })
+      .click();
+    await page.getByLabel(/maximum/i).fill("2000");
+    await page
+      .getByRole("button", {
+        name: /add budget/i,
+      })
+      .click();
+  }
+  await page
+    .getByRole("link", {
+      name: /add new budget/i,
+    })
+    .click();
+
+  await expect(page.getByRole("dialog", { name: "error" })).toHaveText(
+    /no categories left/i,
+  );
+
+  await page.getByRole("button", { name: "close" }).click();
+
+  await expect(page).toHaveURL("/budgets");
+
+  await page.goto("/budgets/add");
+
+  await expect(page.getByRole("heading", { name: "error" })).toBeAttached();
+  await expect(page.getByText(/no categories left/i)).toBeAttached();
+});
+
 test("budgets a11y", async ({ page }) => {
   await page.goto("/budgets");
 

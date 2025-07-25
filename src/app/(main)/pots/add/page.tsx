@@ -11,16 +11,16 @@ import Spinner from "~/app/_components/ui/spinner";
 import { getThemesWithPot } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import { ErrorPage } from "~/app/(main)/_components/error-page";
 
 const AddPotPage = async () => {
   await requireRealUser();
 
   const themes = await getThemesWithPot();
 
-  // todo: Disable "Add New Pot"
   const defaultTheme = themes.find((t) => t.pot === null);
   if (defaultTheme === undefined) {
-    throw new Error("No available theme left for budget.");
+    return <ErrorPage message="No themes left." />;
   }
 
   return (

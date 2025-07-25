@@ -14,6 +14,7 @@ import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import { ErrorDialog } from "~/app/(main)/@dialog/_components/error-dialog";
 
 const AddBudgetPage = async () => {
   await requireRealUser();
@@ -23,15 +24,14 @@ const AddBudgetPage = async () => {
     getThemesWithBudget(),
   ]);
 
-  // todo: Disable "Add New Budget"
   const defaultCategory = categories[0];
   if (defaultCategory === undefined) {
-    throw new Error("No categories without budget left.");
+    return <ErrorDialog message="No categories left." />;
   }
 
   const defaultTheme = themes.find((t) => t.budget === null);
   if (defaultTheme === undefined) {
-    throw new Error("No available theme left for budget.");
+    return <ErrorDialog message="No themes left." />;
   }
 
   return (

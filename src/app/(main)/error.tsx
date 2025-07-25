@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { ErrorPage } from "~/app/(main)/_components/error-page";
 
 const Error = ({
   error,
@@ -12,12 +13,7 @@ const Error = ({
     console.log({ error });
   }, [error]);
 
-  return (
-    <>
-      <h1 className="text-preset-1">Error</h1>
-      <p className="mt-200">Something went wrong! Please try again.</p>
-    </>
-  );
+  return <ErrorPage message="Something went wrong! Please try again." />;
 };
 
 export default Error;

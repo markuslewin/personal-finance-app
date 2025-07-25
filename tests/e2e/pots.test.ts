@@ -1,4 +1,5 @@
 import { AxeBuilder } from "@axe-core/playwright";
+import { faker } from "@faker-js/faker";
 import { expect } from "@playwright/test";
 import { test } from "tests/playwright-utils";
 
@@ -426,6 +427,46 @@ test.describe("javascript disabled", () => {
 
     await expect(page.getByTestId("current-balance")).toHaveText(/\$5,367.00/i);
   });
+});
+
+test("receives error message when exceeding max pots", async ({
+  page,
+  login,
+}) => {
+  test.setTimeout(80_000);
+
+  await login();
+  await page.goto("/pots");
+  for (let i = 5; i < 15; ++i) {
+    await page
+      .getByRole("link", {
+        name: "add new pot",
+      })
+      .click();
+
+    const dialog = page.getByRole("dialog", { name: "add new pot" });
+    await dialog.getByLabel("name").fill(faker.lorem.words());
+    await dialog.getByLabel("target").fill("2000");
+    await dialog.getByRole("button", { name: "add pot" }).click();
+  }
+  await page
+    .getByRole("link", {
+      name: "add new pot",
+    })
+    .click();
+
+  await expect(page.getByRole("dialog", { name: "error" })).toHaveText(
+    /no themes left/i,
+  );
+
+  await page.getByRole("button", { name: "close" }).click();
+
+  await expect(page).toHaveURL("/pots");
+
+  await page.goto("/pots/add");
+
+  await expect(page.getByRole("heading", { name: "error" })).toBeAttached();
+  await expect(page.getByText(/no themes left/i)).toBeAttached();
 });
 
 test("pots a11y", async ({ page }) => {

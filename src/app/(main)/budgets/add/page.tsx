@@ -1,18 +1,19 @@
-import * as Dialog from "~/app/_components/ui/dialog";
-import * as FormUI from "~/app/_components/ui/form";
-import * as Form from "~/app/_components/form";
-import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
+import { ErrorPage } from "~/app/(main)/_components/error-page";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
+import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
+import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import * as Form from "~/app/_components/form";
+import { Idle, Pending } from "~/app/_components/form-status";
+import Status from "~/app/_components/status";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
+import * as Dialog from "~/app/_components/ui/dialog";
 import DialogPage from "~/app/_components/ui/dialog-page";
-import Status from "~/app/_components/status";
-import { Idle, Pending } from "~/app/_components/form-status";
+import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
-import { requireRealUser } from "~/app/_auth";
-import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const AddBudgetPage = async () => {
   await requireRealUser();
@@ -22,15 +23,14 @@ const AddBudgetPage = async () => {
     getThemesWithBudget(),
   ]);
 
-  // todo: Disable "Add New Budget"
   const defaultCategory = categories[0];
   if (defaultCategory === undefined) {
-    throw new Error("No categories without budget left.");
+    return <ErrorPage message="No categories left." />;
   }
 
   const defaultTheme = themes.find((t) => t.budget === null);
   if (defaultTheme === undefined) {
-    throw new Error("No available theme left for budget.");
+    return <ErrorPage message="No themes left." />;
   }
 
   return (
