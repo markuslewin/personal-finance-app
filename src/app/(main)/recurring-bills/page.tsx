@@ -119,17 +119,20 @@ const RecurringBillsPage = async ({
             </div>
           </div>
         </div>
-        <div className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 tablet:pb-150 forced-colors:border-[0.0625rem]">
+        <div className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:p-400 forced-colors:border-[0.0625rem]">
           <h2 className="sr-only">Bills</h2>
           <header>
             <h3 className="sr-only">Search</h3>
             <BillsSearchForm defaultSort={DEFAULT_SORTING} />
           </header>
-          <SearchResultsSection className="mt-300">
+          <SearchResultsSection>
             {/* Duplicate HTML to match the design */}
             {/* A list on mobile turns into a table on tablet */}
             <ul
-              className="space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200 tablet:hidden"
+              className={cx(
+                "space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200 tablet:hidden",
+                recurringBills.length ? "mt-300" : null,
+              )}
               role="list"
             >
               {recurringBills.map((bill) => {
@@ -190,7 +193,7 @@ const RecurringBillsPage = async ({
                 );
               })}
             </ul>
-            <table className="hidden w-full tablet:table">
+            <table className="mt-300 hidden w-full tablet:table">
               <thead className="border-b-[0.0625rem] border-grey-100">
                 <tr>
                   <th className="pt-150 pb-[0.6875rem] text-start text-preset-5 desktop:px-200">
@@ -210,8 +213,8 @@ const RecurringBillsPage = async ({
                   const isDueSoon = getIsDueSoon(date, bill);
 
                   return (
-                    <tr key={bill.id} data-testid="bill">
-                      <td className="py-250 desktop:px-200">
+                    <tr className="group" key={bill.id} data-testid="bill">
+                      <td className="py-250 group-last:pb-0 desktop:px-200">
                         <div className="grid grid-cols-[auto_1fr] items-center gap-200">
                           <Image
                             className="size-400 rounded-full object-cover"
@@ -230,7 +233,7 @@ const RecurringBillsPage = async ({
                       </td>
                       <td
                         className={cx(
-                          "py-200 text-preset-5 desktop:px-200",
+                          "py-250 text-preset-5 group-last:pb-0 desktop:px-200",
                           isPaid ? "text-green" : null,
                         )}
                       >
@@ -251,7 +254,7 @@ const RecurringBillsPage = async ({
                       </td>
                       <td
                         className={cx(
-                          "py-200 text-end text-preset-4-bold text-grey-900 desktop:px-200",
+                          "py-250 text-end text-preset-4-bold text-grey-900 group-last:pb-0 desktop:px-200",
                           isDueSoon ? "text-red" : null,
                         )}
                         data-testid="amount"

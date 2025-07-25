@@ -298,30 +298,34 @@ const PotsCard = ({ totalSaved, pots }: PotsCardProps) => {
             </p>
           </div>
         </div>
-        <h3 className="sr-only">Per Pot</h3>
-        <ul
-          className="grid grow basis-[17.3125rem] auto-cols-fr grid-flow-col grid-rows-2 gap-200 py-50"
-          role="list"
-          aria-labelledby={headingId}
-        >
-          {pots
-            .toSorted((a, b) => {
-              return b.total - a.total;
-            })
-            .slice(0, 4)
-            .map((pot) => {
-              return (
-                <LegendItem key={pot.id} color={pot.theme.color}>
-                  <LegendName>{pot.name}</LegendName>
-                  <LegendValue>
-                    {currency(pot.total, {
-                      trailingZeroDisplay: "stripIfInteger",
-                    })}
-                  </LegendValue>
-                </LegendItem>
-              );
-            })}
-        </ul>
+        {pots.length ? (
+          <>
+            <h3 className="sr-only">Per Pot</h3>
+            <ul
+              className="grid grow basis-[17.3125rem] auto-cols-fr grid-flow-col grid-rows-2 gap-200 py-50"
+              role="list"
+              aria-labelledby={headingId}
+            >
+              {pots
+                .toSorted((a, b) => {
+                  return b.total - a.total;
+                })
+                .slice(0, 4)
+                .map((pot) => {
+                  return (
+                    <LegendItem key={pot.id} color={pot.theme.color}>
+                      <LegendName>{pot.name}</LegendName>
+                      <LegendValue>
+                        {currency(pot.total, {
+                          trailingZeroDisplay: "stripIfInteger",
+                        })}
+                      </LegendValue>
+                    </LegendItem>
+                  );
+                })}
+            </ul>
+          </>
+        ) : null}
       </CardContent>
     </Card>
   );

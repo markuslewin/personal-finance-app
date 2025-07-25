@@ -66,37 +66,39 @@ const BudgetsPage = async () => {
               </Donut.Hole>
             </Donut.Root>
           </div>
-          <div>
-            <h3 className="text-preset-2 text-grey-900">Spending Summary</h3>
-            <ul
-              className="mt-300 space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200"
-              role="list"
-            >
-              {budgets.map((budget) => {
-                const sum = sumByCategory[budget.category.id] ?? 0;
+          {budgets.length ? (
+            <div>
+              <h3 className="text-preset-2 text-grey-900">Spending Summary</h3>
+              <ul
+                className="mt-300 space-y-200 divide-y-[0.0625rem] divide-grey-100 add-space-y-200"
+                role="list"
+              >
+                {budgets.map((budget) => {
+                  const sum = sumByCategory[budget.category.id] ?? 0;
 
-                return (
-                  <li className="flex gap-200" key={budget.id}>
-                    <div
-                      className="w-50 rounded-full forced-color-adjust-none"
-                      style={{
-                        background: budget.theme.color,
-                      }}
-                    />
-                    <div className="flex grow flex-wrap items-center justify-between gap-100">
-                      <h4>{budget.category.name}</h4>
-                      <p className="flex items-center gap-100">
-                        <strong className="text-preset-3 text-grey-900">
-                          {currency(-1 * sum)}
-                        </strong>{" "}
-                        of {currency(budget.maximum)}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                  return (
+                    <li className="flex gap-200" key={budget.id}>
+                      <div
+                        className="w-50 rounded-full forced-color-adjust-none"
+                        style={{
+                          background: budget.theme.color,
+                        }}
+                      />
+                      <div className="flex grow flex-wrap items-center justify-between gap-100">
+                        <h4>{budget.category.name}</h4>
+                        <p className="flex items-center gap-100">
+                          <strong className="text-preset-3 text-grey-900">
+                            {currency(-1 * sum)}
+                          </strong>{" "}
+                          of {currency(budget.maximum)}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
         </div>
         <div className="grid gap-300">
           <h2 className="sr-only">Categories</h2>
