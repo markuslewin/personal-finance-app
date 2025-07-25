@@ -1,17 +1,26 @@
-import { getRelevantBudgetIds } from "~/app/(main)/_budget";
+import { getRelevantBudgets } from "~/app/(main)/_budget";
 
-test.each<{ value: { id: string; spent: number }[]; expected: string[] }>([
-  { value: [{ id: "1", spent: -100 }], expected: ["1"] },
+test.each<{
+  value: { id: string; spent: number }[];
+  expected: { id: string; spent: number }[];
+}>([
+  { value: [{ id: "1", spent: -100 }], expected: [{ id: "1", spent: -100 }] },
   {
     value: [
       { id: "1", spent: -100 },
-      { id: "2", spent: -50 },
+      { id: "2", spent: -10 },
       { id: "3", spent: -110 },
       { id: "4", spent: -700 },
-      { id: "5", spent: -10 },
+      { id: "5", spent: -50 },
     ],
-    expected: ["4", "3", "1", "2"],
+    expected: [
+      { id: "1", spent: -100 },
+      // { id: "2", spent: -10 },
+      { id: "3", spent: -110 },
+      { id: "4", spent: -700 },
+      { id: "5", spent: -50 },
+    ],
   },
-])("getRelevantBudgetIds($value)", ({ value, expected }) => {
-  expect([...getRelevantBudgetIds(value)]).toEqual(expected);
+])("getRelevantBudgets($value)", ({ value, expected }) => {
+  expect(getRelevantBudgets(value)).toEqual(expected);
 });

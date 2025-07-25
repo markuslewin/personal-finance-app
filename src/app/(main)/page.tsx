@@ -1,24 +1,24 @@
-import { type Metadata } from "next";
-import { Link } from "~/app/_components/link";
-import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
-import IconPot from "~/app/_assets/icon-pot.svg";
-import { useId, type ComponentPropsWithRef } from "react";
 import { cx } from "class-variance-authority";
+import { type Metadata } from "next";
 import Image from "next/image";
-import * as Donut from "~/app/_components/ui/donut";
-import { currency, date } from "~/app/_format";
-import { nowDate } from "~/app/_now";
-import { clamp, sum } from "~/app/_math";
+import { useId, type ComponentPropsWithRef } from "react";
+import { getRelevantBudgets } from "~/app/(main)/_budget";
 import {
   getIsDueSoon,
   getIsPaid,
 } from "~/app/(main)/recurring-bills/_utils/bills";
+import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
+import IconPot from "~/app/_assets/icon-pot.svg";
+import { Link } from "~/app/_components/link";
+import * as Donut from "~/app/_components/ui/donut";
+import { currency, date } from "~/app/_format";
+import { clamp, sum } from "~/app/_math";
+import { nowDate } from "~/app/_now";
+import { getBalance } from "~/server/balance";
 import { getBudgets } from "~/server/budget";
 import { getPots } from "~/server/pot";
-import { getTransactions, getTransactionsForMonth } from "~/server/transaction";
-import { getBalance } from "~/server/balance";
 import { getRecurringBills } from "~/server/recurring-bill";
-import { getRelevantBudgetIds } from "~/app/(main)/_budget";
+import { getTransactions, getTransactionsForMonth } from "~/server/transaction";
 
 export const metadata: Metadata = {
   title: "Overview",
@@ -416,8 +416,6 @@ type BudgetsCardProps = {
 const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
   const headingId = useId();
 
-  const relevantBudgetIds = new Set(getRelevantBudgetIds(budgets));
-
   return (
     <Card className="desktop:row-span-2 desktop:row-start-1">
       <CardHeader>
@@ -460,18 +458,14 @@ const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
             role="list"
             aria-labelledby={headingId}
           >
-            {budgets
-              .filter((budget) => {
-                return relevantBudgetIds.has(budget.id);
-              })
-              .map((budget) => {
-                return (
-                  <LegendItem key={budget.id} color={budget.theme.color}>
-                    <LegendName>{budget.category.name}</LegendName>
-                    <LegendValue>{currency(-1 * budget.spent)}</LegendValue>
-                  </LegendItem>
-                );
-              })}
+            {getRelevantBudgets(budgets).map((budget) => {
+              return (
+                <LegendItem key={budget.id} color={budget.theme.color}>
+                  <LegendName>{budget.category.name}</LegendName>
+                  <LegendValue>{currency(-1 * budget.spent)}</LegendValue>
+                </LegendItem>
+              );
+            })}
           </ul>
         </div>
       </CardContent>
