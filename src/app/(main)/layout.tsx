@@ -17,7 +17,11 @@ const MainLayout = async ({ children, dialog }: MainLayoutProps) => {
     <>
       <Sidebar className="isolate" isOpen={isSidebarOpen}>
         {/* Padding creates buffer for fixed `header` */}
-        <main className="isolate px-200 pt-300 pb-[5.25rem] tablet:px-500 tablet:pt-500 tablet:pb-[6.625rem] desktop:pb-400">
+        <main
+          className="isolate px-200 pt-300 pb-[5.25rem] outline-none tablet:px-500 tablet:pt-500 tablet:pb-[6.625rem] desktop:pb-400"
+          id="main"
+          tabIndex={-1}
+        >
           <div className="mx-auto max-w-[66.25rem]">{children}</div>
         </main>
         {dialog}

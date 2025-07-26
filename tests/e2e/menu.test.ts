@@ -1,6 +1,17 @@
 import { expect } from "@playwright/test";
 import { test } from "tests/playwright-utils";
 
+test("can skip to main content", async ({ page }) => {
+  await page.goto("/");
+
+  const skipLink = page.getByRole("link", { name: "main content" });
+  // Make visible
+  await skipLink.focus();
+  await skipLink.click();
+
+  await expect(page.getByRole("main")).toBeFocused();
+});
+
 test("menu highlights current page", async ({ page }) => {
   await page.goto("/");
 
