@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
+import { toCentsFromNumber } from "~/app/_currency";
 import { categories, themes, transactions, userSeed } from "~/data/data";
 
 const db = new PrismaClient({
@@ -29,7 +30,7 @@ async function main() {
   for (const transaction of transactions) {
     await db.transaction.create({
       data: {
-        amount: transaction.amount,
+        amount: toCentsFromNumber(transaction.amount),
         avatar: transaction.avatar,
         date: transaction.date,
         name: transaction.name,
@@ -45,7 +46,7 @@ async function main() {
                   name: transaction.name,
                 },
                 create: {
-                  amount: Math.abs(transaction.amount),
+                  amount: toCentsFromNumber(Math.abs(transaction.amount)),
                   avatar: transaction.avatar,
                   day: new Date(transaction.date).getUTCDate(),
                   name: transaction.name,

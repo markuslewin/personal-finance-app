@@ -1,3 +1,4 @@
+import { toCentsFromNumber } from "~/app/_currency";
 import data from "~/data/data.json";
 
 export const categories = [
@@ -49,15 +50,15 @@ export const userSeed = (createdAt: Date) => {
   return {
     balance: {
       create: {
-        current: data.balance.current,
-        expenses: data.balance.expenses,
-        income: data.balance.income,
+        current: toCentsFromNumber(data.balance.current),
+        expenses: toCentsFromNumber(data.balance.expenses),
+        income: toCentsFromNumber(data.balance.income),
       },
     },
     budgets: {
       create: data.budgets.map((budget, i) => {
         return {
-          maximum: budget.maximum,
+          maximum: toCentsFromNumber(budget.maximum),
           category: {
             connect: {
               name: budget.category,
@@ -78,8 +79,8 @@ export const userSeed = (createdAt: Date) => {
       create: data.pots.map((pot, i) => {
         return {
           name: pot.name,
-          target: pot.target,
-          total: pot.total,
+          target: toCentsFromNumber(pot.target),
+          total: toCentsFromNumber(pot.total),
           theme: {
             // todo: or create?
             connect: {

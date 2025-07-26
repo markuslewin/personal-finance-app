@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { maxInt } from "~/app/_prisma";
+import { centsSchema } from "~/app/_currency";
 
 export const budgetSchema = z.object({
-  maximum: z.number().positive().int().lte(maxInt),
+  maximum: centsSchema,
   category: z.string(),
   theme: z.string(),
 });

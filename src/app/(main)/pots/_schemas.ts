@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { maxInt } from "~/app/_prisma";
+import { centsSchema } from "~/app/_currency";
 
 export const NAME_MAX_LENGTH = 30;
 
 const id = z.string();
 const name = z.string().max(NAME_MAX_LENGTH);
-const target = z.number().positive().int().lte(maxInt);
+const target = centsSchema;
 const theme = z.string();
 
-export const amount = z.number().positive().int().lte(maxInt);
+export const amount = centsSchema;
 
 export const potSchema = z.object({
   name,
