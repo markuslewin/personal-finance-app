@@ -17,4 +17,4 @@ export type BudgetIdSchema = z.infer<typeof budgetIdSchema>;
 
 export const budgetSchemaWithId = budgetSchema.merge(budgetIdSchema);
 
-export type BudgetSchemaWithId = z.infer<typeof budgetSchemaWithId>;
+export type BudgetSchemaWithId = z.input<typeof budgetSchemaWithId>;

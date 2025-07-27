@@ -4,7 +4,8 @@ import { useField } from "@conform-to/react";
 import { useId } from "react";
 import { amount as amountSchema } from "~/app/(main)/pots/_schemas";
 import * as Meter from "~/app/_components/meter";
-import { currency, percent } from "~/app/_format";
+import { formatCents } from "~/app/_currency";
+import { percent } from "~/app/_format";
 
 type WithdrawMeterSectionProps = {
   name: string;
@@ -38,7 +39,7 @@ const WithdrawMeterSection = ({
           <span className="sr-only">: </span>
         </span>
         <span className="text-preset-1 text-grey-900">
-          {currency(nextTotal)}
+          {formatCents(nextTotal)}
         </span>
       </p>
       <p className="mt-200">
@@ -78,7 +79,7 @@ const WithdrawMeterSection = ({
         </p>
         <p className="text-end text-preset-5">
           Target of{" "}
-          {currency(target, {
+          {formatCents(target, {
             trailingZeroDisplay: "stripIfInteger",
           })}
         </p>

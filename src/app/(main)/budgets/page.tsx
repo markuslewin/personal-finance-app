@@ -2,12 +2,12 @@ import { type Metadata } from "next";
 import { Link } from "~/app/_components/link";
 import { nowDate } from "~/app/_now";
 import * as Donut from "~/app/_components/ui/donut";
-import { currency } from "~/app/_format";
 import Button from "~/app/_components/ui/button";
 import { clamp, sum } from "~/app/_math";
 import { getBudgetsWithSpendingTransactions } from "~/server/budget";
 import { getSumByCategoryForMonth } from "~/server/transaction";
 import { Budget } from "~/app/(main)/budgets/_components/budget";
+import { formatCents } from "~/app/_currency";
 
 export const metadata: Metadata = {
   title: "Budgets",
@@ -55,12 +55,14 @@ const BudgetsPage = async () => {
               <Donut.Hole>
                 <p>
                   <strong className="block text-preset-1 text-grey-900">
-                    {currency(-1 * total, {
+                    {formatCents(-1 * total, {
                       trailingZeroDisplay: "stripIfInteger",
                     })}
                   </strong>{" "}
                   of{" "}
-                  {currency(limit, { trailingZeroDisplay: "stripIfInteger" })}{" "}
+                  {formatCents(limit, {
+                    trailingZeroDisplay: "stripIfInteger",
+                  })}{" "}
                   limit
                 </p>
               </Donut.Hole>
@@ -88,9 +90,9 @@ const BudgetsPage = async () => {
                         <h4>{budget.category.name}</h4>
                         <p className="flex items-center gap-100">
                           <strong className="text-preset-3 text-grey-900">
-                            {currency(-1 * sum)}
+                            {formatCents(-1 * sum)}
                           </strong>{" "}
-                          of {currency(budget.maximum)}
+                          of {formatCents(budget.maximum)}
                         </p>
                       </div>
                     </li>

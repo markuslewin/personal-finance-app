@@ -51,7 +51,7 @@ test("budget", () => {
     <Budget
       budget={{
         id: faker.string.uuid(),
-        maximum: 100,
+        maximum: 10000,
         category: {
           name: "My Category",
           Transaction: [],
@@ -60,7 +60,7 @@ test("budget", () => {
           color: "green",
         },
       }}
-      spent={75}
+      spent={7500}
     />,
   );
 

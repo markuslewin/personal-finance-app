@@ -3,11 +3,12 @@ import Image from "next/image";
 import { useId } from "react";
 import BudgetActions from "~/app/(main)/budgets/_components/budget-actions-menu";
 import { Hydrated, Dehydrated } from "~/app/_components/hydration";
-import { currency, date } from "~/app/_format";
+import { date } from "~/app/_format";
 import { clamp } from "~/app/_math";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import * as Meter from "~/app/_components/meter";
+import { formatCents } from "~/app/_currency";
 
 type BudgetProps = {
   budget: {
@@ -66,7 +67,7 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
           </Link>
         </Dehydrated>
       </header>
-      <p className="mt-250">Maximum of {currency(budget.maximum)}</p>
+      <p className="mt-250">Maximum of {formatCents(budget.maximum)}</p>
       <p className="mt-200">
         <span className="sr-only" id={meterLabelId}>
           Amount spent
@@ -95,7 +96,7 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
               className="text-preset-4-bold text-grey-900"
               data-testid="budget-spent"
             >
-              {currency(spent)}
+              {formatCents(spent)}
             </p>
           </div>
         </div>
@@ -107,7 +108,7 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
               className="text-preset-4-bold text-grey-900"
               data-testid="budget-free"
             >
-              {currency(free)}
+              {formatCents(free)}
             </p>
           </div>
         </div>
@@ -154,7 +155,7 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
                 <div className="grid gap-50 text-end">
                   <p className="text-preset-5-bold text-grey-900">
                     <span className="sr-only">Amount: </span>
-                    {currency(transaction.amount)}
+                    {formatCents(transaction.amount)}
                   </p>
                   <p>
                     <span className="sr-only">Date: </span>

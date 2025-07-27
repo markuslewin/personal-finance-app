@@ -5,7 +5,6 @@ import { cx } from "class-variance-authority";
 import Image from "next/image";
 import IconBillDue from "~/app/_assets/icon-bill-due.svg";
 import IconBillPaid from "~/app/_assets/icon-bill-paid.svg";
-import { currency } from "~/app/_format";
 import { nowDate } from "~/app/_now";
 import { sum } from "~/app/_math";
 import {
@@ -16,6 +15,7 @@ import { z } from "zod";
 import { type SortingOption, sortingOptions } from "~/app/_sort";
 import { BillsSearchForm } from "~/app/(main)/recurring-bills/_components/bills-search-form";
 import { getRecurringBills } from "~/server/recurring-bill";
+import { formatCents } from "~/app/_currency";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
@@ -88,7 +88,7 @@ const RecurringBillsPage = async ({
             </div>
             <div className="grid gap-150">
               <h2>Total Bills</h2>
-              <p className="text-preset-1">{currency(total)}</p>
+              <p className="text-preset-1">{formatCents(total)}</p>
             </div>
           </div>
           <div className="rounded-xl bg-white p-250 text-grey-500 forced-colors:border-[0.0625rem]">
@@ -98,14 +98,16 @@ const RecurringBillsPage = async ({
                 <h3>Paid Bills</h3>
                 <p className="text-end text-preset-5-bold text-grey-900">
                   {billByDueType.paid?.length ?? 0} (
-                  {currency(sum(billByDueType.paid ?? [], (b) => b.amount))})
+                  {formatCents(sum(billByDueType.paid ?? [], (b) => b.amount))})
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-between">
                 <h3>Total Upcoming</h3>
                 <p className="text-end text-preset-5-bold text-grey-900">
                   {billByDueType.upcoming?.length ?? 0} (
-                  {currency(sum(billByDueType.upcoming ?? [], (b) => b.amount))}
+                  {formatCents(
+                    sum(billByDueType.upcoming ?? [], (b) => b.amount),
+                  )}
                   )
                 </p>
               </div>
@@ -113,7 +115,7 @@ const RecurringBillsPage = async ({
                 <h3>Due Soon</h3>
                 <p className="text-end text-preset-5-bold">
                   {billsDueSoon.length} (
-                  {currency(sum(billsDueSoon, (b) => b.amount))})
+                  {formatCents(sum(billsDueSoon, (b) => b.amount))})
                 </p>
               </div>
             </div>
@@ -185,7 +187,7 @@ const RecurringBillsPage = async ({
                       >
                         <span className="sr-only">Amount: </span>
                         <span data-testid="amount">
-                          {currency(bill.amount)}
+                          {formatCents(bill.amount)}
                         </span>
                       </p>
                     </div>
@@ -259,7 +261,7 @@ const RecurringBillsPage = async ({
                         )}
                         data-testid="amount"
                       >
-                        {currency(bill.amount)}
+                        {formatCents(bill.amount)}
                       </td>
                     </tr>
                   );

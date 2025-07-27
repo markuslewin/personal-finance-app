@@ -1,9 +1,9 @@
 "use client";
 
 import { type ReactNode } from "react";
-import * as Form from "~/app/_components/form";
 import { edit } from "~/app/(main)/pots/_actions";
 import { editPotSchema, type EditPotSchema } from "~/app/(main)/pots/_schemas";
+import * as Form from "~/app/_components/form";
 
 type EditPotFormProps = {
   children: ReactNode;

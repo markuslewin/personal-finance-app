@@ -16,6 +16,7 @@ import { getPot } from "~/server/pot";
 import { getThemesWithPot } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import { toDollarValue } from "~/app/_currency";
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   await requireRealUser();
@@ -37,7 +38,7 @@ const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           defaultValue={{
             id: pot.id,
             name: pot.name,
-            target: pot.target,
+            target: toDollarValue(pot.target),
             theme: pot.theme.id,
           }}
         >

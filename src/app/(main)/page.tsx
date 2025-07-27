@@ -11,7 +11,8 @@ import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconPot from "~/app/_assets/icon-pot.svg";
 import { Link } from "~/app/_components/link";
 import * as Donut from "~/app/_components/ui/donut";
-import { currency, date } from "~/app/_format";
+import { formatCents } from "~/app/_currency";
+import { date } from "~/app/_format";
 import { clamp, sum } from "~/app/_math";
 import { nowDate } from "~/app/_now";
 import { getBalance } from "~/server/balance";
@@ -100,19 +101,19 @@ const OverviewPage = async () => {
         <div className="rounded-xl bg-grey-900 p-250 text-white tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3>Current Balance</h3>
           <p className="mt-150 text-preset-1" data-testid="current-balance">
-            {currency(balance.current)}
+            {formatCents(balance.current)}
           </p>
         </div>
         <div className="rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Income</h3>
           <p className="mt-150 text-preset-1" data-testid="income">
-            {currency(income)}
+            {formatCents(income)}
           </p>
         </div>
         <div className="rounded-xl bg-white p-250 tablet:p-300 forced-colors:border-[0.0625rem]">
           <h3 className="text-grey-500">Expenses</h3>
           <p className="mt-150 text-preset-1" data-testid="expenses">
-            {currency(Math.abs(expenses))}
+            {formatCents(Math.abs(expenses))}
           </p>
         </div>
       </div>
@@ -138,7 +139,7 @@ const OverviewPage = async () => {
                 className="text-preset-4-bold text-grey-900"
                 data-testid="paid-bills"
               >
-                {currency(totalPaid)}
+                {formatCents(totalPaid)}
               </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-yellow bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
@@ -147,7 +148,7 @@ const OverviewPage = async () => {
                 className="text-preset-4-bold text-grey-900"
                 data-testid="total-upcoming"
               >
-                {currency(totalUpcoming)}
+                {formatCents(totalUpcoming)}
               </p>
             </div>
             <div className="grid grid-cols-[1fr_auto] rounded-lg border-l-[0.25rem] border-cyan bg-beige-100 py-250 pr-200 pl-150 text-grey-500 forced-colors:border-[0.0625rem] forced-colors:border-l-[0.25rem]">
@@ -156,7 +157,7 @@ const OverviewPage = async () => {
                 className="text-preset-4-bold text-grey-900"
                 data-testid="due-soon"
               >
-                {currency(totalDueSoon)}
+                {formatCents(totalDueSoon)}
               </p>
             </div>
           </CardContent>
@@ -292,7 +293,7 @@ const PotsCard = ({ totalSaved, pots }: PotsCardProps) => {
           <div>
             <h3 className="text-grey-500">Total Saved</h3>
             <p className="text-preset-1">
-              {currency(totalSaved, {
+              {formatCents(totalSaved, {
                 trailingZeroDisplay: "stripIfInteger",
               })}
             </p>
@@ -316,7 +317,7 @@ const PotsCard = ({ totalSaved, pots }: PotsCardProps) => {
                     <LegendItem key={pot.id} color={pot.theme.color}>
                       <LegendName>{pot.name}</LegendName>
                       <LegendValue>
-                        {currency(pot.total, {
+                        {formatCents(pot.total, {
                           trailingZeroDisplay: "stripIfInteger",
                         })}
                       </LegendValue>
@@ -383,7 +384,7 @@ const TransactionsCard = ({ transactions }: TransactionsCardProps) => {
                   >
                     <span className="sr-only">Amount: </span>
                     <strong>
-                      {currency(transaction.amount, {
+                      {formatCents(transaction.amount, {
                         signDisplay: "always",
                       })}
                     </strong>
@@ -443,12 +444,12 @@ const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
               <Donut.Hole>
                 <p>
                   <strong className="block text-preset-1 text-grey-900">
-                    {currency(-1 * total, {
+                    {formatCents(-1 * total, {
                       trailingZeroDisplay: "stripIfInteger",
                     })}
                   </strong>{" "}
                   of{" "}
-                  {currency(limit, {
+                  {formatCents(limit, {
                     trailingZeroDisplay: "stripIfInteger",
                   })}{" "}
                   limit
@@ -466,7 +467,7 @@ const BudgetsCard = ({ total, limit, budgets }: BudgetsCardProps) => {
               return (
                 <LegendItem key={budget.id} color={budget.theme.color}>
                   <LegendName>{budget.category.name}</LegendName>
-                  <LegendValue>{currency(-1 * budget.spent)}</LegendValue>
+                  <LegendValue>{formatCents(-1 * budget.spent)}</LegendValue>
                 </LegendItem>
               );
             })}

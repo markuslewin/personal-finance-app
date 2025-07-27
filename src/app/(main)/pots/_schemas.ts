@@ -31,7 +31,7 @@ export const editPotSchema = z.object({
   theme,
 });
 
-export type EditPotSchema = z.infer<typeof editPotSchema>;
+export type EditPotSchema = z.input<typeof editPotSchema>;
 
 export const addMoneySchema = z.object({
   id,

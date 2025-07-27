@@ -22,10 +22,10 @@ test("budget maximum errors", async ({ page, login }) => {
 
   await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
 
-  await input.fill("12.3");
+  await input.fill("12.333");
   await submitButton.click();
 
-  await expect(input).toHaveAccessibleDescription(/expected integer/i);
+  await expect(input).toHaveAccessibleDescription(/invalid decimals/i);
 
   await input.fill(String(maxInt + 1));
   await submitButton.click();
@@ -146,6 +146,9 @@ test("can edit budget", async ({ page, login }) => {
 
   const dialog = page.getByRole("dialog", { name: /edit budget/i });
   await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("textbox", { name: "maximum" })).toHaveValue(
+    "50",
+  );
   await expect(page).toHaveURL(/\/budgets\/.*\/edit$/i);
 
   await dialog.getByLabel(/category/i).click();
@@ -324,6 +327,10 @@ test.describe("javascript disabled", () => {
         name: /edit/i,
       })
       .click();
+
+    await expect(page.getByRole("textbox", { name: "maximum" })).toHaveValue(
+      "50",
+    );
 
     await page.getByLabel(/category/i).selectOption({ label: "General" });
     await page.getByLabel(/maximum/i).fill("750");

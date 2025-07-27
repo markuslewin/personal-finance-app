@@ -5,14 +5,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
-  removePotSchema,
-  potSchema,
-  editPotSchema,
   addMoneySchema,
-  type AddMoneySchema,
-  withdrawSchema,
-  type PotSchema,
+  editPotSchema,
   type EditPotSchema,
+  potSchema,
+  removePotSchema,
+  withdrawSchema,
+  type AddMoneySchema,
+  type PotSchema,
   type WithdrawSchema,
 } from "~/app/(main)/pots/_schemas";
 import {

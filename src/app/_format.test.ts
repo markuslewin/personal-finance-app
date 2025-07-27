@@ -1,22 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { currency, type CurrencyOptions, percent } from "~/app/_format";
-
-test.each<{ value: number; options?: CurrencyOptions; expected: string }>([
-  { value: 4836, expected: "$4,836.00" },
-  { value: 3814.25, expected: "$3,814.25" },
-  { value: 1700.5, expected: "$1,700.50" },
-  {
-    value: 850,
-    options: {
-      trailingZeroDisplay: "stripIfInteger",
-    },
-    expected: "$850",
-  },
-  { value: 75.5, options: { signDisplay: "always" }, expected: "+$75.50" },
-  { value: -55.5, options: { signDisplay: "always" }, expected: "-$55.50" },
-])("currency($value, $options)", ({ value, options, expected }) => {
-  expect(currency(value, options)).toBe(expected);
-});
+import { percent } from "~/app/_format";
 
 test.each<{ value: number; expected: string }>([
   { value: 0.0795, expected: "7.95%" },

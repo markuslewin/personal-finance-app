@@ -1,21 +1,22 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import RoutedDialog from "~/app/_components/routed-dialog";
-import * as Form from "~/app/_components/form";
-import * as DialogUI from "~/app/_components/ui/dialog";
-import * as FormUI from "~/app/_components/ui/form";
-import Button from "~/app/_components/ui/button";
-import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
-import ThemesCombobox from "~/app/_components/themes-combobox";
 import { notFound } from "next/navigation";
 import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budget-form";
-import Status from "~/app/_components/status";
+import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
+import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import * as Form from "~/app/_components/form";
 import { Idle, Pending } from "~/app/_components/form-status";
+import RoutedDialog from "~/app/_components/routed-dialog";
+import Status from "~/app/_components/status";
+import ThemesCombobox from "~/app/_components/themes-combobox";
+import Button from "~/app/_components/ui/button";
+import * as DialogUI from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
+import { toDollarValue } from "~/app/_currency";
 import { getBudget } from "~/server/budget";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
-import { requireRealUser } from "~/app/_auth";
-import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const EditBudgetPage = async ({
   params,
@@ -62,7 +63,7 @@ const EditBudgetPage = async ({
                   <EditBudgetForm
                     budget={{
                       id: budget.id,
-                      maximum: budget.maximum,
+                      maximum: toDollarValue(budget.maximum),
                       category: budget.category.id,
                       theme: budget.theme.id,
                     }}

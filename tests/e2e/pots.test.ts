@@ -80,6 +80,10 @@ test("can edit pot", async ({ page, login }) => {
   await expect(page).toHaveURL(/\/pots\/.*\/edit$/i);
 
   const dialog = page.getByRole("dialog", { name: "edit pot" });
+  await expect(dialog.getByRole("textbox", { name: "target" })).toHaveValue(
+    "2000",
+  );
+
   await dialog.getByLabel("name").fill("An edited pot");
   await dialog.getByLabel("target").fill("3000");
   await dialog.getByLabel("theme").click();
@@ -345,6 +349,9 @@ test.describe("javascript disabled", () => {
     await secondPot.getByRole("link", { name: "edit" }).click();
 
     await expect(page).toHaveURL(/\/pots\/.*\/edit$/i);
+    await expect(page.getByRole("textbox", { name: "target" })).toHaveValue(
+      "150",
+    );
 
     await page.getByLabel("name").fill("An edited pot");
     await page.getByLabel("target").fill("4000");

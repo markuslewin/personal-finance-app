@@ -2,13 +2,14 @@ import { type Metadata } from "next";
 import { Link } from "~/app/_components/link";
 import * as Meter from "~/app/_components/meter";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
-import { currency, percent } from "~/app/_format";
+import { percent } from "~/app/_format";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import PotActions from "~/app/(main)/pots/_components/pot-actions-menu";
 import { useId } from "react";
 import { clamp } from "~/app/_math";
 import Button from "~/app/_components/ui/button";
 import { getPots } from "~/server/pot";
+import { formatCents } from "~/app/_currency";
 
 export const metadata: Metadata = {
   title: "Pots",
@@ -85,7 +86,7 @@ const Pot = ({ pot }: PotProps) => {
       <div className="mt-500 flex flex-wrap items-center justify-between">
         <h3 id={meterLabelId}>Total Saved</h3>
         <p className="text-preset-1 text-grey-900" data-testid="total">
-          <strong>{currency(pot.total)}</strong>
+          <strong>{formatCents(pot.total)}</strong>
         </p>
       </div>
       <div className="mt-200 text-preset-5">
@@ -111,7 +112,7 @@ const Pot = ({ pot }: PotProps) => {
           </p>
           <p className="text-end">
             Target of{" "}
-            {currency(pot.target, {
+            {formatCents(pot.target, {
               trailingZeroDisplay: "stripIfInteger",
             })}
           </p>

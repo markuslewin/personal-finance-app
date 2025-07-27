@@ -5,13 +5,14 @@ import { Link } from "~/app/_components/link";
 import IconCaretLeft from "~/app/_assets/icon-caret-left.svg";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import { type ComponentPropsWithRef, useId } from "react";
-import { currency, date } from "~/app/_format";
+import { date } from "~/app/_format";
 import TransactionsSearchForm from "~/app/(main)/transactions/_components/transactions-search-form";
 import { searchSchema } from "~/app/(main)/transactions/_search";
 import { z } from "zod";
 import { getPaginatedTransactions } from "~/server/transaction";
 import { getCategories } from "~/server/category";
 import { maxInt } from "~/app/_prisma";
+import { formatCents } from "~/app/_currency";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -107,7 +108,7 @@ const TransactionsPage = async ({
                     >
                       <span className="sr-only">Amount: </span>
                       <span data-testid="amount">
-                        {currency(transaction.amount, {
+                        {formatCents(transaction.amount, {
                           signDisplay: "always",
                         })}
                       </span>
@@ -178,7 +179,7 @@ const TransactionsPage = async ({
                       )}
                       data-testid="amount"
                     >
-                      {currency(transaction.amount, {
+                      {formatCents(transaction.amount, {
                         signDisplay: "always",
                       })}
                     </td>
