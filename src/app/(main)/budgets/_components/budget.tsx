@@ -16,7 +16,7 @@ type BudgetProps = {
     maximum: number;
     category: {
       name: string;
-      Transaction: {
+      transactions: {
         id: string;
         name: string;
         avatar: string;
@@ -136,7 +136,7 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
           role="list"
           aria-labelledby={latestSpendingLabelId}
         >
-          {budget.category.Transaction.map((transaction) => {
+          {budget.category.transactions.map((transaction) => {
             return (
               <li
                 className="grid grid-cols-[1fr_auto] items-center gap-200 tablet:grid-cols-[auto_1fr_auto]"

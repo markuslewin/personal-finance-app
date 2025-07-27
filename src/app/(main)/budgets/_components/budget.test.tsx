@@ -54,7 +54,7 @@ test("budget", () => {
         maximum: 10000,
         category: {
           name: "My Category",
-          Transaction: [],
+          transactions: [],
         },
         theme: {
           color: "green",

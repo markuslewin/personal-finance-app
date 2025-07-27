@@ -9,7 +9,7 @@ export const getThemesWithBudget = async () => {
       id: true,
       name: true,
       color: true,
-      Budget: {
+      budgets: {
         select: {
           id: true,
         },
@@ -23,16 +23,16 @@ export const getThemesWithBudget = async () => {
     },
   });
   return themes.map((theme) => {
-    if (theme.Budget.length > 1) {
+    if (theme.budgets.length > 1) {
       throw new Error(
-        `A user can have at most one budget related to a theme, but user ${user.id} has ${theme.Budget.length}`,
+        `A user can have at most one budget related to a theme, but user ${user.id} has ${theme.budgets.length}`,
       );
     }
     return {
       id: theme.id,
       name: theme.name,
       color: theme.color,
-      budget: theme.Budget[0] ?? null,
+      budget: theme.budgets[0] ?? null,
     };
   });
 };
@@ -44,7 +44,7 @@ export const getThemesWithPot = async () => {
       id: true,
       name: true,
       color: true,
-      Pot: {
+      pots: {
         select: {
           id: true,
         },
@@ -58,16 +58,16 @@ export const getThemesWithPot = async () => {
     },
   });
   return themes.map((theme) => {
-    if (theme.Pot.length > 1) {
+    if (theme.pots.length > 1) {
       throw new Error(
-        `A user can have at most one pot related to a theme, but user ${user.id} has ${theme.Pot.length}`,
+        `A user can have at most one pot related to a theme, but user ${user.id} has ${theme.pots.length}`,
       );
     }
     return {
       id: theme.id,
       name: theme.name,
       color: theme.color,
-      pot: theme.Pot[0] ?? null,
+      pot: theme.pots[0] ?? null,
     };
   });
 };

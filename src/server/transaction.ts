@@ -30,7 +30,7 @@ export const getTransactionsForMonth = async (date: Date) => {
       amount: true,
       category: {
         select: {
-          Budget: {
+          budgets: {
             select: {
               id: true,
             },
@@ -49,13 +49,13 @@ export const getTransactionsForMonth = async (date: Date) => {
     },
   });
   return transactions.map((transaction) => {
-    if (transaction.category.Budget.length > 1) {
+    if (transaction.category.budgets.length > 1) {
       throw new Error(
-        `A user can have at most one budget related to a category, but user ${user.id} has ${transaction.category.Budget.length}`,
+        `A user can have at most one budget related to a category, but user ${user.id} has ${transaction.category.budgets.length}`,
       );
     }
 
-    const budget = transaction.category.Budget[0];
+    const budget = transaction.category.budgets[0];
     return {
       id: transaction.id,
       amount: transaction.amount,

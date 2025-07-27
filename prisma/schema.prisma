@@ -94,8 +94,8 @@ model Category {
     name String @unique
     // todo: order Int
 
-    Transaction Transaction[]
-    Budget      Budget[]
+    transactions Transaction[]
+    budgets      Budget[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -107,8 +107,8 @@ model Theme {
     color String
     // todo: order Int
 
-    Budget Budget[]
-    Pot    Pot[]
+    budgets Budget[]
+    pots    Pot[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

@@ -24,7 +24,7 @@ export const getAvailableCategories = async (includeCategoryId?: string) => {
     where:
       includeCategoryId === undefined
         ? {
-            Budget: {
+            budgets: {
               none: {
                 userId: user.id,
               },
@@ -33,14 +33,14 @@ export const getAvailableCategories = async (includeCategoryId?: string) => {
         : {
             OR: [
               {
-                Budget: {
+                budgets: {
                   none: {
                     userId: user.id,
                   },
                 },
               },
               {
-                Budget: {
+                budgets: {
                   some: {
                     categoryId: includeCategoryId,
                     userId: user.id,

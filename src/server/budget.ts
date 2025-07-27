@@ -65,7 +65,7 @@ export const getBudgetsWithSpendingTransactions = async () => {
         select: {
           id: true,
           name: true,
-          Transaction: {
+          transactions: {
             select: {
               id: true,
               name: true,
