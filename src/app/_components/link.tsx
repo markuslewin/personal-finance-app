@@ -43,7 +43,7 @@ export const Link = (props: LinkProps) => {
         e.preventDefault();
         startTransition(() => {
           progress.start();
-          router.push(props.href);
+          router.push(props.href, { scroll: props.scroll });
         });
       }}
     />
