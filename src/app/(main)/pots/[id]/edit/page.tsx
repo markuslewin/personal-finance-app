@@ -17,6 +17,11 @@ import { getThemesWithPot } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import { toDollarValue } from "~/app/_currency";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit pot",
+};
 
 const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   await requireRealUser();

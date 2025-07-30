@@ -12,6 +12,11 @@ import { getThemesWithPot } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import { ErrorPage } from "~/app/(main)/_components/error-page";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Add pot",
+};
 
 const AddPotPage = async () => {
   await requireRealUser();

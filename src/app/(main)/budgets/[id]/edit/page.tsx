@@ -1,3 +1,4 @@
+import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import DeleteBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/delete-budget-form";
 import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budget-form";
@@ -19,6 +20,10 @@ import { toDollarValue } from "~/app/_currency";
 import { getBudget } from "~/server/budget";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
+
+export const metadata: Metadata = {
+  title: "Edit budget",
+};
 
 const EditBudgetPage = async ({
   params,

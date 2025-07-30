@@ -1,3 +1,4 @@
+import { type Metadata } from "next";
 import { ErrorPage } from "~/app/(main)/_components/error-page";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
@@ -14,6 +15,10 @@ import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
+
+export const metadata: Metadata = {
+  title: "Add budget",
+};
 
 const AddBudgetPage = async () => {
   await requireRealUser();

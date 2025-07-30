@@ -1,5 +1,10 @@
+import { type Metadata } from "next";
 import SignupForm from "~/app/(auth)/signup/_components/signup-form";
 import { Link } from "~/app/_components/link";
+
+export const metadata: Metadata = {
+  title: "Sign up",
+};
 
 const SignupPage = async () => {
   return (

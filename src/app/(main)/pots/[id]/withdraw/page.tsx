@@ -14,6 +14,11 @@ import Spinner from "~/app/_components/ui/spinner";
 import { getPot } from "~/server/pot";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Withdraw money",
+};
 
 const WithdrawFromPotPage = async ({
   params,
