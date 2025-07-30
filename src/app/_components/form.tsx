@@ -166,8 +166,10 @@ export const Combobox = ({ name, ...props }: ComboboxProps) => {
 
 type EnhancedComboboxContextValue = {
   contentRef: RefObject<HTMLDivElement | null>;
-  triggerProps: ReturnType<typeof getEnhancedComboboxProps>["triggerProps"];
-  handleBlur: FocusEventHandler;
+  triggerProps: ReturnType<typeof getEnhancedComboboxProps>["triggerProps"] & {
+    ref: RefObject<HTMLButtonElement | null>;
+    onBlur: FocusEventHandler;
+  };
 } | null;
 
 const EnhancedComboboxContext =
@@ -190,24 +192,42 @@ export const EnhancedCombobox = ({ name, ...props }: EnhancedComboboxProps) => {
   const [meta] = useField(name);
   const control = useInputControl(meta);
   const {
+    meta: propsMeta,
     rootProps: { key, ...rootProps },
     triggerProps,
   } = getEnhancedComboboxProps(meta);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const contextValue: EnhancedComboboxContextValue = useMemo(() => {
     return {
       contentRef,
-      triggerProps,
-      handleBlur: (e: FocusEvent) => {
-        if (!contentRef.current?.contains(e.relatedTarget)) {
-          control.blur();
-        }
+      triggerProps: {
+        ...triggerProps,
+        ref: triggerRef,
+        onBlur: (e: FocusEvent) => {
+          if (!contentRef.current?.contains(e.relatedTarget)) {
+            control.blur();
+          }
+        },
       },
     };
   }, [control, triggerProps]);
 
   return (
     <EnhancedComboboxContext.Provider value={contextValue}>
+      <input
+        className="sr-only"
+        name={propsMeta.name}
+        value={control.value}
+        readOnly
+        tabIndex={-1}
+        onFocus={() => {
+          // Conform will focus this element if validation fails for the field
+          // Forward focus to trigger
+          triggerRef.current?.focus();
+        }}
+        aria-hidden="true"
+      />
       <Select.Root
         {...rootProps}
         key={key}
@@ -233,9 +253,9 @@ type EnhancedComboboxTriggerProps = ComponentPropsWithRef<
 export const EnhancedComboboxTrigger = (
   props: EnhancedComboboxTriggerProps,
 ) => {
-  const { triggerProps, handleBlur } = useEnhancedCombobox();
+  const { triggerProps } = useEnhancedCombobox();
 
-  return <Select.Trigger {...triggerProps} onBlur={handleBlur} {...props} />;
+  return <Select.Trigger {...triggerProps} {...props} />;
 };
 
 export const EnhancedComboboxPortal = Select.Portal;
@@ -252,10 +272,16 @@ export const EnhancedComboboxContent = (
   return <Select.Content ref={contentRef} {...props} />;
 };
 
+// Use `getSelectProps`, but split the props across interactive elements
 const getEnhancedComboboxProps = (meta: FieldMetadata) => {
   const props = getSelectProps(meta);
 
   return {
+    meta: {
+      // We don't include `name` in `rootProps`, because we don't want to use Radix's hidden `select`
+      // We create our own hidden `input` instead, so that we can handle focus via Conform
+      name: props.name,
+    },
     rootProps: {
       // `Select.Root` only allows `string | undefined`
       defaultValue:
@@ -266,7 +292,6 @@ const getEnhancedComboboxProps = (meta: FieldMetadata) => {
       form: props.form,
       key: props.key,
       multiple: props.multiple,
-      name: props.name,
       required: props.required,
     },
     triggerProps: {
