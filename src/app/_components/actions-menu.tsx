@@ -19,7 +19,7 @@ export const Trigger = ({ className, ...props }: TriggerProps) => {
       {...props}
       className={cx(
         className,
-        "text-grey-300 transition-colors hocus:text-grey-900",
+        "clickable text-grey-300 transition-colors hocus:text-grey-900",
       )}
     >
       <span className="grid size-200 place-items-center">

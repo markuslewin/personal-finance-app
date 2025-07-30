@@ -20,11 +20,11 @@ type ComboboxProps = ComponentPropsWithRef<"select">;
 
 export const Control = ({ className, ...props }: ComboboxProps) => {
   return (
-    <span className="absolute inset-0 tablet:relative tablet:inset-auto tablet:inline-grid tablet:items-center">
+    <span className="absolute inset-0 focus-within:outline-offset-4 focus-within:outline-auto tablet:relative tablet:inset-auto tablet:inline-grid tablet:items-center tablet:focus-within:outline-none">
       <select
         {...props}
         className={cx(
-          "absolute inset-0 rounded-lg border-[0.0625rem] border-beige-500 bg-white text-grey-900 opacity-0 transition-colors hover:border-grey-500 focus-visible:border-grey-900 tablet:static tablet:inset-auto tablet:col-start-1 tablet:row-start-1 tablet:h-[2.8125rem] tablet:appearance-none tablet:pr-[3.1875rem] tablet:pl-[1.1875rem] tablet:opacity-100",
+          "absolute top-1/2 left-1/2 size-500 -translate-1/2 rounded-lg border-[0.0625rem] border-beige-500 bg-white text-grey-900 opacity-0 transition-colors hover:border-grey-500 focus-visible:border-grey-900 tablet:static tablet:inset-auto tablet:top-auto tablet:left-auto tablet:col-start-1 tablet:row-start-1 tablet:h-[2.8125rem] tablet:w-auto tablet:translate-none tablet:appearance-none tablet:pr-[3.1875rem] tablet:pl-[1.1875rem] tablet:opacity-100",
           className,
         )}
       />

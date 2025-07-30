@@ -83,7 +83,7 @@ export const Close = ({ className, ...props }: CloseProps) => {
       {...props}
       className={cx(
         className,
-        "rounded-full transition-colors hocus:text-grey-900",
+        "clickable rounded-full transition-colors hocus:text-grey-900",
       )}
     >
       <IconCloseModal className="h-[1.625rem]" />

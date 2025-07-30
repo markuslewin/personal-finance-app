@@ -97,7 +97,7 @@ export const BillsSearchForm = ({ defaultSort }: BillsSearchFormProps) => {
                 );
               }}
             >
-              <RadixSelect.Trigger className="group tablet:select-trigger">
+              <RadixSelect.Trigger className="group clickable tablet:select-trigger tablet:clickable-none">
                 <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
                   <IconSortMobile className="h-[0.9375rem]" />
                 </span>

@@ -95,6 +95,10 @@
   strong {
     font-weight: inherit;
   }
+
+  :focus {
+    @apply outline-offset-4;
+  }
 }
 
 @utility select-trigger {
@@ -104,7 +108,7 @@
 /* Additional space to be used with `divide-y-*` and `space-y-*` */
 @utility add-space-y-* {
   & > :not(:last-child) {
-    padding-block-end: --value(--spacing- *);
+    padding-block-end: --value(--spacing-*);
   }
 }
 
@@ -113,8 +117,20 @@
   display: grid;
   grid-template-columns: repeat(
     auto-fit,
-    minmax(min(--value(--container- *, [length]), 100%), 1fr)
+    minmax(min(--value(--container-*, [length]), 100%), 1fr)
   );
+}
+
+@utility clickable {
+  @apply relative isolate before:absolute before:top-1/2 before:left-1/2 before:-z-10 before:block before:size-500 before:-translate-1/2;
+}
+
+@utility clickable-none {
+  @apply before:content-none;
+}
+
+@utility outline-auto {
+  outline-style: auto;
 }
 
 @custom-variant hocus {

@@ -111,7 +111,7 @@ const TransactionsSearchForm = ({
                   handleChange(SORT_NAME, value);
                 }}
               >
-                <RadixSelect.Trigger className="group tablet:select-trigger">
+                <RadixSelect.Trigger className="group clickable tablet:select-trigger tablet:clickable-none">
                   <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
                     <IconSortMobile className="h-[0.9375rem]" />
                   </span>
@@ -186,7 +186,7 @@ const TransactionsSearchForm = ({
                   );
                 }}
               >
-                <RadixSelect.Trigger className="group tablet:select-trigger">
+                <RadixSelect.Trigger className="group clickable tablet:select-trigger tablet:clickable-none">
                   <span className="grid size-250 place-items-center text-grey-900 tablet:hidden">
                     <IconFilterMobile className="h-[1rem]" />
                   </span>
