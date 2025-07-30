@@ -160,87 +160,76 @@ export const updatePot = async (data: {
 export const deletePot = async (id: string) => {
   const user = await requireRealUser();
 
-  // todo: Transaction
-  const pot = await db.pot.delete({
-    select: {
-      total: true,
-    },
-    where: {
-      id,
-      userId: user.id,
-    },
-  });
-
-  await db.balance.update({
-    data: {
-      current: {
-        increment: pot.total,
+  await db.$transaction(async (tx) => {
+    const pot = await tx.pot.delete({
+      select: {
+        total: true,
       },
-    },
-    where: {
-      userId: user.id,
-    },
+      where: {
+        id,
+        userId: user.id,
+      },
+    });
+    await tx.balance.update({
+      data: {
+        current: {
+          increment: pot.total,
+        },
+      },
+      where: {
+        userId: user.id,
+      },
+    });
   });
 };
 
 export const addMoneyToPot = async (data: { id: string; amount: number }) => {
   const user = await requireRealUser();
-  // todo: Transaction
-  // todo: Lock
-  const pot = await db.pot.findUnique({
-    select: {
-      total: true,
-      user: {
-        select: {
-          balance: {
-            select: {
-              current: true,
-            },
-          },
+
+  await db.$transaction(async (tx) => {
+    const pot = await tx.pot.update({
+      data: {
+        total: {
+          increment: data.amount,
         },
-      },
-    },
-    where: {
-      id: data.id,
-      userId: user.id,
-    },
-  });
-  if (!pot) {
-    throw new Error("Pot not found");
-  }
-  if (!pot.user.balance) {
-    throw new Error("Balance not found");
-  }
-
-  if (pot.user.balance.current < data.amount) {
-    throw new PotError("Insufficient funds", {
-      cause: {
-        field: "amount",
-      },
-    });
-  }
-
-  await db.pot.update({
-    data: {
-      total: {
-        increment: data.amount,
-      },
-      user: {
-        update: {
-          balance: {
-            update: {
-              current: {
-                decrement: data.amount,
+        user: {
+          update: {
+            balance: {
+              update: {
+                current: {
+                  decrement: data.amount,
+                },
               },
             },
           },
         },
       },
-    },
-    where: {
-      id: data.id,
-      userId: user.id,
-    },
+      where: {
+        id: data.id,
+        userId: user.id,
+      },
+      select: {
+        user: {
+          select: {
+            balance: {
+              select: {
+                current: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (pot.user.balance === null) {
+      throw new Error("Balance not found");
+    }
+    if (pot.user.balance.current < 0) {
+      throw new PotError("Insufficient funds", {
+        cause: {
+          field: "amount",
+        },
+      });
+    }
   });
 };
 
@@ -249,62 +238,40 @@ export const withdrawMoneyFromPot = async (data: {
   amount: number;
 }) => {
   const user = await requireRealUser();
-  // todo: Transaction
-  // todo: Lock
-  const pot = await db.pot.findUnique({
-    select: {
-      total: true,
-      user: {
-        select: {
-          balance: {
-            select: {
-              current: true,
-            },
-          },
+
+  await db.$transaction(async (tx) => {
+    const pot = await tx.pot.update({
+      data: {
+        total: {
+          decrement: data.amount,
         },
-      },
-    },
-    where: {
-      id: data.id,
-      userId: user.id,
-    },
-  });
-  if (!pot) {
-    throw new Error("Pot not found");
-  }
-  if (!pot.user.balance) {
-    throw new Error("Balance not found");
-  }
-
-  if (pot.total < data.amount) {
-    throw new PotError("Insufficient funds", {
-      cause: {
-        field: "amount",
-      },
-    });
-  }
-
-  await db.pot.update({
-    data: {
-      total: {
-        decrement: data.amount,
-      },
-      user: {
-        update: {
-          balance: {
-            update: {
-              current: {
-                increment: data.amount,
+        user: {
+          update: {
+            balance: {
+              update: {
+                current: {
+                  increment: data.amount,
+                },
               },
             },
           },
         },
       },
-    },
-    where: {
-      id: data.id,
-      userId: user.id,
-    },
+      where: {
+        id: data.id,
+        userId: user.id,
+      },
+      select: {
+        total: true,
+      },
+    });
+    if (pot.total < 0) {
+      throw new PotError("Insufficient funds", {
+        cause: {
+          field: "amount",
+        },
+      });
+    }
   });
 };
 

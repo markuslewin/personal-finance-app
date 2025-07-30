@@ -270,7 +270,7 @@ test("can't add more money than current balance", async ({ page, login }) => {
 
   const dialog = page.getByRole("dialog", { name: "add to" });
   const textbox = dialog.getByLabel("amount to add");
-  await textbox.fill("4837");
+  await textbox.fill("4836.01");
   await dialog.getByRole("button", { name: "confirm" }).click();
 
   await expect(textbox).toHaveAccessibleDescription(/insufficient funds/i);
@@ -290,7 +290,7 @@ test("can't withdraw more money than what's in the pot", async ({
 
   const dialog = page.getByRole("dialog", { name: "withdraw" });
   const textbox = dialog.getByLabel("amount to withdraw");
-  await textbox.fill("160");
+  await textbox.fill("159.01");
   await dialog.getByRole("button", { name: "confirm" }).click();
 
   await expect(textbox).toHaveAccessibleDescription(/insufficient funds/i);
