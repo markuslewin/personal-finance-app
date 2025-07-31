@@ -192,17 +192,6 @@ const Sidebar = ({
             </span>
           </button>
         </form>
-        {/* todo: User? */}
-        {/* {user ? (
-            <>
-            <p>Hello, {user.name}!</p>
-            <form action={logOut}>
-                <button type="submit">Log out</button>
-              </form>
-              </>
-              ) : (
-                <p>User isn&apos;t logged in</p>
-                )} */}
       </header>
       {children}
     </div>

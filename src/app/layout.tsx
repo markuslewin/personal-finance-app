@@ -30,20 +30,6 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  // todo: What do we do here?
-  // const userId = await getSession();
-  // let user;
-  // if (typeof userId === "string") {
-  //   user = await db.user.findUnique({
-  //     select: {
-  //       name: true,
-  //     },
-  //     where: {
-  //       id: userId,
-  //     },
-  //   });
-  // }
-
   return (
     <Html lang="en" className={`${publicSans.variable}`}>
       <ProgressBarProvider>
