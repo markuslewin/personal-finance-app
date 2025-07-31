@@ -12,9 +12,11 @@ export const createSession = async (userId: string) => {
   cookieStore.set({
     path: "/",
     name,
-    // todo: Encode
-    value: sign(userId, env.SESSION_SECRET[0]),
-    // todo: maxAge/expires,
+    value: sign(
+      btoa(unescape(encodeURIComponent(userId))),
+      env.SESSION_SECRET[0],
+    ),
+    maxAge: 60 * 60 * 24,
     sameSite: "lax",
     httpOnly: true,
     secure: env.NODE_ENV === "production",
@@ -30,7 +32,7 @@ export const verifySession = cache(async () => {
   for (const secret of env.SESSION_SECRET) {
     const unsigned = unsign(cookie.value, secret);
     if (unsigned !== false) {
-      return { userId: unsigned };
+      return { userId: decodeURIComponent(escape(atob(unsigned))) };
     }
   }
   return null;
