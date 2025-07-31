@@ -1,9 +1,8 @@
 "use client";
 
 import { useField } from "@conform-to/react";
-import { useId } from "react";
 import { amount as amountSchema } from "~/app/(main)/pots/_schemas";
-import * as Meter from "~/app/_components/meter";
+import Status from "~/app/_components/status";
 import { formatCents } from "~/app/_currency";
 import { percent } from "~/app/_format";
 
@@ -15,10 +14,9 @@ type MeterSectionProps = {
 
 // todo: Merge with `WithdrawMeterSection`
 const MeterSection = ({ name, total, target }: MeterSectionProps) => {
-  const labelId = useId();
   const [meta] = useField(name);
 
-  const amount = amountSchema.catch(0).parse(Number(meta.value));
+  const amount = amountSchema.catch(0).parse(meta.value);
   const clampedAmount = Math.min(target - total, amount);
   const nextTotal = total + amount;
   const clampedNextTotal = Math.min(target, nextTotal);
@@ -30,7 +28,7 @@ const MeterSection = ({ name, total, target }: MeterSectionProps) => {
     <div>
       <p className="flex flex-wrap items-center justify-between">
         <span>
-          <span id={labelId}>New Amount</span>
+          <span>New Amount</span>
           <span className="sr-only">: </span>
         </span>
         <span className="text-preset-1 text-grey-900">
@@ -38,15 +36,9 @@ const MeterSection = ({ name, total, target }: MeterSectionProps) => {
         </span>
       </p>
       <p className="mt-200">
-        <Meter.Root
-          className="grid h-100 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]"
-          min={0}
-          max={target}
-          value={nextTotal}
-          aria-labelledby={labelId}
-        >
+        <span className="grid h-100 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]">
           {clampedNextTotal > 0 ? (
-            <Meter.Indicator
+            <span
               className="flex gap-[0.125rem] overflow-hidden rounded-full"
               style={{
                 width: `${(clampedNextTotal / target) * 100}%`,
@@ -64,13 +56,13 @@ const MeterSection = ({ name, total, target }: MeterSectionProps) => {
                   style={{ flexGrow: greenPercent * 100 }}
                 />
               ) : null}
-            </Meter.Indicator>
+            </span>
           ) : null}
-        </Meter.Root>
+        </span>
       </p>
       <div className="mt-150 flex items-center justify-between">
         <p className="text-preset-5-bold text-green">
-          {percent(clampedNextTotal / target)}
+          <Status>{percent(clampedNextTotal / target)}</Status>
         </p>
         <p className="text-end text-preset-5">
           Target of{" "}

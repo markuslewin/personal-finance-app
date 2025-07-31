@@ -1,15 +1,13 @@
 import { type Metadata } from "next";
-import { Link } from "~/app/_components/link";
-import * as Meter from "~/app/_components/meter";
-import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
-import { percent } from "~/app/_format";
-import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import PotActions from "~/app/(main)/pots/_components/pot-actions-menu";
-import { useId } from "react";
-import { clamp } from "~/app/_math";
+import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import { Link } from "~/app/_components/link";
 import Button from "~/app/_components/ui/button";
-import { getPots } from "~/server/pot";
 import { formatCents } from "~/app/_currency";
+import { percent } from "~/app/_format";
+import { clamp } from "~/app/_math";
+import { getPots } from "~/server/pot";
 
 export const metadata: Metadata = {
   title: "Pots",
@@ -50,8 +48,6 @@ type PotProps = {
 };
 
 const Pot = ({ pot }: PotProps) => {
-  const meterLabelId = useId();
-
   return (
     <article
       className="rounded-xl bg-white px-250 py-300 text-grey-500 tablet:px-300 forced-colors:border-[0.0625rem]"
@@ -84,27 +80,21 @@ const Pot = ({ pot }: PotProps) => {
         </Dehydrated>
       </header>
       <div className="mt-500 flex flex-wrap items-center justify-between">
-        <h3 id={meterLabelId}>Total Saved</h3>
+        <h3>Total Saved</h3>
         <p className="text-preset-1 text-grey-900" data-testid="total">
           <strong>{formatCents(pot.total)}</strong>
         </p>
       </div>
       <div className="mt-200 text-preset-5">
         <p>
-          <Meter.Root
-            className="grid h-100 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]"
-            min={0}
-            max={pot.target}
-            value={pot.total}
-            aria-labelledby={meterLabelId}
-          >
-            <Meter.Indicator
+          <span className="grid h-100 rounded-full bg-beige-100 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]">
+            <span
               className="rounded-full bg-[var(--theme-color)] forced-colors:bg-[CanvasText]"
               style={{
                 width: `${clamp(0, 100, (pot.total / pot.target) * 100)}%`,
               }}
             />
-          </Meter.Root>
+          </span>
         </p>
         <div className="mt-150 flex items-center justify-between">
           <p className="text-preset-5-bold">

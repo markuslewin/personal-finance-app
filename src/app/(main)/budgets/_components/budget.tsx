@@ -1,14 +1,13 @@
-import { Link } from "~/app/_components/link";
 import Image from "next/image";
 import { useId } from "react";
 import BudgetActions from "~/app/(main)/budgets/_components/budget-actions-menu";
-import { Hydrated, Dehydrated } from "~/app/_components/hydration";
-import { date } from "~/app/_format";
-import { clamp } from "~/app/_math";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
-import * as Meter from "~/app/_components/meter";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import { Link } from "~/app/_components/link";
 import { formatCents } from "~/app/_currency";
+import { date } from "~/app/_format";
+import { clamp } from "~/app/_math";
 
 type BudgetProps = {
   budget: {
@@ -32,7 +31,6 @@ type BudgetProps = {
 };
 
 export const Budget = ({ budget, spent }: BudgetProps) => {
-  const meterLabelId = useId();
   const latestSpendingLabelId = useId();
 
   const free = Math.max(0, budget.maximum - spent);
@@ -69,23 +67,15 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
       </header>
       <p className="mt-250">Maximum of {formatCents(budget.maximum)}</p>
       <p className="mt-200">
-        <span className="sr-only" id={meterLabelId}>
-          Amount spent
-        </span>
-        <Meter.Root
-          className="grid h-400 rounded-sm bg-beige-100 p-50 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]"
-          min={0}
-          max={budget.maximum}
-          value={spent}
-          aria-labelledby={meterLabelId}
-        >
-          <Meter.Indicator
+        <span className="sr-only">Amount spent</span>
+        <span className="grid h-400 rounded-sm bg-beige-100 p-50 forced-colors:border-[0.0625rem] forced-colors:bg-[Canvas]">
+          <span
             className="rounded-sm bg-[var(--theme-color)] forced-colors:bg-[CanvasText]"
             style={{
               width: `${clamp(0, 100, (spent / budget.maximum) * 100)}%`,
             }}
           />
-        </Meter.Root>
+        </span>
       </p>
       <div className="mt-200 grid grid-cols-2 gap-200 text-preset-5">
         <div className="grid grid-cols-[auto_1fr] gap-200">
