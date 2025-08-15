@@ -37,15 +37,15 @@ test("toggles visibility", async () => {
   await user.type(textbox, "my password");
 
   expect(textbox).toHaveAttribute("type", "password");
-  expect(toggle).toHaveAttribute("aria-pressed", "false");
+  expect(toggle).not.toBePressed();
 
   await user.click(toggle);
 
   expect(textbox).toHaveAttribute("type", "text");
-  expect(toggle).toHaveAttribute("aria-pressed", "true");
+  expect(toggle).toBePressed();
 
   await user.click(toggle);
 
   expect(textbox).toHaveAttribute("type", "password");
-  expect(toggle).toHaveAttribute("aria-pressed", "false");
+  expect(toggle).not.toBePressed();
 });
