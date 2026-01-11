@@ -22,9 +22,7 @@ export const metadata: Metadata = {
 
 const WithdrawFromPotPage = async ({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+}: PageProps<"/pots/[id]/withdraw">) => {
   await requireRealUser();
 
   const id = (await params).id;

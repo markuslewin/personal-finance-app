@@ -14,11 +14,9 @@ import { getPot } from "~/server/pot";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
-const AddMoneyToPotPage = async ({
+const WithdrawFromPotPage = async ({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+}: PageProps<"/pots/[id]/withdraw">) => {
   await requireRealUser();
 
   const id = (await params).id;
@@ -88,4 +86,4 @@ const AddMoneyToPotPage = async ({
   );
 };
 
-export default AddMoneyToPotPage;
+export default WithdrawFromPotPage;

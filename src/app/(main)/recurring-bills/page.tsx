@@ -50,9 +50,7 @@ const getSortFn = (option: SortingOption): ((a: Bill, b: Bill) => number) => {
 
 const RecurringBillsPage = async ({
   searchParams,
-}: {
-  searchParams: Promise<unknown>;
-}) => {
+}: PageProps<"/recurring-bills">) => {
   const { name, sort } = z
     .object({
       name: z.optional(z.string()).catch(undefined),

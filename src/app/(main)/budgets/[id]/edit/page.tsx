@@ -25,11 +25,7 @@ export const metadata: Metadata = {
   title: "Edit budget",
 };
 
-const EditBudgetPage = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const EditBudgetPage = async ({ params }: PageProps<"/budgets/[id]/edit">) => {
   await requireRealUser();
 
   const id = (await params).id;

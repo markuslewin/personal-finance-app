@@ -22,9 +22,7 @@ export const metadata: Metadata = {
 
 const AddMoneyToPotPage = async ({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+}: PageProps<"/pots/[id]/add-money">) => {
   await requireRealUser();
 
   const id = (await params).id;

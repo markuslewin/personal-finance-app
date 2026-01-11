@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "Edit pot",
 };
 
-const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const EditPotPage = async ({ params }: PageProps<"/pots/[id]/edit">) => {
   await requireRealUser();
 
   const id = (await params).id;

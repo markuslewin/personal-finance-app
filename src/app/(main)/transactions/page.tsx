@@ -20,9 +20,7 @@ export const metadata: Metadata = {
 
 const TransactionsPage = async ({
   searchParams,
-}: {
-  searchParams: Promise<unknown>;
-}) => {
+}: PageProps<"/transactions">) => {
   const { name, sort, category, page } = searchSchema
     .extend({
       page: z

@@ -16,7 +16,7 @@ import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import { toDollarValue } from "~/app/_currency";
 
-const EditPotPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const EditPotPage = async ({ params }: PageProps<"/pots/[id]/edit">) => {
   await requireRealUser();
 
   const id = (await params).id;
