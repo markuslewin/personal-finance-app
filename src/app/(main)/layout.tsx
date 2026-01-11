@@ -1,16 +1,10 @@
 import { cookies } from "next/headers";
-import { getIsSidebarOpen } from "~/app/_sidebar";
 import Sidebar from "~/app/_components/sidebar";
-import { type ReactNode } from "react";
+import { getIsSidebarOpen } from "~/app/_sidebar";
 
 export const dynamic = "force-dynamic";
 
-type MainLayoutProps = {
-  children: ReactNode;
-  dialog: ReactNode;
-};
-
-const MainLayout = async ({ children, dialog }: MainLayoutProps) => {
+const MainLayout = async ({ children, dialog }: LayoutProps<"/">) => {
   const isSidebarOpen = getIsSidebarOpen(await cookies());
 
   return (
