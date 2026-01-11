@@ -3,12 +3,12 @@
 
 import { cx } from "class-variance-authority";
 import {
-  useContext,
   createContext,
   type ReactNode,
-  useOptimistic,
-  useState,
+  startTransition,
+  useContext,
   useEffect,
+  useOptimistic,
   useRef,
 } from "react";
 
@@ -62,22 +62,18 @@ const useInterval = (callback: () => void, delay: number | null) => {
 
 export const ProgressBarProvider = (props: ProgressProps) => {
   const [loading, setLoading] = useOptimistic(false);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useOptimistic(0);
 
   useInterval(
     () => {
-      setValue((value) => {
-        return Math.min(value + getDiff(value), 99);
+      startTransition(() => {
+        setValue((value) => {
+          return Math.min(value + getDiff(value), 99);
+        });
       });
     },
     loading ? 750 : null,
   );
-
-  useEffect(() => {
-    if (!loading) {
-      setValue(0);
-    }
-  }, [loading]);
 
   return (
     <ProgressContext.Provider

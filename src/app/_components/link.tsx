@@ -20,6 +20,7 @@ const isModifiedEvent = (event: MouseEvent): boolean => {
     event.ctrlKey ||
     event.shiftKey ||
     event.altKey || // triggers resource download
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     (event.nativeEvent && event.nativeEvent.which === 2)
   );
 };
