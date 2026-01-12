@@ -2,21 +2,20 @@
 
 import { cx } from "class-variance-authority";
 import { ReadonlyURLSearchParams } from "next/navigation";
+import { Portal, Select as RadixSelect } from "radix-ui";
 import { type ComponentPropsWithRef, Fragment, useState } from "react";
-import Textbox from "~/app/_components/ui/textbox";
+import { DEFAULT_SORT } from "~/app/(main)/transactions/_search";
 import IconFilterMobile from "~/app/_assets/icon-filter-mobile.svg";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import Status from "~/app/_components/status";
 import * as IconCombobox from "~/app/_components/ui/icon-combobox";
 import * as Select from "~/app/_components/ui/select";
-import * as RadixSelect from "@radix-ui/react-select";
-import { sortingOptions } from "~/app/_sort";
-import { Dehydrated, Hydrated } from "~/app/_components/hydration";
-import { useOptimisticSearchParams } from "~/app/_routing";
-import { Portal } from "@radix-ui/react-portal";
-import Status from "~/app/_components/status";
 import Spinner from "~/app/_components/ui/spinner";
-import { DEFAULT_SORT } from "~/app/(main)/transactions/_search";
+import Textbox from "~/app/_components/ui/textbox";
+import { useOptimisticSearchParams } from "~/app/_routing";
+import { sortingOptions } from "~/app/_sort";
 
 const NAME_NAME = "name";
 const SORT_NAME = "sort";
@@ -223,11 +222,11 @@ const TransactionsSearchForm = ({
         </div>
       </form>
       {/* User doesn't need to know about this element */}
-      <Portal>
+      <Portal.Root>
         <Status className="sr-only">
           {pending ? <>Loading transactions</> : <>{status}</>}
         </Status>
-      </Portal>
+      </Portal.Root>
     </>
   );
 };

@@ -1,5 +1,5 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import { notFound } from "next/navigation";
+import { Dialog } from "radix-ui";
 import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budget-form";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import { requireRealUser } from "~/app/_auth";

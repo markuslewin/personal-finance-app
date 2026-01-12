@@ -1,9 +1,9 @@
+import { Toggle } from "radix-ui";
 import { type ComponentPropsWithRef, useState } from "react";
-import { Textbox } from "~/app/_components/form";
-import { Hydrated } from "~/app/_components/hydration";
-import * as Toggle from "@radix-ui/react-toggle";
 import IconHidePassword from "~/app/_assets/icon-hide-password.svg";
 import IconShowPassword from "~/app/_assets/icon-show-password.svg";
+import { Textbox } from "~/app/_components/form";
+import { Hydrated } from "~/app/_components/hydration";
 
 type PasswordTextboxProps = ComponentPropsWithRef<typeof Textbox>;
 

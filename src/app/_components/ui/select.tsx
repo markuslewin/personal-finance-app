@@ -1,9 +1,9 @@
+import { cx } from "class-variance-authority";
+import { Select } from "radix-ui";
 import { type ComponentPropsWithRef } from "react";
-import * as Select from "@radix-ui/react-select";
+import { twMerge } from "tailwind-merge";
 import IconCaretDown from "~/app/_assets/icon-caret-down.svg";
 import IconSelected from "~/app/_assets/icon-selected.svg";
-import { cx } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
 
 export const Root = Select.Root;
 

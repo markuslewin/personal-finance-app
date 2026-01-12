@@ -1,7 +1,7 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
+import { Dialog } from "radix-ui";
 import { type ComponentPropsWithRef } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

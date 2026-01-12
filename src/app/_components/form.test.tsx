@@ -4,9 +4,9 @@
 import "~/../tests/setup/jsdom-mocks";
 
 import { expect, test } from "@jest/globals";
-import * as Select from "@radix-ui/react-select";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Select } from "radix-ui";
 import { type ReactNode } from "react";
 import { z } from "zod";
 import * as Form from "~/app/_components/form";

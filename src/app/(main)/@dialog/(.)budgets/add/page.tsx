@@ -1,20 +1,20 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import RoutedDialog from "~/app/_components/routed-dialog";
+import { Dialog } from "radix-ui";
+import { ErrorDialog } from "~/app/(main)/@dialog/_components/error-dialog";
+import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
+import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
+import { requireRealUser } from "~/app/_auth";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import * as Form from "~/app/_components/form";
+import { Idle, Pending } from "~/app/_components/form-status";
+import RoutedDialog from "~/app/_components/routed-dialog";
+import Status from "~/app/_components/status";
+import ThemesCombobox from "~/app/_components/themes-combobox";
+import Button from "~/app/_components/ui/button";
 import * as DialogUI from "~/app/_components/ui/dialog";
 import * as FormUI from "~/app/_components/ui/form";
-import Button from "~/app/_components/ui/button";
-import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
-import ThemesCombobox from "~/app/_components/themes-combobox";
-import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
-import Status from "~/app/_components/status";
-import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";
-import { requireRealUser } from "~/app/_auth";
-import { DollarTextbox } from "~/app/_components/dollar-textbox";
-import { ErrorDialog } from "~/app/(main)/@dialog/_components/error-dialog";
 
 const AddBudgetPage = async () => {
   await requireRealUser();

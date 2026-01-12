@@ -1,5 +1,5 @@
-import { Slot } from "@radix-ui/react-slot";
 import { cx } from "class-variance-authority";
+import { Slot } from "radix-ui";
 import { type ComponentPropsWithRef } from "react";
 import IconCloseModal from "~/app/_assets/icon-close-modal.svg";
 
@@ -26,7 +26,7 @@ export const Content = ({
   asChild = false,
   ...props
 }: ContentProps) => {
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot.Root : "div";
 
   return (
     <Comp
@@ -62,7 +62,7 @@ export const Heading = ({
   asChild = false,
   ...props
 }: HeadingProps) => {
-  const Comp = asChild ? Slot : "h1";
+  const Comp = asChild ? Slot.Root : "h1";
 
   return (
     <Comp

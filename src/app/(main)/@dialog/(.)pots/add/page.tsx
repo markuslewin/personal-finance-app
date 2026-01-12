@@ -1,18 +1,18 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import RoutedDialog from "~/app/_components/routed-dialog";
-import * as Form from "~/app/_components/form";
-import * as DialogUI from "~/app/_components/ui/dialog";
-import * as FormUI from "~/app/_components/ui/form";
-import Button from "~/app/_components/ui/button";
-import ThemesCombobox from "~/app/_components/themes-combobox";
+import { Dialog } from "radix-ui";
+import { ErrorDialog } from "~/app/(main)/@dialog/_components/error-dialog";
 import AddPotForm from "~/app/(main)/pots/_components/add-pot-form";
-import Status from "~/app/_components/status";
-import { Idle, Pending } from "~/app/_components/form-status";
-import Spinner from "~/app/_components/ui/spinner";
-import { getThemesWithPot } from "~/server/theme";
 import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
-import { ErrorDialog } from "~/app/(main)/@dialog/_components/error-dialog";
+import * as Form from "~/app/_components/form";
+import { Idle, Pending } from "~/app/_components/form-status";
+import RoutedDialog from "~/app/_components/routed-dialog";
+import Status from "~/app/_components/status";
+import ThemesCombobox from "~/app/_components/themes-combobox";
+import Button from "~/app/_components/ui/button";
+import * as DialogUI from "~/app/_components/ui/dialog";
+import * as FormUI from "~/app/_components/ui/form";
+import Spinner from "~/app/_components/ui/spinner";
+import { getThemesWithPot } from "~/server/theme";
 
 const AddPotPage = async () => {
   await requireRealUser();

@@ -54,5 +54,6 @@ export default defineConfig([
     "next-env.d.ts",
     // Project ignores:
     "svgr.d.ts",
+    "playwright-report",
   ]),
 ]);

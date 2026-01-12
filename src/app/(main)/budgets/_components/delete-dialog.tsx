@@ -1,11 +1,11 @@
-import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import * as Dialog from "~/app/_components/ui/dialog";
-import * as Form from "~/app/_components/form";
+import { AlertDialog } from "radix-ui";
 import { type ComponentPropsWithRef } from "react";
 import DeleteBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/delete-budget-form";
-import Button from "~/app/_components/ui/button";
-import Status from "~/app/_components/status";
+import * as Form from "~/app/_components/form";
 import { Idle, Pending } from "~/app/_components/form-status";
+import Status from "~/app/_components/status";
+import Button from "~/app/_components/ui/button";
+import * as Dialog from "~/app/_components/ui/dialog";
 import Spinner from "~/app/_components/ui/spinner";
 
 type RootProps = ComponentPropsWithRef<typeof AlertDialog.Root>;

@@ -1,4 +1,4 @@
-import * as Dialog from "@radix-ui/react-dialog";
+import { Dialog } from "radix-ui";
 import RoutedDialog from "~/app/_components/routed-dialog";
 import * as DialogUI from "~/app/_components/ui/dialog";
 

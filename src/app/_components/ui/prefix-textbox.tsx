@@ -1,4 +1,4 @@
-import * as Slot from "@radix-ui/react-slot";
+import { Slot } from "radix-ui";
 import { type ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 

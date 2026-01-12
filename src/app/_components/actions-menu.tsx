@@ -1,7 +1,7 @@
 "use client";
 
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { cva, cx, type VariantProps } from "class-variance-authority";
+import { DropdownMenu } from "radix-ui";
 import { type ComponentPropsWithRef } from "react";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 

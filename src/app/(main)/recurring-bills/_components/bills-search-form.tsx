@@ -1,19 +1,18 @@
 "use client";
 
+import { ReadonlyURLSearchParams } from "next/navigation";
+import { Portal, Select as RadixSelect } from "radix-ui";
 import { Fragment, useState } from "react";
 import IconSearch from "~/app/_assets/icon-search.svg";
 import IconSortMobile from "~/app/_assets/icon-sort-mobile.svg";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import Status from "~/app/_components/status";
 import * as IconCombobox from "~/app/_components/ui/icon-combobox";
 import * as Select from "~/app/_components/ui/select";
-import Textbox from "~/app/_components/ui/textbox";
-import { type SortingOption, sortingOptions } from "~/app/_sort";
-import * as RadixSelect from "@radix-ui/react-select";
-import { useOptimisticSearchParams } from "~/app/_routing";
-import { ReadonlyURLSearchParams } from "next/navigation";
 import Spinner from "~/app/_components/ui/spinner";
-import Status from "~/app/_components/status";
-import { Portal } from "@radix-ui/react-portal";
+import Textbox from "~/app/_components/ui/textbox";
+import { useOptimisticSearchParams } from "~/app/_routing";
+import { type SortingOption, sortingOptions } from "~/app/_sort";
 
 const NAME_NAME = "name";
 const SORT_NAME = "sort";
@@ -133,11 +132,11 @@ export const BillsSearchForm = ({ defaultSort }: BillsSearchFormProps) => {
         </Hydrated>
       </form>
       {/* User doesn't need to know about this element */}
-      <Portal>
+      <Portal.Root>
         <Status className="sr-only">
           {pending ? <>Loading bills</> : <>{status}</>}
         </Status>
-      </Portal>
+      </Portal.Root>
     </>
   );
 };
