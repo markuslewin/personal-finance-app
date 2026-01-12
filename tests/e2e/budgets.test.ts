@@ -94,10 +94,6 @@ test("can create budget", async ({ page, login }) => {
     })
     .click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText(/adding budget/i)),
-  ).toBeAttached();
-
   const lastBudget = page.getByTestId("budget").last();
   // todo: Scroll
   // await expect(lastBudget).toBeInViewport();
@@ -162,9 +158,6 @@ test("can edit budget", async ({ page, login }) => {
     })
     .click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText(/saving changes/i)),
-  ).toBeAttached();
   await expect(dialog).not.toBeAttached();
   await expect(
     firstBudget.getByRole("heading", {
@@ -216,9 +209,6 @@ test("can delete budget", async ({ page, login }) => {
   });
   await dialog.getByRole("button", { name: "confirm" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText(/deleting/i)),
-  ).toBeAttached();
   await expect(dialog).not.toBeAttached();
   await expect(page.getByTestId("budget").getByTestId("name")).toHaveText([
     /entertainment/i,

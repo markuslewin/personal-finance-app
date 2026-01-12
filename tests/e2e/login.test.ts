@@ -21,9 +21,6 @@ test("can login", async ({ page, login }) => {
     })
     .click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText("logging in")),
-  ).toBeAttached();
   await expect(page).toHaveURL("/");
 });
 

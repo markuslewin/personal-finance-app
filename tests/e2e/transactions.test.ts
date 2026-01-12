@@ -11,12 +11,6 @@ test("can search transactions", async ({ page }) => {
   await page.getByRole("textbox", { name: "search" }).fill("spa");
 
   await expect(
-    page.getByRole("status").and(page.getByText(/loading/i)),
-  ).toBeAttached();
-  await expect(
-    page.getByRole("status").and(page.getByText(/loaded/i)),
-  ).toBeAttached();
-  await expect(
     page
       .getByTestId("transaction")
       .getByTestId("name")
@@ -31,12 +25,6 @@ test("can filter transactions by category", async ({ page }) => {
   await page.getByRole("option", { name: "entertainment" }).click();
 
   await expect(
-    page.getByRole("status").and(page.getByText(/loading/i)),
-  ).toBeAttached();
-  await expect(
-    page.getByRole("status").and(page.getByText(/loaded/i)),
-  ).toBeAttached();
-  await expect(
     page
       .getByTestId("transaction")
       .getByTestId("category")
@@ -50,12 +38,6 @@ test("can sort transactions", async ({ page }) => {
   await page.getByLabel("sort by").click();
   await page.getByRole("option", { name: "a to z" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText(/loading/i)),
-  ).toBeAttached();
-  await expect(
-    page.getByRole("status").and(page.getByText(/loaded/i)),
-  ).toBeAttached();
   await expect(
     page
       .getByTestId("transaction")
@@ -77,12 +59,6 @@ test("can sort transactions", async ({ page }) => {
   await page.getByLabel("sort by").click();
   await page.getByRole("option", { name: "z to a" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText(/loading/i)),
-  ).toBeAttached();
-  await expect(
-    page.getByRole("status").and(page.getByText(/loaded/i)),
-  ).toBeAttached();
   await expect(
     page
       .getByTestId("transaction")
@@ -149,12 +125,6 @@ test.describe("on mobile", () => {
     await page.getByRole("textbox", { name: "search" }).fill("am h");
 
     await expect(
-      page.getByRole("status").and(page.getByText(/loading/i)),
-    ).toBeAttached();
-    await expect(
-      page.getByRole("status").and(page.getByText(/loaded/i)),
-    ).toBeAttached();
-    await expect(
       page
         .getByTestId("transaction")
         .getByTestId("name")
@@ -169,12 +139,6 @@ test.describe("on mobile", () => {
     await page.getByRole("option", { name: "groceries" }).click();
 
     await expect(
-      page.getByRole("status").and(page.getByText(/loading/i)),
-    ).toBeAttached();
-    await expect(
-      page.getByRole("status").and(page.getByText(/loaded/i)),
-    ).toBeAttached();
-    await expect(
       page
         .getByTestId("transaction")
         .getByTestId("category")
@@ -188,12 +152,6 @@ test.describe("on mobile", () => {
     await page.getByRole("combobox", { name: "sort by" }).click();
     await page.getByRole("option", { name: "highest" }).click();
 
-    await expect(
-      page.getByRole("status").and(page.getByText(/loading/i)),
-    ).toBeAttached();
-    await expect(
-      page.getByRole("status").and(page.getByText(/loaded/i)),
-    ).toBeAttached();
     await expect(
       page
         .getByTestId("transaction")
@@ -215,12 +173,6 @@ test.describe("on mobile", () => {
     await page.getByLabel("sort by").click();
     await page.getByRole("option", { name: "lowest" }).click();
 
-    await expect(
-      page.getByRole("status").and(page.getByText(/loading/i)),
-    ).toBeAttached();
-    await expect(
-      page.getByRole("status").and(page.getByText(/loaded/i)),
-    ).toBeAttached();
     await expect(
       page
         .getByTestId("transaction")

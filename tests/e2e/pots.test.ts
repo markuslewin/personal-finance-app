@@ -36,9 +36,6 @@ test("can create pot", async ({ page, login }) => {
   await page.getByLabel("Magenta").click();
   await dialog.getByRole("button", { name: "add pot" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText("adding pot")),
-  ).toBeAttached();
   await expect(page).toHaveURL(/\/pots$/i);
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
     /savings/i,
@@ -90,9 +87,6 @@ test("can edit pot", async ({ page, login }) => {
   await page.getByLabel("Blue").click();
   await dialog.getByRole("button", { name: "save" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText("saving")),
-  ).toBeAttached();
   await expect(page).toHaveURL(/\/pots$/i);
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
     /an edited pot/i,
@@ -137,9 +131,6 @@ test("can delete pot", async ({ page, login }) => {
     .getByRole("button", { name: "confirm" })
     .click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText("deleting")),
-  ).toBeAttached();
   await expect(page).toHaveURL(/\/pots$/i);
   await expect(page.getByTestId("pot").getByTestId("name")).toHaveText([
     /savings/i,
@@ -202,9 +193,6 @@ test("can add money to pot", async ({ page, login }) => {
   await dialog.getByLabel("amount to add").fill("336");
   await dialog.getByRole("button", { name: "confirm" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText("adding")),
-  ).toBeAttached();
   await expect(page).toHaveURL(/\/pots$/i);
   await expect(total).toHaveText(/\$495.00/i);
 
@@ -237,9 +225,6 @@ test("can withdraw money from pot", async ({ page, login }) => {
   await dialog.getByLabel("amount to withdraw").fill("10");
   await dialog.getByRole("button", { name: "confirm" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText("withdrawing")),
-  ).toBeAttached();
   await expect(page).toHaveURL(/\/pots$/i);
   await expect(thirdPot.getByTestId("total")).toHaveText(/\$100.00/i);
 

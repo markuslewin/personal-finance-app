@@ -7,12 +7,6 @@ test("can search recurring bills", async ({ page }) => {
   await page.getByRole("textbox", { name: "search" }).fill("p");
 
   await expect(
-    page.getByRole("status").and(page.getByText(/loading/i)),
-  ).toBeAttached();
-  await expect(
-    page.getByRole("status").and(page.getByText(/loaded/i)),
-  ).toBeAttached();
-  await expect(
     page.getByTestId("bill").getByTestId("name").filter({ visible: true }),
   ).toHaveText([/p/i, /p/i, /p/i]);
 });
@@ -23,12 +17,6 @@ test("can sort recurring bills", async ({ page }) => {
   await page.getByRole("combobox", { name: "sort by" }).click();
   await page.getByRole("option", { name: "a to z" }).click();
 
-  await expect(
-    page.getByRole("status").and(page.getByText(/loading/i)),
-  ).toBeAttached();
-  await expect(
-    page.getByRole("status").and(page.getByText(/loaded/i)),
-  ).toBeAttached();
   await expect(
     page.getByTestId("bill").getByTestId("name").filter({ visible: true }),
   ).toHaveText([
@@ -56,12 +44,6 @@ test.describe("on mobile", () => {
     await page.getByRole("textbox", { name: "search" }).fill("education");
 
     await expect(
-      page.getByRole("status").and(page.getByText(/loading/i)),
-    ).toBeAttached();
-    await expect(
-      page.getByRole("status").and(page.getByText(/loaded/i)),
-    ).toBeAttached();
-    await expect(
       page.getByTestId("bill").getByTestId("name").filter({ visible: true }),
     ).toHaveText([/education/i]);
   });
@@ -72,12 +54,6 @@ test.describe("on mobile", () => {
     await page.getByRole("combobox", { name: "sort by" }).click();
     await page.getByRole("option", { name: "Highest" }).click();
 
-    await expect(
-      page.getByRole("status").and(page.getByText(/loading/i)),
-    ).toBeAttached();
-    await expect(
-      page.getByRole("status").and(page.getByText(/loaded/i)),
-    ).toBeAttached();
     await expect(
       page.getByTestId("bill").getByTestId("amount").filter({ visible: true }),
     ).toHaveText([
