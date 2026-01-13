@@ -64,7 +64,7 @@
     "@types/big.js": "^6.2.2",
     "@types/cookie-signature": "^1.1.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.17.2",
+    "@types/node": "^22.19.5",
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.33.0",
