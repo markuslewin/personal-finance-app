@@ -3,18 +3,18 @@ import {
   type SubmissionResult,
   useForm,
 } from "@conform-to/react";
-import { getZodConstraint, parseWithZod } from "@conform-to/zod";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod/v4";
 import { startTransition } from "react";
-import { type z, type ZodTypeAny } from "zod";
+import { type z } from "zod";
 
-interface AppFormOptions<Schema extends ZodTypeAny, FormError = string[]> {
+interface AppFormOptions<Schema extends z.ZodObject, FormError = string[]> {
   schema: Schema;
   defaultValue?: DefaultValue<z.input<Schema>>;
   lastResult?: SubmissionResult<FormError>;
   action: (formData: FormData) => void;
 }
 
-export const useAppForm = <Schema extends ZodTypeAny>({
+export const useAppForm = <Schema extends z.ZodObject>({
   lastResult,
   schema,
   defaultValue,

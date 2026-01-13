@@ -25,7 +25,7 @@ const TransactionsPage = async ({
     .extend({
       page: z
         .preprocess(
-          (val) => (Array.isArray(val) ? val[0] : val),
+          (val): unknown => (Array.isArray(val) ? val[0] : val),
           z.coerce.number().int().positive().lte(maxInt),
         )
         .catch(1),

@@ -1,10 +1,10 @@
 "use server";
 
-import { parseWithZod } from "@conform-to/zod";
+import { parseWithZod } from "@conform-to/zod/v4";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { type Schema, schema } from "~/app/(auth)/signup/_schema";
 import { signUp as _signUp, UserError } from "~/server/user";
-import { z } from "zod";
 
 export const signUp = async (prevState: unknown, formData: FormData) => {
   const submission = await parseWithZod(formData, {

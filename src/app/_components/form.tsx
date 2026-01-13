@@ -26,7 +26,6 @@ import {
   useRef,
 } from "react";
 import type z from "zod";
-import { type ZodTypeAny } from "zod";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import ComboboxUI from "~/app/_components/ui/combobox";
 import * as FormUI from "~/app/_components/ui/form";
@@ -35,7 +34,7 @@ import TextboxUI from "~/app/_components/ui/textbox";
 import { useAppForm } from "~/app/_form";
 import { nbsp } from "~/app/_unicode";
 
-type RootProps<Schema extends ZodTypeAny> = Omit<
+type RootProps<Schema extends z.ZodObject> = Omit<
   ComponentPropsWithRef<"form">,
   "action" | "defaultValue"
 > & {
@@ -48,7 +47,7 @@ type RootProps<Schema extends ZodTypeAny> = Omit<
   ) => Promise<SubmissionResult<string[]> | undefined>;
 };
 
-export const Root = <Schema extends ZodTypeAny>({
+export const Root = <Schema extends z.ZodObject>({
   schema,
   defaultValue,
   asChild = false,

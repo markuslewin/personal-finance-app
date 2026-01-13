@@ -45,7 +45,7 @@ test.each([
   },
   {
     value: "0",
-    message: "Number must be greater than 0",
+    message: "Number must be positive",
   },
   {
     value: "0.001",
@@ -53,11 +53,11 @@ test.each([
   },
   {
     value: "-0.01",
-    message: "Number must be greater than 0",
+    message: "Number must be positive",
   },
   {
     value: "-100",
-    message: "Number must be greater than 0",
+    message: "Number must be positive",
   },
   {
     value: "100,50",

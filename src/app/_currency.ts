@@ -17,7 +17,13 @@ export const centsSchema = z
       });
     }
   })
-  .pipe(z.number().int({ message: "Invalid decimals" }).positive().lte(maxInt));
+  .pipe(
+    z
+      .number()
+      .int({ message: "Invalid decimals" })
+      .positive("Number must be positive")
+      .lte(maxInt),
+  );
 
 // https://mikemcl.github.io/big.js/#Errors
 const getErrorMessage = (message: string) => {

@@ -40,7 +40,7 @@ test("specifies currency and message", async () => {
   const { user } = setup(
     <Form.Root
       schema={z.object({
-        amount: z.string(),
+        amount: z.string("Amount is required"),
       })}
       action={async () => {
         return undefined;
@@ -59,5 +59,5 @@ test("specifies currency and message", async () => {
   await user.clear(textbox);
 
   expect(textbox).toHaveAccessibleDescription(/in dollars/i);
-  expect(textbox).toHaveAccessibleDescription(/required/i);
+  expect(textbox).toHaveAccessibleDescription(/amount is required/i);
 });

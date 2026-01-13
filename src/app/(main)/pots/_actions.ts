@@ -1,17 +1,17 @@
 "use server";
 
-import { parseWithZod } from "@conform-to/zod";
+import { parseWithZod } from "@conform-to/zod/v4";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
   addMoneySchema,
   editPotSchema,
-  type EditPotSchema,
   potSchema,
   removePotSchema,
   withdrawSchema,
   type AddMoneySchema,
+  type EditPotSchema,
   type PotSchema,
   type WithdrawSchema,
 } from "~/app/(main)/pots/_schemas";

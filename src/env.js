@@ -13,7 +13,7 @@ export const env = createEnv({
       .default("development"),
     SESSION_SECRET: z.preprocess(
       (val) => (typeof val === "string" ? val.split(",") : undefined),
-      z.string().array().nonempty(),
+      z.tuple([z.string()], z.string()),
     ),
   },
 
