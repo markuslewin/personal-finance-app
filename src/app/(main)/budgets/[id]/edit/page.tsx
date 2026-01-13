@@ -47,7 +47,7 @@ const EditBudgetPage = async ({ params }: PageProps<"/budgets/[id]/edit">) => {
           As your budgets change, feel free to update your spending limits.
         </Dialog.Description>
         <EditBudgetForm
-          budget={{
+          defaultValue={{
             id: budget.id,
             maximum: toDollarValue(budget.maximum),
             category: budget.category.id,

@@ -57,7 +57,7 @@ const EditBudgetPage = async ({ params }: PageProps<"/budgets/[id]/edit">) => {
                     </DialogUI.Description>
                   </Dialog.Description>
                   <EditBudgetForm
-                    budget={{
+                    defaultValue={{
                       id: budget.id,
                       maximum: toDollarValue(budget.maximum),
                       category: budget.category.id,

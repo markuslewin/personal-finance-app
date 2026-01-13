@@ -19,10 +19,11 @@ export const logIn = async (prevState: unknown, formData: FormData) => {
         return true;
       } catch (error) {
         if (error instanceof UserError) {
-          ctx.addIssue({
-            path: [error.cause.field] satisfies [keyof Schema],
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: "custom",
+            input: val,
             message: error.message,
+            path: [error.cause.field] satisfies [keyof Schema],
           });
           return z.NEVER;
         }

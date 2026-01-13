@@ -20,7 +20,7 @@ test("budget maximum errors", async ({ page, login }) => {
   await input.fill("0");
   await submitButton.click();
 
-  await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
+  await expect(input).toHaveAccessibleDescription(/must be positive/i);
 
   await input.fill("12.333");
   await submitButton.click();
@@ -30,12 +30,12 @@ test("budget maximum errors", async ({ page, login }) => {
   await input.fill(String(maxInt + 1));
   await submitButton.click();
 
-  await expect(input).toHaveAccessibleDescription(/must be less/i);
+  await expect(input).toHaveAccessibleDescription(/too large/i);
 
   await input.fill("-100");
   await submitButton.click();
 
-  await expect(input).toHaveAccessibleDescription(/must be greater than 0/i);
+  await expect(input).toHaveAccessibleDescription(/must be positive/i);
 });
 
 test("add budget dialog", async ({ page, login }) => {

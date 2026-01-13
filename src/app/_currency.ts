@@ -1,17 +1,19 @@
 import * as z from "zod";
-import { maxInt } from "~/app/_prisma";
 import { Big } from "~/app/_big";
 import { locales } from "~/app/_format";
+import { maxInt } from "~/app/_prisma";
+import { requiredParams } from "~/app/_zod";
 
 // Dollar string to integer cents
 export const centsSchema = z
-  .string()
+  .string(requiredParams)
   .transform((val, ctx) => {
     try {
       return toCents(val);
     } catch (err) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+      ctx.issues.push({
+        code: "custom",
+        input: val,
         message:
           err instanceof Error ? getErrorMessage(err.message) : undefined,
       });
@@ -20,9 +22,9 @@ export const centsSchema = z
   .pipe(
     z
       .number()
-      .int({ message: "Invalid decimals" })
+      .int("Invalid decimals")
       .positive("Number must be positive")
-      .lte(maxInt),
+      .lte(maxInt, "Number is too large"),
   );
 
 // https://mikemcl.github.io/big.js/#Errors

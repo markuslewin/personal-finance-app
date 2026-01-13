@@ -38,10 +38,11 @@ export const add = async (prevState: unknown, formData: FormData) => {
         if (error instanceof PotError) {
           const result = potSchema.keyof().safeParse(error.cause.field);
           if (result.success) {
-            ctx.addIssue({
-              path: [result.data] satisfies [keyof PotSchema],
-              code: z.ZodIssueCode.custom,
+            ctx.issues.push({
+              code: "custom",
+              input: val,
               message: error.message,
+              path: [result.data] satisfies [keyof PotSchema],
             });
             return z.NEVER;
           }
@@ -74,10 +75,11 @@ export const edit = async (prevState: unknown, formData: FormData) => {
         if (error instanceof PotError) {
           const result = editPotSchema.keyof().safeParse(error.cause.field);
           if (result.success) {
-            ctx.addIssue({
-              path: [result.data] satisfies [keyof EditPotSchema],
-              code: z.ZodIssueCode.custom,
+            ctx.issues.push({
+              code: "custom",
+              input: val,
               message: error.message,
+              path: [result.data] satisfies [keyof EditPotSchema],
             });
             return z.NEVER;
           }
@@ -121,10 +123,11 @@ export const addMoney = async (prevState: unknown, formData: FormData) => {
         if (error instanceof PotError) {
           const result = addMoneySchema.keyof().safeParse(error.cause.field);
           if (result.success) {
-            ctx.addIssue({
-              path: [result.data] satisfies [keyof AddMoneySchema],
-              code: z.ZodIssueCode.custom,
+            ctx.issues.push({
+              code: "custom",
+              input: val,
               message: error.message,
+              path: [result.data] satisfies [keyof AddMoneySchema],
             });
             return z.NEVER;
           }
@@ -152,10 +155,11 @@ export const withdraw = async (prevState: unknown, formData: FormData) => {
         if (error instanceof PotError) {
           const result = withdrawSchema.keyof().safeParse(error.cause.field);
           if (result.success) {
-            ctx.addIssue({
-              path: [result.data] satisfies [keyof WithdrawSchema],
-              code: z.ZodIssueCode.custom,
+            ctx.issues.push({
+              code: "custom",
+              input: val,
               message: error.message,
+              path: [result.data] satisfies [keyof WithdrawSchema],
             });
             return z.NEVER;
           }

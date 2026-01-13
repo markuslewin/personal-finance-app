@@ -29,6 +29,7 @@ export default defineConfig([
         "error",
         { checksVoidReturn: { attributes: false } },
       ],
+      "@typescript-eslint/no-deprecated": "error",
     },
   },
   {

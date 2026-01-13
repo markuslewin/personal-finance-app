@@ -20,12 +20,13 @@ export const signUp = async (prevState: unknown, formData: FormData) => {
         if (error instanceof UserError) {
           // todo: Utility
           const field = schema.keyof().safeParse(error.cause.field);
-          ctx.addIssue({
+          ctx.issues.push({
+            code: "custom",
+            input: val,
+            message: error.message,
             path: field.success
               ? ([field.data] satisfies [keyof Schema])
               : undefined,
-            code: z.ZodIssueCode.custom,
-            message: error.message,
           });
           return z.NEVER;
         }

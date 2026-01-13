@@ -13,6 +13,7 @@ export const createSession = async (userId: string) => {
     path: "/",
     name,
     value: sign(
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       btoa(unescape(encodeURIComponent(userId))),
       env.SESSION_SECRET[0],
     ),
@@ -32,6 +33,7 @@ export const verifySession = cache(async () => {
   for (const secret of env.SESSION_SECRET) {
     const unsigned = unsign(cookie.value, secret);
     if (unsigned !== false) {
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       return { userId: decodeURIComponent(escape(atob(unsigned))) };
     }
   }

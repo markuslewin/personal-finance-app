@@ -1,24 +1,24 @@
 "use client";
 
 import { type ReactNode } from "react";
-import * as Form from "~/app/_components/form";
 import { edit } from "~/app/(main)/budgets/_actions";
 import {
-  type BudgetSchemaWithId,
-  budgetSchemaWithId,
+  type EditBudget,
+  editBudgetSchema,
 } from "~/app/(main)/budgets/_schemas";
+import * as Form from "~/app/_components/form";
 
 type EditBudgetFormProps = {
   children: ReactNode;
-  budget: BudgetSchemaWithId;
+  defaultValue: EditBudget;
 };
 
-const EditBudgetForm = ({ budget, ...props }: EditBudgetFormProps) => {
+const EditBudgetForm = ({ defaultValue, ...props }: EditBudgetFormProps) => {
   return (
     <Form.Root
-      schema={budgetSchemaWithId}
+      schema={editBudgetSchema}
       action={edit}
-      defaultValue={budget}
+      defaultValue={defaultValue}
       {...props}
     />
   );

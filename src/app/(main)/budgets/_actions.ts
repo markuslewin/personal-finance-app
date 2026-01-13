@@ -8,7 +8,7 @@ import {
   budgetIdSchema,
   type BudgetSchema,
   budgetSchema,
-  budgetSchemaWithId,
+  editBudgetSchema,
 } from "~/app/(main)/budgets/_schemas";
 import {
   BudgetError,
@@ -29,10 +29,11 @@ export const add = async (prevState: unknown, formData: FormData) => {
         });
       } catch (error) {
         if (error instanceof BudgetError) {
-          ctx.addIssue({
-            path: [error.cause.field] satisfies [keyof BudgetSchema],
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: "custom",
+            input: val,
             message: error.message,
+            path: [error.cause.field] satisfies [keyof BudgetSchema],
           });
           return z.NEVER;
         }
@@ -51,7 +52,7 @@ export const add = async (prevState: unknown, formData: FormData) => {
 // todo: Restructure, see Pot action
 export const edit = async (prevState: unknown, formData: FormData) => {
   const submission = parseWithZod(formData, {
-    schema: budgetSchemaWithId,
+    schema: editBudgetSchema,
   });
   if (submission.status !== "success") {
     return submission.reply();

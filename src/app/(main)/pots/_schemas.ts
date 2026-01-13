@@ -1,12 +1,13 @@
 import * as z from "zod";
 import { centsSchema } from "~/app/_currency";
+import { requiredParams } from "~/app/_zod";
 
 export const NAME_MAX_LENGTH = 30;
 
 const id = z.string();
-const name = z.string().max(NAME_MAX_LENGTH);
+const name = z.string(requiredParams).max(NAME_MAX_LENGTH);
 const target = centsSchema;
-const theme = z.string();
+const theme = z.string(requiredParams);
 
 export const amount = centsSchema;
 
