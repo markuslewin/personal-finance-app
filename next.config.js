@@ -8,6 +8,9 @@
 /** @type {import("next").NextConfig} */
 const config = {
   output: "standalone",
+  // Faker 10 is ESM-only and needs to be `transform`ed to work with Jest.
+  // Transform the Faker package using the Next.js Compiler set up by `nextJest`.
+  transpilePackages: ["@faker-js/faker"],
   turbopack: {
     rules: {
       "*.svg": {
