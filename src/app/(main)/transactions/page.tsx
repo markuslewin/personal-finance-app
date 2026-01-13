@@ -8,7 +8,7 @@ import { type ComponentPropsWithRef, useId } from "react";
 import { date } from "~/app/_format";
 import TransactionsSearchForm from "~/app/(main)/transactions/_components/transactions-search-form";
 import { searchSchema } from "~/app/(main)/transactions/_search";
-import { z } from "zod";
+import * as z from "zod";
 import { getPaginatedTransactions } from "~/server/transaction";
 import { getCategories } from "~/server/category";
 import { maxInt } from "~/app/_prisma";

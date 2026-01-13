@@ -11,7 +11,7 @@ import {
   getIsDueSoon,
   getIsPaid,
 } from "~/app/(main)/recurring-bills/_utils/bills";
-import { z } from "zod";
+import * as z from "zod";
 import { type SortingOption, sortingOptions } from "~/app/_sort";
 import { BillsSearchForm } from "~/app/(main)/recurring-bills/_components/bills-search-form";
 import { getRecurringBills } from "~/server/recurring-bill";

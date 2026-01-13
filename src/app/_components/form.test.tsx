@@ -8,7 +8,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Select } from "radix-ui";
 import { type ReactNode } from "react";
-import { z } from "zod";
+import * as z from "zod";
 import * as Form from "~/app/_components/form";
 
 const setup = (jsx: ReactNode) => {

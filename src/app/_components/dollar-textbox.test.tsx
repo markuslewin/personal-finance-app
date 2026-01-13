@@ -7,7 +7,7 @@ import { render, screen } from "@testing-library/react";
 import { type ReactNode } from "react";
 import userEvent from "@testing-library/user-event";
 import * as Form from "~/app/_components/form";
-import { z } from "zod";
+import * as z from "zod";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 
 const setup = (jsx: ReactNode) => {

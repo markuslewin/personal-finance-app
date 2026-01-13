@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { centsSchema } from "~/app/_currency";
 
 export const budgetSchema = z.object({

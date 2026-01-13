@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
+import * as z from "zod";
 import { deleteSession } from "~/app/_auth";
 import { setIsSidebarOpen } from "~/app/_sidebar";
 

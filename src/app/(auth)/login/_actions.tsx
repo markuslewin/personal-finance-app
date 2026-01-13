@@ -2,7 +2,7 @@
 
 import { parseWithZod } from "@conform-to/zod/v4";
 import { redirect } from "next/navigation";
-import { z } from "zod";
+import * as z from "zod";
 import { type Schema, schema } from "~/app/(auth)/login/_schema";
 import { logIn as _logIn, UserError } from "~/server/user";
 

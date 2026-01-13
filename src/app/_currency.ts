@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { maxInt } from "~/app/_prisma";
 import { Big } from "~/app/_big";
 import { locales } from "~/app/_format";
