@@ -12,6 +12,7 @@ FROM base AS build
 ENV SKIP_ENV_VALIDATION=true
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/prisma/generated ./prisma/generated
 COPY . .
 RUN npm run build
 
