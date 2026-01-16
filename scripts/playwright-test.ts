@@ -58,7 +58,7 @@ const setUpDb = async (network: StartedNetwork) => {
         authority: `${db.getHost()}:${db.getPort()}`,
       }),
     },
-  })`prisma migrate reset --force --skip-generate`; // --skip-seed
+  })`prisma migrate reset --force && prisma db seed`;
 
   return db;
 };

@@ -1,4 +1,4 @@
-import { type Prisma } from "@prisma/client";
+import { type Prisma } from "~/../prisma/generated/prisma/client";
 
 export const maxInt = 2_147_483_647;
 

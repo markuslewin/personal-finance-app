@@ -1,8 +1,8 @@
 import "server-only";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "~/../prisma/generated/prisma/client";
+import { requireRealUser } from "~/app/_auth";
 import { db } from "~/server/db";
 import { getUser } from "~/server/user";
-import { requireRealUser } from "~/app/_auth";
 
 export const getBudget = async (id: string) => {
   const user = await getUser();

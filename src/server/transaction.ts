@@ -1,5 +1,5 @@
-import { type Prisma } from "@prisma/client";
 import "server-only";
+import { type Prisma } from "~/../prisma/generated/prisma/client";
 import { DEFAULT_SORT, getOrderBy } from "~/app/(main)/transactions/_search";
 import { inUTCMonth } from "~/app/_prisma";
 import { type SortingOption } from "~/app/_sort";
