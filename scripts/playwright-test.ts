@@ -50,7 +50,7 @@ const setUpDb = async (network: StartedNetwork) => {
     .withPassword(DATABASE_CONNECTION_OPTIONS.password)
     .start();
 
-  await execa({
+  const ex = execa({
     stdio: "inherit",
     env: {
       DATABASE_URL: createJDBC({
@@ -58,7 +58,9 @@ const setUpDb = async (network: StartedNetwork) => {
         authority: `${db.getHost()}:${db.getPort()}`,
       }),
     },
-  })`prisma migrate reset --force && prisma db seed`;
+  });
+  await ex`prisma migrate reset --force`;
+  await ex`prisma db seed`;
 
   return db;
 };
