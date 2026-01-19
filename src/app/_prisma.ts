@@ -38,9 +38,3 @@ export type ConfigEnv = z.input<typeof envSchema>;
 export const createConfig = () => {
   return envSchema.parse(process.env);
 };
-
-// Some parts of Prisma don't parse the connection string internally, and so don't suffer from the bugs mentioned above
-export const createConnectionString = () => {
-  const config = createConfig();
-  return `sqlserver://${config.server};database={${config.database}};user={${config.user}};password={${config.password}};trustServerCertificate={${config.options.trustServerCertificate}}`;
-};

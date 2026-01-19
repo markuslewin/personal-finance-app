@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
-import { createConnectionString } from "./src/app/_prisma";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -9,6 +8,6 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: createConnectionString(),
+    url: `sqlserver://${process.env.DB_SERVER};database={${process.env.DB_DATABASE}};user={${process.env.DB_USER}};password={${process.env.DB_PASSWORD}};trustServerCertificate={${process.env.DB_TRUST_SERVER_CERT}}`,
   },
 });
