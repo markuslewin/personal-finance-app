@@ -1,10 +1,11 @@
 import { PrismaMssql } from "@prisma/adapter-mssql";
 import { PrismaClient } from "~/../prisma/generated/prisma/client";
+import { createConfig } from "~/app/_prisma";
 import { env } from "~/env";
 
 const createPrismaClient = () =>
   new PrismaClient({
-    adapter: new PrismaMssql(env.DATABASE_URL),
+    adapter: new PrismaMssql(createConfig()),
     log:
       env.NODE_ENV === "development"
         ? [

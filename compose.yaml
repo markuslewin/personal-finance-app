@@ -13,7 +13,11 @@ services:
   #   build: .
   #   env_file: .env
   #   environment:
-  #     DATABASE_URL: sqlserver://db;database=master;user=sa;password=Passw0rd;encrypt=true;trustServerCertificate=true;
+  #     DB_USER: "sa"
+  #     DB_PASSWORD: "Passw0rd"
+  #     DB_SERVER: "localhost"
+  #     DB_DATABASE: "master"
+  #     DB_TRUST_SERVER_CERT: "true"
   #   ports:
   #     - 3000:3000
 

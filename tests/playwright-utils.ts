@@ -1,8 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+
 import type AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
 import { test as baseTest, type Page } from "@playwright/test";
 import { PrismaMssql } from "@prisma/adapter-mssql";
+import { createConfig } from "~/app/_prisma";
 import { PrismaClient } from "../prisma/generated/prisma/client";
 
 type AxeResults = Awaited<
@@ -30,7 +32,7 @@ export const waitForHydration = (page: Page) => {
 };
 
 const db = new PrismaClient({
-  adapter: new PrismaMssql(process.env.DATABASE_URL),
+  adapter: new PrismaMssql(createConfig()),
   log: ["error"],
 });
 

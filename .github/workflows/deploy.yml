@@ -116,4 +116,8 @@ jobs:
       - uses: bahmutov/npm-install@v1
       - run: npm run db:migrate
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SERVER: ${{ secrets.DB_SERVER }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_TRUST_SERVER_CERT: ${{ secrets.DB_TRUST_SERVER_CERT }}

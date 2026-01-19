@@ -1,15 +1,16 @@
 import {
-  GenericContainer,
-  Network,
-  type StartedNetwork,
-  Wait,
-  type StartedTestContainer,
-} from "testcontainers";
-import {
   MSSQLServerContainer,
   type StartedMSSQLServerContainer,
 } from "@testcontainers/mssqlserver";
 import { execa } from "execa";
+import {
+  GenericContainer,
+  Network,
+  Wait,
+  type StartedNetwork,
+  type StartedTestContainer,
+} from "testcontainers";
+import { type ConfigEnv } from "~/app/_prisma";
 
 const { APP_IMAGE } = process.env;
 if (!APP_IMAGE) {
@@ -24,18 +25,14 @@ const DATABASE_CONNECTION_OPTIONS = {
 };
 const DATABASE_NETWORK_ALIAS = "db";
 
-const createJDBC = ({
-  authority,
-  database,
-  user,
-  password,
-}: {
-  authority: string;
-  database: string;
-  user: string;
-  password: string;
-}) => {
-  return `sqlserver://${authority};database=${database};user=${user};password=${password};encrypt=true;trustServerCertificate=true;`;
+const createDbEnv = (server: string): ConfigEnv => {
+  return {
+    DB_USER: DATABASE_CONNECTION_OPTIONS.user,
+    DB_PASSWORD: DATABASE_CONNECTION_OPTIONS.password,
+    DB_SERVER: server,
+    DB_DATABASE: DATABASE_CONNECTION_OPTIONS.database,
+    DB_TRUST_SERVER_CERT: "true",
+  };
 };
 
 const setUpDb = async (network: StartedNetwork) => {
@@ -52,12 +49,7 @@ const setUpDb = async (network: StartedNetwork) => {
 
   const ex = execa({
     stdio: "inherit",
-    env: {
-      DATABASE_URL: createJDBC({
-        ...DATABASE_CONNECTION_OPTIONS,
-        authority: `${db.getHost()}:${db.getPort()}`,
-      }),
-    },
+    env: createDbEnv(db.getHost()),
   });
   await ex`prisma migrate reset --force`;
   await ex`prisma db seed`;
@@ -73,10 +65,7 @@ try {
     new GenericContainer(APP_IMAGE)
       .withNetwork(network)
       .withEnvironment({
-        DATABASE_URL: createJDBC({
-          ...DATABASE_CONNECTION_OPTIONS,
-          authority: DATABASE_NETWORK_ALIAS,
-        }),
+        ...createDbEnv(DATABASE_NETWORK_ALIAS),
         SESSION_SECRET: "s3cret",
       })
       .withExposedPorts(APP_PORT)
@@ -88,10 +77,7 @@ try {
   await execa({
     stdio: "inherit",
     env: {
-      DATABASE_URL: createJDBC({
-        ...DATABASE_CONNECTION_OPTIONS,
-        authority: `${db.getHost()}:${db.getPort()}`,
-      }),
+      ...createDbEnv(db.getHost()),
       PORT: String(app.getMappedPort(APP_PORT)),
     },
   })`npm run test:e2e`;
