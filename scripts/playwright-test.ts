@@ -25,11 +25,18 @@ const DATABASE_CONNECTION_OPTIONS = {
 };
 const DATABASE_NETWORK_ALIAS = "db";
 
-const createDbEnv = (server: string): Config => {
+const createDbEnv = ({
+  server,
+  port,
+}: {
+  server: string;
+  port: number;
+}): Config => {
   return {
     DB_USER: DATABASE_CONNECTION_OPTIONS.user,
     DB_PASSWORD: DATABASE_CONNECTION_OPTIONS.password,
     DB_SERVER: server,
+    DB_PORT: `${port}`,
     DB_DATABASE: DATABASE_CONNECTION_OPTIONS.database,
     DB_TRUST_SERVER_CERT: "true",
   };
@@ -49,7 +56,10 @@ const setUpDb = async (network: StartedNetwork) => {
 
   const ex = execa({
     stdio: "inherit",
-    env: createDbEnv(db.getHost()),
+    env: createDbEnv({
+      server: db.getHost(),
+      port: db.getPort(),
+    }),
   });
   await ex`prisma migrate reset --force`;
   await ex`prisma db seed`;
@@ -65,7 +75,7 @@ try {
     new GenericContainer(APP_IMAGE)
       .withNetwork(network)
       .withEnvironment({
-        ...createDbEnv(DATABASE_NETWORK_ALIAS),
+        ...createDbEnv({ server: DATABASE_NETWORK_ALIAS, port: 1433 }),
         SESSION_SECRET: "s3cret",
       })
       .withExposedPorts(APP_PORT)
@@ -77,7 +87,10 @@ try {
   await execa({
     stdio: "inherit",
     env: {
-      ...createDbEnv(db.getHost()),
+      ...createDbEnv({
+        server: db.getHost(),
+        port: db.getPort(),
+      }),
       PORT: String(app.getMappedPort(APP_PORT)),
     },
   })`npm run test:e2e`;

@@ -8,6 +8,6 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: `sqlserver://${process.env.DB_SERVER};database={${process.env.DB_DATABASE}};user={${process.env.DB_USER}};password={${process.env.DB_PASSWORD}};trustServerCertificate={${process.env.DB_TRUST_SERVER_CERT}}`,
+    url: `sqlserver://${process.env.DB_SERVER}:${process.env.DB_PORT};database={${process.env.DB_DATABASE}};user={${process.env.DB_USER}};password={${process.env.DB_PASSWORD}};trustServerCertificate={${process.env.DB_TRUST_SERVER_CERT}}`,
   },
 });
