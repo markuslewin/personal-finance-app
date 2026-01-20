@@ -14,7 +14,7 @@ export const config = {
   DB_USER: z.string(),
   DB_PASSWORD: z.string(),
   DB_SERVER: z.string(),
-  DB_PORT: z.string(),
+  DB_PORT: z.optional(z.string()),
   DB_DATABASE: z.string(),
   DB_TRUST_SERVER_CERT: z.string(),
 };
@@ -31,7 +31,7 @@ export const createConfig = (env: Partial<Config>) => {
     password: env.DB_PASSWORD,
     database: env.DB_DATABASE,
     server: env.DB_SERVER,
-    port: Number(env.DB_PORT),
+    port: typeof env.DB_PORT === "string" ? Number(env.DB_PORT) : undefined,
     options: {
       trustServerCertificate:
         env.DB_TRUST_SERVER_CERT?.toLowerCase() === "true",

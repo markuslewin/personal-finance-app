@@ -30,16 +30,18 @@ const createDbEnv = ({
   port,
 }: {
   server: string;
-  port: number;
-}): Config => {
-  return {
+  port?: number;
+}):
+  | Omit<Config, "DB_PORT">
+  | (Omit<Config, "DB_PORT"> & { DB_PORT: string }) => {
+  const required = {
     DB_USER: DATABASE_CONNECTION_OPTIONS.user,
     DB_PASSWORD: DATABASE_CONNECTION_OPTIONS.password,
     DB_SERVER: server,
-    DB_PORT: `${port}`,
     DB_DATABASE: DATABASE_CONNECTION_OPTIONS.database,
     DB_TRUST_SERVER_CERT: "true",
   };
+  return port === undefined ? required : { ...required, DB_PORT: `${port}` };
 };
 
 const setUpDb = async (network: StartedNetwork) => {
@@ -75,7 +77,9 @@ try {
     new GenericContainer(APP_IMAGE)
       .withNetwork(network)
       .withEnvironment({
-        ...createDbEnv({ server: DATABASE_NETWORK_ALIAS, port: 1433 }),
+        ...createDbEnv({
+          server: DATABASE_NETWORK_ALIAS,
+        }),
         SESSION_SECRET: "s3cret",
       })
       .withExposedPorts(APP_PORT)
