@@ -5,7 +5,7 @@ import { env } from "~/env";
 
 const createPrismaClient = () =>
   new PrismaClient({
-    adapter: new PrismaMssql(createConfig()),
+    adapter: new PrismaMssql(createConfig(env)),
     log:
       env.NODE_ENV === "development"
         ? [

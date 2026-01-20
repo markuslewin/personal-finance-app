@@ -10,7 +10,7 @@ import {
   type StartedNetwork,
   type StartedTestContainer,
 } from "testcontainers";
-import { type ConfigEnv } from "~/app/_prisma";
+import { type Config } from "~/app/_prisma";
 
 const { APP_IMAGE } = process.env;
 if (!APP_IMAGE) {
@@ -25,7 +25,7 @@ const DATABASE_CONNECTION_OPTIONS = {
 };
 const DATABASE_NETWORK_ALIAS = "db";
 
-const createDbEnv = (server: string): ConfigEnv => {
+const createDbEnv = (server: string): Config => {
   return {
     DB_USER: DATABASE_CONNECTION_OPTIONS.user,
     DB_PASSWORD: DATABASE_CONNECTION_OPTIONS.password,

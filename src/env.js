@@ -1,5 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
+import { config } from "~/app/_prisma";
 
 export const env = createEnv({
   /**
@@ -14,6 +15,7 @@ export const env = createEnv({
       (val) => (typeof val === "string" ? val.split(",") : undefined),
       z.tuple([z.string()], z.string()),
     ),
+    ...config,
   },
 
   /**
@@ -31,6 +33,11 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    DB_USER: process.env.DB_USER,
+    DB_PASSWORD: process.env.DB_PASSWORD,
+    DB_SERVER: process.env.DB_SERVER,
+    DB_DATABASE: process.env.DB_DATABASE,
+    DB_TRUST_SERVER_CERT: process.env.DB_TRUST_SERVER_CERT,
     SESSION_SECRET: process.env.SESSION_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },

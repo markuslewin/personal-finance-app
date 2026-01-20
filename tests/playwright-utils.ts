@@ -32,7 +32,9 @@ export const waitForHydration = (page: Page) => {
 };
 
 const db = new PrismaClient({
-  adapter: new PrismaMssql(createConfig()),
+  adapter: new PrismaMssql(
+    createConfig(process.env as Partial<Record<string, string>>),
+  ),
   log: ["error"],
 });
 
