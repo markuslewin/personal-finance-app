@@ -160,9 +160,9 @@ const Sidebar = ({
             e.preventDefault();
 
             const formData = new FormData(e.currentTarget);
-            startTransition(async () => {
+            startTransition(() => {
               setIsOpen(formData.get("value") === "true");
-              await minimizeMenu(formData);
+              void minimizeMenu(formData);
             });
           }}
         >
