@@ -10,7 +10,7 @@ import {
   type StartedNetwork,
   type StartedTestContainer,
 } from "testcontainers";
-import { type Config } from "~/app/_prisma";
+import { type Config } from "~/app/_utils/prisma";
 
 const { APP_IMAGE } = process.env;
 if (!APP_IMAGE) {

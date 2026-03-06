@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import Sidebar from "~/app/_components/sidebar";
-import { getIsSidebarOpen } from "~/app/_sidebar";
+import { getIsSidebarOpen } from "~/app/_utils/sidebar";
 
 export const dynamic = "force-dynamic";
 

@@ -2,7 +2,7 @@ import { type Metadata } from "next";
 import { ErrorPage } from "~/app/(main)/_components/error-page";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import AddBudgetForm from "~/app/(main)/budgets/add/_components/add-budget-form";
-import { requireRealUser } from "~/app/_auth";
+import { requireRealUser } from "~/app/_utils/auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import * as Form from "~/app/_components/form";
 import { Idle, Pending } from "~/app/_components/form-status";

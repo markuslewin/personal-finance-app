@@ -2,11 +2,11 @@
 
 import { type ReactNode } from "react";
 import * as Form from "~/app/_components/form";
-import { withdraw } from "~/app/(main)/pots/_actions";
+import { withdraw } from "~/app/(main)/pots/_utils/actions";
 import {
   withdrawSchema,
   type WithdrawSchema,
-} from "~/app/(main)/pots/_schemas";
+} from "~/app/(main)/pots/_utils/schemas";
 
 type WithdrawFormProps = {
   children: ReactNode;

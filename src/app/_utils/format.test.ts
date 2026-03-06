@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { percent } from "~/app/_format";
+import { percent } from "~/app/_utils/format";
 
 test.each<{ value: number; expected: string }>([
   { value: 0.0795, expected: "7.95%" },

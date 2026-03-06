@@ -9,7 +9,7 @@ import Status from "~/app/_components/status";
 import { Idle, Pending } from "~/app/_components/form-status";
 import Spinner from "~/app/_components/ui/spinner";
 import { getThemesWithPot } from "~/server/theme";
-import { requireRealUser } from "~/app/_auth";
+import { requireRealUser } from "~/app/_utils/auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import { ErrorPage } from "~/app/(main)/_components/error-page";
 import { type Metadata } from "next";

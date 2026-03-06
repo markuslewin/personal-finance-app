@@ -1,6 +1,6 @@
 import { PrismaMssql } from "@prisma/adapter-mssql";
 import { PrismaClient } from "~/../prisma/generated/prisma/client";
-import { createConfig } from "~/app/_prisma";
+import { createConfig } from "~/app/_utils/prisma";
 import { env } from "~/env";
 
 const createPrismaClient = () =>

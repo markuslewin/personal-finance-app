@@ -1,6 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import * as z from "zod";
-import { config } from "~/app/_prisma";
+import { config } from "~/app/_utils/prisma";
 
 export const env = createEnv({
   /**

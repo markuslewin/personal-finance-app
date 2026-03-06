@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { centsSchema } from "~/app/_currency";
-import { requiredParams } from "~/app/_zod";
+import { centsSchema } from "~/app/_utils/currency";
+import { requiredParams } from "~/app/_utils/zod";
 
 export const NAME_MAX_LENGTH = 30;
 

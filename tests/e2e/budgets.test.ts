@@ -2,7 +2,7 @@ import { AxeBuilder } from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
 import { expect } from "@playwright/test";
 import { test } from "tests/playwright-utils";
-import { maxInt } from "~/app/_prisma";
+import { maxInt } from "~/app/_utils/prisma";
 
 test("budget maximum errors", async ({ page, login }) => {
   await login();

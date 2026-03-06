@@ -4,7 +4,7 @@ import {
   type CurrencyOptions,
   formatCents,
   toDollarValue,
-} from "~/app/_currency";
+} from "~/app/_utils/currency";
 
 test.each([
   {

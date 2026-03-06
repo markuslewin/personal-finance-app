@@ -2,8 +2,8 @@
 
 import { type ReactNode } from "react";
 import * as Form from "~/app/_components/form";
-import { remove } from "~/app/(main)/pots/_actions";
-import { removePotSchema } from "~/app/(main)/pots/_schemas";
+import { remove } from "~/app/(main)/pots/_utils/actions";
+import { removePotSchema } from "~/app/(main)/pots/_utils/schemas";
 
 type DeletePotFormProps = {
   children: ReactNode;

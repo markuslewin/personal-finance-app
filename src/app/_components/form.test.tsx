@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import "~/../tests/setup/jsdom-mocks";
 
 import { expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
@@ -9,6 +8,7 @@ import userEvent from "@testing-library/user-event";
 import { Select } from "radix-ui";
 import { type ReactNode } from "react";
 import * as z from "zod";
+import "~/../tests/setup/jsdom-mocks";
 import * as Form from "~/app/_components/form";
 
 const setup = (jsx: ReactNode) => {

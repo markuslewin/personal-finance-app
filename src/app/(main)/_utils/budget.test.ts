@@ -1,4 +1,4 @@
-import { getRelevantBudgets } from "~/app/(main)/_budget";
+import { getRelevantBudgets } from "~/app/(main)/_utils/budget";
 
 test.each<{
   value: { id: string; spent: number }[];

@@ -1,6 +1,6 @@
 import "server-only";
 import { Prisma } from "~/../prisma/generated/prisma/client";
-import { requireRealUser } from "~/app/_auth";
+import { requireRealUser } from "~/app/_utils/auth";
 import { db } from "~/server/db";
 import { getUser } from "~/server/user";
 

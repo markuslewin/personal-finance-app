@@ -1,5 +1,5 @@
 import { test, expect } from "@jest/globals";
-import { clamp, sum } from "~/app/_math";
+import { clamp, sum } from "~/app/_utils/math";
 
 test("sum nothing", () => {
   expect(sum([], (i) => i)).toBe(0);

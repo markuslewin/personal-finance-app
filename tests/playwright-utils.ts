@@ -4,7 +4,7 @@ import type AxeBuilder from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
 import { test as baseTest, type Page } from "@playwright/test";
 import { PrismaMssql } from "@prisma/adapter-mssql";
-import { createConfig } from "~/app/_prisma";
+import { createConfig } from "~/app/_utils/prisma";
 import { PrismaClient } from "../prisma/generated/prisma/client";
 
 type AxeResults = Awaited<

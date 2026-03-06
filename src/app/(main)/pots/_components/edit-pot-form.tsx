@@ -1,8 +1,11 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { edit } from "~/app/(main)/pots/_actions";
-import { editPotSchema, type EditPotSchema } from "~/app/(main)/pots/_schemas";
+import { edit } from "~/app/(main)/pots/_utils/actions";
+import {
+  editPotSchema,
+  type EditPotSchema,
+} from "~/app/(main)/pots/_utils/schemas";
 import * as Form from "~/app/_components/form";
 
 type EditPotFormProps = {

@@ -1,23 +1,23 @@
-import * as Dialog from "~/app/_components/ui/dialog";
-import * as FormUI from "~/app/_components/ui/form";
-import * as Form from "~/app/_components/form";
-import * as DeleteDialog from "~/app/(main)/pots/_components/delete-dialog";
+import { type Metadata } from "next";
 import { notFound } from "next/navigation";
+import * as DeleteDialog from "~/app/(main)/pots/_components/delete-dialog";
+import DeletePotForm from "~/app/(main)/pots/_components/delete-pot-form";
+import EditPotForm from "~/app/(main)/pots/_components/edit-pot-form";
+import { DollarTextbox } from "~/app/_components/dollar-textbox";
+import * as Form from "~/app/_components/form";
+import { Idle, Pending } from "~/app/_components/form-status";
+import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import Status from "~/app/_components/status";
 import ThemesCombobox from "~/app/_components/themes-combobox";
 import Button from "~/app/_components/ui/button";
-import EditPotForm from "~/app/(main)/pots/_components/edit-pot-form";
-import DeletePotForm from "~/app/(main)/pots/_components/delete-pot-form";
-import { Dehydrated, Hydrated } from "~/app/_components/hydration";
+import * as Dialog from "~/app/_components/ui/dialog";
 import DialogPage from "~/app/_components/ui/dialog-page";
-import Status from "~/app/_components/status";
-import { Idle, Pending } from "~/app/_components/form-status";
+import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
+import { requireRealUser } from "~/app/_utils/auth";
+import { toDollarValue } from "~/app/_utils/currency";
 import { getPot } from "~/server/pot";
 import { getThemesWithPot } from "~/server/theme";
-import { requireRealUser } from "~/app/_auth";
-import { DollarTextbox } from "~/app/_components/dollar-textbox";
-import { toDollarValue } from "~/app/_currency";
-import { type Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Edit pot",

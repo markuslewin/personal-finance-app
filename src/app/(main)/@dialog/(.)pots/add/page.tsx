@@ -1,7 +1,7 @@
 import { Dialog } from "radix-ui";
 import { ErrorDialog } from "~/app/(main)/@dialog/_components/error-dialog";
 import AddPotForm from "~/app/(main)/pots/_components/add-pot-form";
-import { requireRealUser } from "~/app/_auth";
+import { requireRealUser } from "~/app/_utils/auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import * as Form from "~/app/_components/form";
 import { Idle, Pending } from "~/app/_components/form-status";

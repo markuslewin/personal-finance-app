@@ -3,7 +3,7 @@
 import { parseWithZod } from "@conform-to/zod/v4";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { type Schema, schema } from "~/app/(auth)/signup/_schema";
+import { type Schema, schema } from "~/app/(auth)/signup/_utils/schema";
 import { signUp as _signUp, UserError } from "~/server/user";
 
 export const signUp = async (prevState: unknown, formData: FormData) => {

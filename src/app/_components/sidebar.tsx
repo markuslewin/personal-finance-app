@@ -1,24 +1,24 @@
 "use client";
 
 import { cx } from "class-variance-authority";
-import { usePathname, useSearchParams } from "next/navigation";
 import NextLink from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   type ComponentPropsWithRef,
   startTransition,
   useOptimistic,
 } from "react";
-import { minimizeMenu } from "~/app/_actions";
-import LogoLarge from "~/app/_assets/logo-large.svg";
-import LogoSmall from "~/app/_assets/logo-small.svg";
+import IconMinimizeMenu from "~/app/_assets/icon-minimize-menu.svg";
 import IconNavBudgets from "~/app/_assets/icon-nav-budgets.svg";
 import IconNavOverview from "~/app/_assets/icon-nav-overview.svg";
 import IconNavPots from "~/app/_assets/icon-nav-pots.svg";
 import IconNavRecurringBills from "~/app/_assets/icon-nav-recurring-bills.svg";
 import IconNavTransactions from "~/app/_assets/icon-nav-transactions.svg";
-import IconMinimizeMenu from "~/app/_assets/icon-minimize-menu.svg";
+import LogoLarge from "~/app/_assets/logo-large.svg";
+import LogoSmall from "~/app/_assets/logo-small.svg";
 import { Dehydrated } from "~/app/_components/hydration";
 import { Link } from "~/app/_components/link";
+import { minimizeMenu } from "~/app/_utils/actions";
 
 type SidebarProps = ComponentPropsWithRef<"div"> & {
   isOpen: boolean;

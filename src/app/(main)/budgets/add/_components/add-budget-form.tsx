@@ -1,9 +1,12 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { add } from "~/app/(main)/budgets/_utils/actions";
+import {
+  type BudgetSchema,
+  budgetSchema,
+} from "~/app/(main)/budgets/_utils/schemas";
 import * as Form from "~/app/_components/form";
-import { add } from "~/app/(main)/budgets/_actions";
-import { type BudgetSchema, budgetSchema } from "~/app/(main)/budgets/_schemas";
 
 type AddBudgetFormProps = {
   children: ReactNode;

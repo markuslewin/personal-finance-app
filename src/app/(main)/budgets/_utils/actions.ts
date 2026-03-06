@@ -9,7 +9,7 @@ import {
   type BudgetSchema,
   budgetSchema,
   editBudgetSchema,
-} from "~/app/(main)/budgets/_schemas";
+} from "~/app/(main)/budgets/_utils/schemas";
 import {
   BudgetError,
   createBudget,

@@ -11,8 +11,8 @@ import * as IconCombobox from "~/app/_components/ui/icon-combobox";
 import * as Select from "~/app/_components/ui/select";
 import Spinner from "~/app/_components/ui/spinner";
 import Textbox from "~/app/_components/ui/textbox";
-import { useOptimisticSearchParams } from "~/app/_routing";
-import { type SortingOption, sortingOptions } from "~/app/_sort";
+import { useOptimisticSearchParams } from "~/app/_utils/routing";
+import { type SortingOption, sortingOptions } from "~/app/_utils/sort";
 
 const NAME_NAME = "name";
 const SORT_NAME = "sort";

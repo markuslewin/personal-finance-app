@@ -4,9 +4,9 @@ import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import { Link } from "~/app/_components/link";
 import Button from "~/app/_components/ui/button";
-import { formatCents } from "~/app/_currency";
-import { percent } from "~/app/_format";
-import { clamp } from "~/app/_math";
+import { formatCents } from "~/app/_utils/currency";
+import { percent } from "~/app/_utils/format";
+import { clamp } from "~/app/_utils/math";
 import { getPots } from "~/server/pot";
 
 export const metadata: Metadata = {

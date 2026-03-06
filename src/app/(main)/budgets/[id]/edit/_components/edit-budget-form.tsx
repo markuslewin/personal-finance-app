@@ -1,11 +1,11 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { edit } from "~/app/(main)/budgets/_actions";
+import { edit } from "~/app/(main)/budgets/_utils/actions";
 import {
   type EditBudget,
   editBudgetSchema,
-} from "~/app/(main)/budgets/_schemas";
+} from "~/app/(main)/budgets/_utils/schemas";
 import * as Form from "~/app/_components/form";
 
 type EditBudgetFormProps = {

@@ -2,11 +2,11 @@
 
 import { type ReactNode } from "react";
 import * as Form from "~/app/_components/form";
-import { addMoney } from "~/app/(main)/pots/_actions";
+import { addMoney } from "~/app/(main)/pots/_utils/actions";
 import {
   type AddMoneySchema,
   addMoneySchema,
-} from "~/app/(main)/pots/_schemas";
+} from "~/app/(main)/pots/_utils/schemas";
 
 type AddMoneyFormProps = {
   children: ReactNode;

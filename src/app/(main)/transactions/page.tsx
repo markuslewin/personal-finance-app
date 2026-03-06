@@ -5,14 +5,14 @@ import { Link } from "~/app/_components/link";
 import IconCaretLeft from "~/app/_assets/icon-caret-left.svg";
 import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import { type ComponentPropsWithRef, useId } from "react";
-import { date } from "~/app/_format";
+import { date } from "~/app/_utils/format";
 import TransactionsSearchForm from "~/app/(main)/transactions/_components/transactions-search-form";
-import { searchSchema } from "~/app/(main)/transactions/_search";
+import { searchSchema } from "~/app/(main)/transactions/_utils/search";
 import * as z from "zod";
 import { getPaginatedTransactions } from "~/server/transaction";
 import { getCategories } from "~/server/category";
-import { maxInt } from "~/app/_prisma";
-import { formatCents } from "~/app/_currency";
+import { maxInt } from "~/app/_utils/prisma";
+import { formatCents } from "~/app/_utils/currency";
 
 export const metadata: Metadata = {
   title: "Transactions",

@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
-import { createSession, verifySession } from "~/app/_auth";
+import { createSession, verifySession } from "~/app/_utils/auth";
 import { userSeed } from "~/data/data";
 import { cache } from "react";
 

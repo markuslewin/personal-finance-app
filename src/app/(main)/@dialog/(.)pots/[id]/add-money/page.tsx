@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { Dialog } from "radix-ui";
 import AddMoneyForm from "~/app/(main)/pots/_components/add-money-form";
 import MeterSection from "~/app/(main)/pots/_components/meter-section";
-import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import * as Form from "~/app/_components/form";
 import { Idle, Pending } from "~/app/_components/form-status";
@@ -12,6 +11,7 @@ import Button from "~/app/_components/ui/button";
 import * as DialogUI from "~/app/_components/ui/dialog";
 import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
+import { requireRealUser } from "~/app/_utils/auth";
 import { getPot } from "~/server/pot";
 
 const AddMoneyToPotPage = async ({

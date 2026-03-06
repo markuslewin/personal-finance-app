@@ -3,8 +3,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { deleteSession } from "~/app/_auth";
-import { setIsSidebarOpen } from "~/app/_sidebar";
+import { deleteSession } from "~/app/_utils/auth";
+import { setIsSidebarOpen } from "~/app/_utils/sidebar";
 
 export const logOut = async () => {
   await deleteSession();

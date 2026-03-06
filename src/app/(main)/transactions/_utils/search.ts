@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { type Prisma } from "~/../prisma/generated/prisma/client";
-import { sortingOptions, type SortingOption } from "~/app/_sort";
+import { sortingOptions, type SortingOption } from "~/app/_utils/sort";
 
 export const DEFAULT_SORT: SortingOption = "Latest";
 

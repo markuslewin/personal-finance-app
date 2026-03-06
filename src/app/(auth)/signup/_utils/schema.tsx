@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { requiredParams } from "~/app/_zod";
+import { requiredParams } from "~/app/_utils/zod";
 
 export const schema = z.object({
   name: z.string(requiredParams),

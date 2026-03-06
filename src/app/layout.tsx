@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { publicSans } from "~/app/_fonts";
+import { publicSans } from "~/app/_utils/fonts";
 
 // import { db } from "~/server/db";
 // import { logOut } from "~/app/_actions";
@@ -9,7 +9,7 @@ import { publicSans } from "~/app/_fonts";
 
 import { type ReactNode } from "react";
 import { Html } from "~/app/_components/html";
-import { ProgressBarProvider, ProgressBar } from "~/app/_components/progress";
+import { ProgressBar, ProgressBarProvider } from "~/app/_components/progress";
 
 export const metadata: Metadata = {
   title: {

@@ -2,7 +2,7 @@ import { cx } from "class-variance-authority";
 import { type Metadata } from "next";
 import Image from "next/image";
 import { useId, type ComponentPropsWithRef } from "react";
-import { getRelevantBudgets } from "~/app/(main)/_budget";
+import { getRelevantBudgets } from "~/app/(main)/_utils/budget";
 import {
   getIsDueSoon,
   getIsPaid,
@@ -11,10 +11,10 @@ import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconPot from "~/app/_assets/icon-pot.svg";
 import { Link } from "~/app/_components/link";
 import * as Donut from "~/app/_components/ui/donut";
-import { formatCents } from "~/app/_currency";
-import { date } from "~/app/_format";
-import { clamp, sum } from "~/app/_math";
-import { nowDate } from "~/app/_now";
+import { formatCents } from "~/app/_utils/currency";
+import { date } from "~/app/_utils/format";
+import { clamp, sum } from "~/app/_utils/math";
+import { nowDate } from "~/app/_utils/now";
 import { getBalance } from "~/server/balance";
 import { getBudgets } from "~/server/budget";
 import { getPots } from "~/server/pot";

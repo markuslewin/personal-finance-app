@@ -5,9 +5,9 @@ import IconCaretRight from "~/app/_assets/icon-caret-right.svg";
 import IconEllipsis from "~/app/_assets/icon-ellipsis.svg";
 import { Dehydrated, Hydrated } from "~/app/_components/hydration";
 import { Link } from "~/app/_components/link";
-import { formatCents } from "~/app/_currency";
-import { date } from "~/app/_format";
-import { clamp } from "~/app/_math";
+import { formatCents } from "~/app/_utils/currency";
+import { date } from "~/app/_utils/format";
+import { clamp } from "~/app/_utils/math";
 
 type BudgetProps = {
   budget: {
@@ -122,7 +122,7 @@ export const Budget = ({ budget, spent }: BudgetProps) => {
           </Link>
         </header>
         <ol
-          className="mt-250 space-y-150 divide-y-[0.0625rem] divide-grey-500/15 text-preset-5 add-space-y-150"
+          className="mt-250 space-y-150 divide-y-[0.0625rem] divide-grey-500/15 add-space-y-150 text-preset-5"
           role="list"
           aria-labelledby={latestSpendingLabelId}
         >

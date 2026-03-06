@@ -1,10 +1,10 @@
 "use client";
 
 import { useField } from "@conform-to/react";
-import { amount as amountSchema } from "~/app/(main)/pots/_schemas";
+import { amount as amountSchema } from "~/app/(main)/pots/_utils/schemas";
 import Status from "~/app/_components/status";
-import { formatCents } from "~/app/_currency";
-import { percent } from "~/app/_format";
+import { formatCents } from "~/app/_utils/currency";
+import { percent } from "~/app/_utils/format";
 
 type MeterSectionProps = {
   name: string;

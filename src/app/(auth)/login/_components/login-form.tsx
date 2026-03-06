@@ -1,13 +1,13 @@
 "use client";
 
-import { logIn } from "~/app/(auth)/login/_actions";
-import { schema } from "~/app/(auth)/login/_schema";
+import { logIn } from "~/app/(auth)/login/_utils/actions";
+import { schema } from "~/app/(auth)/login/_utils/schema";
 import * as Form from "~/app/_components/form";
-import * as FormUI from "~/app/_components/ui/form";
 import { FormStatus } from "~/app/_components/form-status";
 import { PasswordTextbox } from "~/app/_components/password-textbox";
 import Status from "~/app/_components/status";
 import Button from "~/app/_components/ui/button";
+import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
 
 const LoginForm = () => {

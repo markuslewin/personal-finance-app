@@ -4,7 +4,6 @@ import DeleteBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/delete-
 import EditBudgetForm from "~/app/(main)/budgets/[id]/edit/_components/edit-budget-form";
 import CategoriesCombobox from "~/app/(main)/budgets/_components/categories-combobox";
 import * as DeleteDialog from "~/app/(main)/budgets/_components/delete-dialog";
-import { requireRealUser } from "~/app/_auth";
 import { DollarTextbox } from "~/app/_components/dollar-textbox";
 import * as Form from "~/app/_components/form";
 import { Idle, Pending } from "~/app/_components/form-status";
@@ -16,7 +15,8 @@ import * as Dialog from "~/app/_components/ui/dialog";
 import DialogPage from "~/app/_components/ui/dialog-page";
 import * as FormUI from "~/app/_components/ui/form";
 import Spinner from "~/app/_components/ui/spinner";
-import { toDollarValue } from "~/app/_currency";
+import { requireRealUser } from "~/app/_utils/auth";
+import { toDollarValue } from "~/app/_utils/currency";
 import { getBudget } from "~/server/budget";
 import { getAvailableCategories } from "~/server/category";
 import { getThemesWithBudget } from "~/server/theme";

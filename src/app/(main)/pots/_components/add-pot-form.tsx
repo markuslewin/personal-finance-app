@@ -2,8 +2,8 @@
 
 import { type ReactNode } from "react";
 import * as Form from "~/app/_components/form";
-import { add } from "~/app/(main)/pots/_actions";
-import { type PotSchema, potSchema } from "~/app/(main)/pots/_schemas";
+import { add } from "~/app/(main)/pots/_utils/actions";
+import { type PotSchema, potSchema } from "~/app/(main)/pots/_utils/schemas";
 
 type AddPotFormProps = {
   children: ReactNode;

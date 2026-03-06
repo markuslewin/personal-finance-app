@@ -2,16 +2,16 @@
  * @jest-environment jsdom
  */
 
-import { test, expect } from "@jest/globals";
-import { render, screen } from "@testing-library/react";
-import { type ReactNode, useState } from "react";
-import userEvent from "@testing-library/user-event";
-import { Budget } from "~/app/(main)/budgets/_components/budget";
 import { faker } from "@faker-js/faker";
+import { expect, test } from "@jest/globals";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { type ReactNode, useState } from "react";
+import { Budget } from "~/app/(main)/budgets/_components/budget";
 import { ProgressBarProvider } from "~/app/_components/progress";
 
 jest.mock("next/navigation");
-jest.mock("../_actions.ts");
+jest.mock("../_utils/actions.ts");
 
 const A = () => {
   const [count, setCount] = useState(0);

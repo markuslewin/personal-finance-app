@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { inUTCMonth } from "~/app/_prisma";
+import { inUTCMonth } from "~/app/_utils/prisma";
 
 test.each([
   {

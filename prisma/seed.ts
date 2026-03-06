@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { PrismaMssql } from "@prisma/adapter-mssql";
 import { PrismaClient } from "~/../prisma/generated/prisma/client";
-import { toCentsFromNumber } from "~/app/_currency";
-import { createConfig } from "~/app/_prisma";
+import { toCentsFromNumber } from "~/app/_utils/currency";
+import { createConfig } from "~/app/_utils/prisma";
 import { categories, themes, transactions, userSeed } from "~/data/data";
 
 const db = new PrismaClient({

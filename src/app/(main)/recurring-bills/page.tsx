@@ -5,17 +5,17 @@ import { cx } from "class-variance-authority";
 import Image from "next/image";
 import IconBillDue from "~/app/_assets/icon-bill-due.svg";
 import IconBillPaid from "~/app/_assets/icon-bill-paid.svg";
-import { nowDate } from "~/app/_now";
-import { sum } from "~/app/_math";
+import { nowDate } from "~/app/_utils/now";
+import { sum } from "~/app/_utils/math";
 import {
   getIsDueSoon,
   getIsPaid,
 } from "~/app/(main)/recurring-bills/_utils/bills";
 import * as z from "zod";
-import { type SortingOption, sortingOptions } from "~/app/_sort";
+import { type SortingOption, sortingOptions } from "~/app/_utils/sort";
 import { BillsSearchForm } from "~/app/(main)/recurring-bills/_components/bills-search-form";
 import { getRecurringBills } from "~/server/recurring-bill";
-import { formatCents } from "~/app/_currency";
+import { formatCents } from "~/app/_utils/currency";
 
 export const metadata: Metadata = {
   title: "Recurring bills",
@@ -91,7 +91,7 @@ const RecurringBillsPage = async ({
           </div>
           <div className="rounded-xl bg-white p-250 text-grey-500 forced-colors:border-[0.0625rem]">
             <h2 className="text-preset-3 text-grey-900">Summary</h2>
-            <div className="mt-250 space-y-200 divide-y-[0.0625rem] divide-grey-500/15 text-preset-5 add-space-y-200">
+            <div className="mt-250 space-y-200 divide-y-[0.0625rem] divide-grey-500/15 add-space-y-200 text-preset-5">
               <div className="flex flex-wrap items-center justify-between">
                 <h3>Paid Bills</h3>
                 <p className="text-end text-preset-5-bold text-grey-900">

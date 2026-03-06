@@ -14,7 +14,7 @@ import {
   type EditPotSchema,
   type PotSchema,
   type WithdrawSchema,
-} from "~/app/(main)/pots/_schemas";
+} from "~/app/(main)/pots/_utils/schemas";
 import {
   addMoneyToPot,
   createPot,
