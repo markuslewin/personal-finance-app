@@ -1,7 +1,7 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { faker } from "@faker-js/faker";
 import { expect } from "@playwright/test";
-import { test } from "tests/playwright-utils";
+import { test } from "~/../tests/playwright-utils";
 
 test("pots title", async ({ page }) => {
   await page.goto("/pots");

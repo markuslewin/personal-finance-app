@@ -1,6 +1,6 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect } from "@playwright/test";
-import { test, waitForHydration } from "tests/playwright-utils";
+import { test, waitForHydration } from "~/../tests/playwright-utils";
 
 test("can search recurring bills", async ({ page }) => {
   await page.goto("/recurring-bills");

@@ -1,6 +1,6 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect } from "@playwright/test";
-import { test } from "tests/playwright-utils";
+import { test } from "~/../tests/playwright-utils";
 
 test("can't signup with the same email", async ({ page, login }) => {
   const { user } = await login();

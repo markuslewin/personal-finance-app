@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "tests/playwright-utils";
+import { test } from "~/../tests/playwright-utils";
 
 test("can skip to main content", async ({ page }) => {
   await page.goto("/");

@@ -1,6 +1,6 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect } from "@playwright/test";
-import { test } from "tests/playwright-utils";
+import { test } from "~/../tests/playwright-utils";
 
 test("overview has title", async ({ page }) => {
   await page.goto("/");

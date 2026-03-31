@@ -4,7 +4,7 @@ import {
   test,
   violationFingerprints,
   waitForHydration,
-} from "tests/playwright-utils";
+} from "~/../tests/playwright-utils";
 
 test("can search transactions", async ({ page }) => {
   await page.goto("/transactions");
