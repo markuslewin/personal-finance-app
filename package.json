@@ -31,7 +31,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
   },
   "dependencies": {
-    "@conform-to/react": "^1.18.0",
+    "@conform-to/react": "^1.19.0",
     "@conform-to/zod": "^1.18.0",
     "@prisma/adapter-mssql": "^7.7.0",
     "@prisma/client": "^7.7.0",
