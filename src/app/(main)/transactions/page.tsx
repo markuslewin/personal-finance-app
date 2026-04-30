@@ -28,7 +28,8 @@ const TransactionsPage = async ({
           (val): unknown => (Array.isArray(val) ? val[0] : val),
           z.coerce.number().int().positive().lte(maxInt),
         )
-        .catch(1),
+        .catch(1)
+        .default(1),
     })
     .parse(await searchParams);
 
