@@ -72,7 +72,7 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.2.6",
     "execa": "^9.6.1",
-    "jest": "^30.4.1",
+    "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "postcss": "^8.5.14",
     "prettier": "^3.8.3",
