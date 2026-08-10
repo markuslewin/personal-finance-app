@@ -79,7 +79,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "prisma": "^7.9.1",
     "tailwindcss": "^4.3.2",
-    "testcontainers": "^12.0.4",
+    "testcontainers": "^12.1.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.5",
     "typescript": "^6.0.3",
